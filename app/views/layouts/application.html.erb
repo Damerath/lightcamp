@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Lightcamp</title>
+    <title>Lightcamp HQ</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,8 +11,29 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <header class="bg-white dark:bg-slate-800 shadow">
+      <div class="mx-auto max-w-5xl px-6 py-4 flex items-center justify-between">
+        
+        <div class="flex items-center gap-3">
+          <%= image_tag "lightcamp_logo.png", class: "h-9 w-auto block dark:hidden" %>
+          <%= image_tag "lightcamp_logo_dark.png", class: "h-9 w-auto hidden dark:block" %>
+          <span class="text-xl font-semibold text-slate-600 dark:text-slate-300">HQ</span>
+        </div>
+
+        <nav class="flex gap-6 text-sm font-medium">
+          <%= link_to "Dashboard", root_path,
+            class: "text-sm font-medium #{current_page?(root_path) ? 'text-red-600' : 'text-slate-600 dark:text-slate-300 hover:text-blue-400'}" %>
+          <%= link_to "Meine Camps", camps_path,
+            class: "text-sm font-medium #{current_page?(camps_path) ? 'text-red-600' : 'text-slate-600 dark:text-slate-300 hover:text-blue-400'}" %>
+          <a href="#" class="text-slate-700 hover:text-blue-400">Leitung</a>
+          <a href="#" class="text-slate-700 hover:text-blue-400">Admin</a>
+        </nav>
+
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-6 py-8">
       <%= yield %>
     </main>
   </body>
