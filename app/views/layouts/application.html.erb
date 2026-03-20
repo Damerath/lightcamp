@@ -43,5 +43,24 @@
     <main class="mx-auto max-w-5xl px-6 py-8">
       <%= yield %>
     </main>
+    <div class="fixed bottom-6 left-1/2 text-center transform -translate-x-1/2 z-50 space-y-3 w-full max-w-5xl">
+      <% if notice %>
+        <div
+          data-controller="flash"
+          class="rounded-lg bg-green-300 px-4 py-3 text-slate-900 shadow-lg transition duration-300 ease-out"
+        >
+          <%= notice %>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div
+          data-controller="flash"
+          class="rounded-lg bg-red-300 px-4 py-3 text-slate-900 shadow-lg transition duration-300 ease-out"
+        >
+          <%= alert %>
+        </div>
+      <% end %>
+    </div>
   </body>
 </html>

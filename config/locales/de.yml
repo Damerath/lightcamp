@@ -1,0 +1,30 @@
+de:
+  activerecord:
+    attributes:
+      user:
+        first_name: "Vorname"
+        last_name: "Nachname"
+        email: "E-Mail"
+        password: "Passwort"
+        password_confirmation: "Passwort bestätigen"
+        remember_me: "Angemeldet bleiben"
+  devise:
+    registrations:
+      new:
+        title: "Konto erstellen"
+        subtitle: "Registriere dich für deinen Lightcamp HQ Account."
+        submit: "Konto erstellen"
+        minimum_password_length: "Mindestens %{count} Zeichen"
+    sessions:
+      new:
+        title: "Anmeldung"
+        subtitle: "Logge dich in deinen Lightcamp HQ Account ein."
+        submit: "Einloggen"
+    shared:
+      links:
+        sign_in: "Hast du bereits einen Account?"
+        sign_up: "Noch keinen Account?"
+        forgot_password: "Passwort vergessen?"
+        confirmation_instructions: "Du hast keine Bestätigungsmail erhalten?"
+        unlock_instructions: "Du hast keine Freischaltmail erhalten?"
+        sign_in_provider: "Mit %{provider} anmelden"

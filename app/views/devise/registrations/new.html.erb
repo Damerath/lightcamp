@@ -1,39 +1,52 @@
-<h2>Sign up</h2>
+<div class="flex min-h-[70vh] items-center justify-center">
+  <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow dark:bg-slate-800">
+    <div class="mb-6 text-center">
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100"><%= t(".title") %></h2>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        <%= t(".subtitle") %>
+      </p>
+    </div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :first_name %><br />
-    <%= f.text_field :first_name, autofocus: true, autocomplete: "given-name" %>
-  </div>
+      <div>
+        <%= f.label :first_name, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :first_name, autofocus: true, autocomplete: "given-name", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
 
-  <div class="field">
-    <%= f.label :last_name %><br />
-    <%= f.text_field :last_name, autocomplete: "family-name" %>
-  </div>
+      <div>
+        <%= f.label :last_name, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :last_name, autocomplete: "family-name", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+      <div>
+        <%= f.label :email, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.email_field :email, autocomplete: "email", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
 
-  <div class="field">
-    <p><%= f.label :password %></p>
-    <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
+      <div>
+        <%= f.label :password, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <% if @minimum_password_length %>
+          <p class="mb-1 text-xs text-slate-500 dark:text-slate-400">
+            <%= t(".minimum_password_length", count: @minimum_password_length) %>
+          </p>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+
+      <div>
+        <%= f.label :password_confirmation, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+
+      <div>
+        <%= f.submit t(".submit"), class: "w-full rounded-lg bg-red-600 px-4 py-2.5 font-medium text-white transition hover:bg-red-700" %>
+      </div>
     <% end %>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-  </div>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
+    <div class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
+      <%= render "devise/shared/links" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
