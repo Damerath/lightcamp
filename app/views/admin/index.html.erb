@@ -8,26 +8,24 @@
 
   <div class="space-y-6">
     <div>
-      <h3 class="mb-3 text-lg font-semibold">2026</h3>
-        <div class="grid gap-4 sm:grid-cols-2">
-          <%= link_to users_path, class: "block rounded-lg bg-white p-5 shadow hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
-            <h4 class="font-semibold text-slate-900 dark:text-slate-100">
-              Benutzerverwaltung
-            </h4>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Verwalte alle Benutzer des Systems.
-            </p>
-          <% end %>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <%= link_to users_path, class: "block rounded-lg bg-white p-5 shadow hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
+          <h4 class="font-semibold text-slate-900 dark:text-slate-100">
+            Benutzerverwaltung
+          </h4>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            Verwalte alle Benutzer des Systems.
+          </p>
+        <% end %>
 
-          <div class="rounded-lg bg-white dark:bg-slate-800 p-5 shadow">
-            <h4 class="font-semibold text-slate-900 dark:text-slate-100">
-              Campverwaltung
-            </h4>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Verwalte alle Camps für jedes Jahr. (Noch nicht implementiert)
-            </p>
-          </div>  
-        </div>
+        <%= link_to admin_camps_path, class: "block rounded-lg bg-white p-5 shadow hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
+          <h4 class="font-semibold text-slate-900 dark:text-slate-100">
+            Campverwaltung
+          </h4>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            Verwalte alle Camps für jedes Jahr. (Noch nicht implementiert)
+          </p>
+        <% end %>
       </div>
     </div>
   </div>

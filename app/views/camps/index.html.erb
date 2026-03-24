@@ -2,33 +2,25 @@
   <div>
     <h2 class="text-2xl font-bold">Meine Camps</h2>
     <p class="mt-1 text-slate-600 dark:text-slate-400">
-      Hier findest du deine Camp-Zuweisungen nach Jahr sortiert.
+      Hier findest du deine Camps nach Jahr sortiert.
     </p>
   </div>
 
-  <div class="space-y-6">
+  <% @years.each do |year| %>
     <div>
-      <h3 class="mb-3 text-lg font-semibold">2026</h3>
-        <div class="grid gap-4 sm:grid-cols-2">
-          <%= link_to "#", class: "block rounded-lg bg-white p-5 shadow hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
-            <h4 class="font-semibold text-slate-900 dark:text-slate-100">
-              Camp 1 – Sport
-            </h4>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Dein Bereich: Sport
-            </p>
-          <% end %>
+      <h3 class="mb-3 text-lg font-semibold">
+        <%= year.name %>
+      </h3>
 
+      <div class="grid gap-4 sm:grid-cols-<%= [year.camps.count, 3].min %>">
+        <% year.camps.each do |camp| %>
           <div class="rounded-lg bg-white dark:bg-slate-800 p-5 shadow">
             <h4 class="font-semibold text-slate-900 dark:text-slate-100">
-              Camp 2 – Küche
+              <%= camp.name %>
             </h4>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Dein Bereich: Küche
-            </p>
-          </div>  
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
-  </div>
+  <% end %>
 </div>

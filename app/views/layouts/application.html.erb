@@ -9,6 +9,7 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script src="https://unpkg.com/lucide@latest"></script>
   </head>
 
   <body class="bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
@@ -62,5 +63,8 @@
         </div>
       <% end %>
     </div>
+    <script>
+      lucide.createIcons();
+    </script>
   </body>
 </html>
