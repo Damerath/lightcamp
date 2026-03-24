@@ -35,7 +35,20 @@
               <%= link_to "Admin", admin_path,
                 class: "text-sm font-medium #{current_page?(admin_path) ? 'text-red-600' : 'text-slate-600 dark:text-slate-300 hover:text-blue-400'}" %>
             <% end %>
-            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "text-sm text-slate-600 dark:text-slate-300 hover:text-blue-400" %>
+            <div class="relative" data-controller="menu">
+              <button type="button" data-action="click->menu#toggle">
+                <span data-menu-target="icon" class="text-slate-300 transition">
+                  ☰
+                </span>
+              </button>
+
+              <div data-menu-target="menu" class="hidden absolute right-0 mt-2 w-40 rounded-lg bg-white shadow dark:bg-slate-800">
+                <%= link_to "Profil", profile_path, class: "block px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" %>
+
+                <%= button_to "Logout", destroy_user_session_path, method: :delete,
+                  class: "w-full text-left px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" %>
+              </div>
+            </div>
           </nav>
         <% end %>
       </div>

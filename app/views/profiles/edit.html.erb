@@ -1,0 +1,87 @@
+<div class="max-w-3xl mx-auto space-y-8">
+  <div>
+    <h2 class="text-2xl font-bold">Mein Profil</h2>
+    <p class="mt-1 text-slate-600 dark:text-slate-400">
+      Bitte vervollständige deine Daten, bevor du dich für ein Camp anmelden kannst.
+    </p>
+  </div>
+
+  <% if @user.errors.any? %>
+    <div class="rounded-lg bg-red-100 px-4 py-3 text-red-800">
+      <p class="font-semibold">Das Profil konnte nicht gespeichert werden:</p>
+      <ul class="mt-2 list-disc pl-5">
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <%= form_with model: @user, url: profile_path, local: true, class: "space-y-6" do |f| %>
+
+    <!-- Basisdaten -->
+    <div class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow space-y-4">
+      <h3 class="text-lg font-semibold">Persönliche Daten</h3>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <%= f.label :first_name, "Vorname", class: "block text-sm font-medium" %>
+          <%= f.text_field :first_name, class: "w-full rounded-lg border px-3 py-2" %>
+        </div>
+
+        <div>
+          <%= f.label :last_name, "Nachname", class: "block text-sm font-medium" %>
+          <%= f.text_field :last_name, class: "w-full rounded-lg border px-3 py-2" %>
+        </div>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <%= f.label :gender, "Geschlecht", class: "block text-sm font-medium" %>
+          <%= f.select :gender, [["Männlich", "male"], ["Weiblich", "female"]], { prompt: "Bitte wählen" }, class: "w-full rounded-lg border px-3 py-2" %>
+        </div>
+
+        <div>
+          <%= f.label :birthdate, "Geburtsdatum", class: "block text-sm font-medium" %>
+          <%= f.date_field :birthdate, class: "w-full rounded-lg border px-3 py-2" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :phone, "Telefonnummer", class: "block text-sm font-medium" %>
+        <%= f.text_field :phone, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow space-y-4">
+      <h3 class="text-lg font-semibold">Fähigkeiten & Qualifikationen</h3>
+
+      <div class="flex items-center gap-2">
+        <%= f.check_box :first_aider %>
+        <%= f.label :first_aider, "Ersthelfer" %>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= f.check_box :sound_tech %>
+        <%= f.label :sound_tech, "Tontechnik" %>
+      </div>
+
+      <div>
+        <%= f.label :instruments, "Instrumente", class: "block text-sm font-medium" %>
+        <%= f.text_field :instruments, placeholder: "z. B. Gitarre, Klavier", class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :other_skills, "Sonstige Fähigkeiten", class: "block text-sm font-medium" %>
+        <%= f.text_area :other_skills, rows: 3, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end">
+      <%= f.submit "Profil speichern", class: "rounded-lg bg-red-600 px-5 py-2 text-white hover:bg-red-700" %>
+    </div>
+
+  <% end %>
+</div>

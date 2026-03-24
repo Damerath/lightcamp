@@ -5,6 +5,14 @@ class User < ApplicationRecord
     role == "admin"
   end
   
+  def profile_complete?
+    first_name.present? &&
+    last_name.present? &&
+    gender.present? &&
+    birthdate.present? &&
+    phone.present?
+  end
+
   private
 
   def set_default_role

@@ -4,3 +4,5 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
+import MenuController from "./menu_controller"
+application.register("menu", MenuController)

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'profiles/edit'
   get 'years/index'
   devise_for :users
   root "dashboard#index"
@@ -12,4 +13,6 @@ Rails.application.routes.draw do
   get "years", to: "years#index"
   post "years", to: "years#create"
   patch "years/:id", to: "years#update", as: :year
+  get "profile", to: "profiles#edit"
+  patch "profile", to: "profiles#update"
 end
