@@ -1,0 +1,83 @@
+<div class="max-w-3xl mx-auto space-y-8">
+  <div>
+    <h2 class="text-2xl font-bold">Mitarbeiter-Anmeldung</h2>
+    <p class="mt-1 text-slate-600 dark:text-slate-400">
+      Melde dich als Mitarbeiter für Lightcamp an!
+    </p>
+  </div>
+
+  <%= form_with model: @camp_application, url: camp_application_path, local: true, class: "space-y-6" do |f| %>
+    <div class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow space-y-4">
+      <h3 class="text-lg font-semibold">
+        Anmeldung für LIGHTCAMP <span class="font-semibold"><%= @active_year.name %></span>
+      </h3>
+
+      <div data-controller="camp-application">
+        <%= f.hidden_field :year_id, value: @active_year.id %>
+
+        <% @active_year.camps.each do |camp| %>
+          <label class="flex items-center justify-between gap-4 rounded-lg border px-3 py-2">
+            <div class="flex items-center gap-2">
+              <%= check_box_tag "camp_application[camp_ids][]", camp.id, false %>
+              <span><%= camp.name %></span>
+            </div>
+
+            <% if @already_applied_camp_ids.include?(camp.id) %>
+              <span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                bereits angemeldet
+              </span>
+            <% end %>
+          </label>
+        <% end %>
+      </div>
+
+      <div>
+        <%= f.label :commitment, "Verbindlichkeit", class: "block text-sm font-medium" %>
+        <%= f.select :commitment, [["Verbindlich", "binding"], ["Noch unsicher", "unsure"]], { prompt: "Bitte wählen" }, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :uncertain_until, "Falls noch unsicher: Ab wann können wir mit einer festen Antwort rechnen?", class: "block text-sm font-medium" %>
+        <%= f.date_field :uncertain_until, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :team_preference, "In welchem Team willst du gerne mitarbeiten?", class: "block text-sm font-medium" %>
+        <%= f.select :team_preference,
+          CampApplication::TEAM_OPTIONS,
+          { prompt: "Bitte wählen" },
+          class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= f.check_box :responsible %>
+        <%= f.label :responsible, "Ich bin bereit, in meinem Bereich Verantwortung zu übernehmen." %>
+      </div>
+
+      <div>
+        <%= f.label :comment, "Bemerkung zur Teamauswahl", class: "block text-sm font-medium" %>
+        <%= f.text_area :comment, rows: 3, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= f.check_box :health_restrictions %>
+        <%= f.label :health_restrictions, "Ich habe Allergien oder gesundheitliche Einschränkungen." %>
+      </div>
+
+      <div>
+        <%= f.label :health_restrictions_details, "Falls ja: Welche?", class: "block text-sm font-medium" %>
+        <%= f.text_area :health_restrictions_details, rows: 3, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :motivation, "Warum willst du mitmachen?", class: "block text-sm font-medium" %>
+        <%= f.text_area :motivation, rows: 4, class: "w-full rounded-lg border px-3 py-2" %>
+      </div>
+
+    </div>
+
+    <div class="flex justify-end">
+      <%= f.submit "Anmeldung speichern", class: "rounded-lg bg-red-600 px-5 py-2 text-white hover:bg-red-700" %>
+    </div>
+  <% end %>
+</div>

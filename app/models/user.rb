@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :camp_applications, dependent: :destroy
+
   after_initialize :set_default_role, if: :new_record?
 
   def admin?

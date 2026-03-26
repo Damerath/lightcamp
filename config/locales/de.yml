@@ -1,4 +1,7 @@
 de:
+  date:
+    formats:
+      default: "%d.%m.%Y"
   activerecord:
     attributes:
       user:
@@ -6,6 +9,7 @@ de:
         last_name: "Nachname"
         email: "E-Mail"
         password: "Passwort"
+        bithdate: "Geburtsdatum"
         password_confirmation: "Passwort bestätigen"
         remember_me: "Angemeldet bleiben"
   devise:

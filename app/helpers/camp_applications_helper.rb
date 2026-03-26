@@ -1,0 +1,2 @@
+module CampApplicationsHelper
+end

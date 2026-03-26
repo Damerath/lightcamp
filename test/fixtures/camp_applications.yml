@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  year: one
+  motivation: MyText
+  commitment: MyString
+  comment: MyText
+
+two:
+  user: two
+  year: two
+  motivation: MyText
+  commitment: MyString
+  comment: MyText

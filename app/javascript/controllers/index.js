@@ -6,3 +6,7 @@ import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 import MenuController from "./menu_controller"
 application.register("menu", MenuController)
+import CampApplicationController from "./camp_application_controller"
+application.register("camp-application", CampApplicationController)
+import ApplicationModalController from "./application_modal_controller"
+application.register("application-modal", ApplicationModalController)

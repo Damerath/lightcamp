@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  camp_application: one
+  camp: one
+
+two:
+  camp_application: two
+  camp: two

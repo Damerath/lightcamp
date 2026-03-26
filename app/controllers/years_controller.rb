@@ -23,6 +23,13 @@ class YearsController < ApplicationController
     end
   end
   
+  def toggle_registration
+    year = Year.find(params[:id])
+
+    year.update!(registration_open: !year.registration_open?)
+
+    redirect_to admin_camps_path, notice: "Anmeldestatus wurde aktualisiert."
+  end
   private
 
   def year_params
