@@ -2,25 +2,21 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["overlay", "content"]
-  static values = { teamOptions: String }
 
   open(event) {
     const el = event.currentTarget
-    const availableCamps = this.parseAvailableCamps(el.dataset.availableCamps)
-    const assignmentOptions = availableCamps.map((camp) => {
-      const selected = String(camp.id) === el.dataset.assignedCampId ? "selected" : ""
-      return `<option value="${camp.id}" ${selected}>${this.escapeHtml(camp.name)}</option>`
-    }).join("")
-    const teamOptions = this.parseTeamOptions().map((team) => {
-      const selected = team === el.dataset.assignedTeam ? "selected" : ""
-      return `<option value="${this.escapeHtml(team)}" ${selected}>${this.escapeHtml(team)}</option>`
-    }).join("")
+    this.campTeams = this.parseCampTeams(el.dataset.campTeams)
+    this.selectedCampId = el.dataset.assignedCampId || this.campTeams[0]?.id?.toString() || ""
+    this.selectedCampTeamId = el.dataset.assignedCampTeamId || ""
     const currentAssignment = el.dataset.assignedCampName
-      ? `Aktuell bestaetigt fuer: <strong>${this.escapeHtml(el.dataset.assignedCampName)}</strong>`
+      ? `Aktuell eingeplant für: <strong>${this.escapeHtml(el.dataset.assignedCampName)}</strong>`
       : "Noch keinem Camp fest zugeteilt."
     const currentTeamAssignment = el.dataset.assignedTeam
-      ? `Festes Team: <strong>${this.escapeHtml(el.dataset.assignedTeam)}</strong>`
+      ? `Team: <strong>${this.escapeHtml(el.dataset.assignedTeam)}</strong>`
       : "Noch kein Team fest zugeteilt."
+    const currentResponsibleAssignment = el.dataset.assignedAsResponsible === "true"
+      ? "Rolle: <strong>verantwortlich</strong>"
+      : "Rolle: <strong>normales Teammitglied</strong>"
 
     this.overlayTarget.classList.remove("hidden")
 
@@ -35,56 +31,66 @@ export default class extends Controller {
           <div><strong>Telefon:</strong> ${el.dataset.phone}</div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4 text-sm">
-          <div><strong>Camps:</strong> ${el.dataset.camps || "-"}</div>
-          <div>
-            <div><strong>Team:</strong> ${el.dataset.team || "-"}</div>
-            <div><strong>Verantwortung:</strong> ${el.dataset.responsible}</div>
+        <div class="grid grid-cols-3 gap-6">
+          <div class="grid grid-rows-5 text-sm">
+            <div><strong>Campdaten:</strong></div>
+            <div>Camps: ${el.dataset.camps || "-"}</div>
+            <div>Team: ${el.dataset.team || "-"}</div>
+            <div>Verantwortung: ${el.dataset.responsible}</div>
+            <div>Bemerkung: ${el.dataset.comment || "-"}</div>
           </div>
-          <div>
-            <p class="font-medium">Bemerkung:</p>
-            <p>${el.dataset.comment || "-"}</p>
+
+          <div class="grid grid-rows-5 text-sm">
+            <div><strong>Fähigkeiten:</strong></div>
+            <div>Ersthelfer:</strong> ${el.dataset.firstAider || "Nein"}</div>
+            <div>Tontechnik: ${el.dataset.soundTech || "Nein"}</div>
+            <div>Instrumente: ${el.dataset.instruments || "-"}</div>
+            <div>Sonstige: ${el.dataset.otherSkills || "-"}</div>
+          </div>
+
+          <div class="grid grid-rows-5 text-sm">
+            <div><strong>Motivation:</strong></div>
+            <div>${el.dataset.motivation || "-"}</div>
+            <br>
+            <div><strong>Gesundheitliches:</strong></div>
+            <div>${el.dataset.health} ${el.dataset.healthDetails ? `- ${el.dataset.healthDetails}` : ""}</div>
           </div>
         </div>
-
-        <div class="grid grid-cols-3 gap-4 text-sm">
-          <div>
-            <p class="font-medium">Motivation:</p>
-            <p>${el.dataset.motivation || "-"}</p>
-          </div>
-          <div>
-            <p class="font-medium">Gesundheitliche Einschränkungen:</p>
-            <p>${el.dataset.health} ${el.dataset.healthDetails ? `- ${el.dataset.healthDetails}` : ""}</p>
-          </div>
-        </div>
-
-        <form action="${el.dataset.assignmentPath}" accept-charset="UTF-8" method="post" class="space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700">
+        <form action="${el.dataset.assignmentPath}" accept-charset="UTF-8" method="post" class="space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700" data-action="submit->application-modal#syncAssignment">
           <input type="hidden" name="_method" value="patch">
           <input type="hidden" name="authenticity_token" value="${this.csrfToken()}">
+          <input type="hidden" name="return_to" value="${this.escapeHtml(window.location.pathname + window.location.search)}">
+          <input type="hidden" name="camp_application[assigned_camp_team_id]" value="${this.escapeHtml(this.selectedCampTeamId)}" data-role="assigned-camp-team-hidden">
 
           <div>
             <p class="font-medium">Zuteilung</p>
             <p class="text-sm text-slate-500 dark:text-slate-400">${currentAssignment}</p>
             <p class="text-sm text-slate-500 dark:text-slate-400">${currentTeamAssignment}</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">${currentResponsibleAssignment}</p>
           </div>
 
           <div class="grid gap-3 sm:grid-cols-2">
             <div>
               <label class="mb-1 block text-sm font-medium" for="assigned-camp-select">Camp bestaetigen</label>
-              <select id="assigned-camp-select" name="camp_application[assigned_camp_id]" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100">
+              <select id="assigned-camp-select" data-role="assigned-camp-select" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" data-action="change->application-modal#campChanged">
                 <option value="">Noch nicht zuteilen</option>
-                ${assignmentOptions}
+                ${this.renderCampOptions()}
               </select>
             </div>
 
             <div>
-              <label class="mb-1 block text-sm font-medium" for="assigned-team-select">Team zuteilen</label>
-              <select id="assigned-team-select" name="camp_application[assigned_team]" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100">
+              <label class="mb-1 block text-sm font-medium" for="assigned-camp-team-select">Team zuteilen</label>
+              <select id="assigned-camp-team-select" data-role="assigned-camp-team-select" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" data-action="change->application-modal#teamChanged">
                 <option value="">Noch kein Team</option>
-                ${teamOptions}
               </select>
             </div>
           </div>
+
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="camp_application[assigned_as_responsible]" value="1" ${el.dataset.assignedAsResponsible === "true" ? "checked" : ""} data-role="assigned-responsible-checkbox">
+            Als verantwortliche Person zuteilen
+          </label>
+          <p class="text-xs text-slate-500 dark:text-slate-400" data-role="responsible-hint"></p>
 
           <button type="submit" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
             Speichern
@@ -92,26 +98,101 @@ export default class extends Controller {
         </form>
       </div>
     `
+
+    this.refreshTeamOptions()
   }
 
   close() {
     this.overlayTarget.classList.add("hidden")
   }
 
-  parseAvailableCamps(campsJson) {
+  campChanged(event) {
+    this.selectedCampId = event.currentTarget.value
+    this.selectedCampTeamId = ""
+    this.refreshTeamOptions()
+  }
+
+  teamChanged(event) {
+    this.selectedCampTeamId = event.currentTarget.value
+    this.syncHiddenAssignmentField()
+    this.refreshResponsibleHint()
+  }
+
+  syncAssignment() {
+    this.syncHiddenAssignmentField()
+  }
+
+  parseCampTeams(campTeamsJson) {
     try {
-      return JSON.parse(campsJson || "[]")
+      return JSON.parse(campTeamsJson || "[]")
     } catch (_error) {
       return []
     }
   }
 
-  parseTeamOptions() {
-    try {
-      return JSON.parse(this.teamOptionsValue || "[]")
-    } catch (_error) {
-      return []
+  renderCampOptions() {
+    return this.campTeams.map((camp) => {
+      const selected = String(camp.id) === String(this.selectedCampId) ? "selected" : ""
+      return `<option value="${camp.id}" ${selected}>${this.escapeHtml(camp.name)}</option>`
+    }).join("")
+  }
+
+  refreshTeamOptions() {
+    const teamSelect = this.contentTarget.querySelector('[data-role="assigned-camp-team-select"]')
+    if (!teamSelect) return
+
+    const selectedCamp = this.campTeams.find((camp) => String(camp.id) === String(this.selectedCampId))
+    const teamOptions = selectedCamp ? selectedCamp.teams : []
+
+    teamSelect.innerHTML = `
+      <option value="">Noch kein Team</option>
+      ${teamOptions.map((team) => {
+        const selected = String(team.id) === String(this.selectedCampTeamId) ? "selected" : ""
+        return `<option value="${team.id}" ${selected}>${this.escapeHtml(team.name)}</option>`
+      }).join("")}
+    `
+
+    if (!teamOptions.some((team) => String(team.id) === String(this.selectedCampTeamId))) {
+      this.selectedCampTeamId = ""
     }
+
+    teamSelect.value = this.selectedCampTeamId
+    this.syncHiddenAssignmentField()
+
+    this.refreshResponsibleHint()
+  }
+
+  refreshResponsibleHint() {
+    const hint = this.contentTarget.querySelector('[data-role="responsible-hint"]')
+    const checkbox = this.contentTarget.querySelector('[data-role="assigned-responsible-checkbox"]')
+    if (!hint || !checkbox) return
+
+    const selectedCamp = this.campTeams.find((camp) => String(camp.id) === String(this.selectedCampId))
+    const selectedTeam = selectedCamp?.teams.find((team) => String(team.id) === String(this.selectedCampTeamId))
+
+    if (!selectedTeam) {
+      hint.textContent = "Waehle zuerst ein Team aus."
+      checkbox.disabled = true
+      checkbox.checked = false
+      return
+    }
+
+    if (selectedTeam.responsible_slots > 0) {
+      hint.textContent = `Dieses Team hat ${selectedTeam.responsible_slots} Verantwortlichen-Platz${selectedTeam.responsible_slots === 1 ? "" : "e"}.`
+      checkbox.disabled = false
+      return
+    }
+
+    hint.textContent = "Dieses Team hat keinen Verantwortlichen-Platz."
+    checkbox.disabled = true
+    checkbox.checked = false
+  }
+
+  syncHiddenAssignmentField() {
+    const hiddenField = this.contentTarget.querySelector('[data-role="assigned-camp-team-hidden"]')
+    if (!hiddenField) return
+
+    hiddenField.value = this.selectedCampTeamId || ""
   }
 
   csrfToken() {

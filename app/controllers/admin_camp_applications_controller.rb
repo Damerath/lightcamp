@@ -5,23 +5,22 @@ class AdminCampApplicationsController < ApplicationController
   def index
     @years = Year.order(name: :desc)
     @selected_year = selected_year
-    @team_options = CampApplication::TEAM_OPTIONS
 
     @camp_applications = CampApplication
-      .includes(:user, :year, :camps, :assigned_camp)
+      .includes(:user, :year, :camps, :assigned_camp, :assigned_camp_team)
       .where(year: @selected_year)
       .order(created_at: :desc)
   end
 
   def update_assignment
-    assigned_camp_id = assignment_params[:assigned_camp_id].presence
-    @camp_application.assigned_camp_id = assigned_camp_id
-    @camp_application.assigned_team = assignment_params[:assigned_team].presence
+    assigned_camp_team_id = assignment_params[:assigned_camp_team_id].presence
+    @camp_application.assigned_camp_team_id = assigned_camp_team_id
+    @camp_application.assigned_as_responsible = assignment_params[:assigned_as_responsible] == "1"
 
     if @camp_application.save
-      redirect_to admin_camp_applications_path(year_id: @camp_application.year_id), notice: "Zuteilung wurde gespeichert."
+      redirect_to assignment_return_path, notice: "Zuteilung wurde gespeichert."
     else
-      redirect_to admin_camp_applications_path(year_id: @camp_application.year_id), alert: @camp_application.errors.full_messages.to_sentence
+      redirect_to assignment_return_path, alert: @camp_application.errors.full_messages.to_sentence
     end
   end
 
@@ -32,7 +31,17 @@ class AdminCampApplicationsController < ApplicationController
   end
 
   def assignment_params
-    params.require(:camp_application).permit(:assigned_camp_id, :assigned_team)
+    params.require(:camp_application).permit(:assigned_camp_team_id, :assigned_as_responsible)
+  end
+
+  def assignment_return_path
+    return_to = params[:return_to].to_s
+
+    if return_to.start_with?("/") && !return_to.start_with?("//")
+      return_to
+    else
+      admin_camp_applications_path(year_id: @camp_application.year_id)
+    end
   end
 
   def selected_year

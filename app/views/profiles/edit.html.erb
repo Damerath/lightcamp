@@ -1,9 +1,12 @@
 <div class="max-w-3xl mx-auto space-y-8">
-  <div>
-    <h2 class="text-2xl font-bold">Mein Profil</h2>
-    <p class="mt-1 text-slate-600 dark:text-slate-400">
-      Bitte vervollständige deine Daten, bevor du dich für ein Camp anmelden kannst.
-    </p>
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold">Mein Profil</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        Bitte vervollständige deine Daten, bevor du dich für ein Camp anmelden kannst.
+      </p>
+    </div>
+    <%= link_to "Zur Dashboard", root_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
   </div>
 
   <% if @user.errors.any? %>

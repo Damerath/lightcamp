@@ -1,0 +1,184 @@
+<div data-controller="application-modal" class="space-y-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        <%= @camp.year.name %>
+      </p>
+      <h2 class="text-2xl font-bold">Teamview <%= @camp.name %></h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        Hier siehst du die Teams samt Einteilung
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="inline-flex rounded-lg border border-slate-300 bg-white p-1 shadow-sm dark:border-slate-600 dark:bg-slate-800">
+        <% @year_camps.each do |year_camp| %>
+          <% active = year_camp == @camp %>
+          <%= link_to year_camp.name, admin_camp_teams_path(year_camp), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+        <% end %>
+      </div>
+      <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Zur Campverwaltung", admin_camps_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    </div>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <% @camp_teams.each do |team| %>
+      <div class="rounded-xl bg-white p-5 shadow dark:bg-slate-800">
+        <div class="flex grid-cols-2 items-start justify-between gap-4 group">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                <%= team.name %>
+              </h3>
+
+              <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+                Ges. <%= team.assigned_count %>/<%= team.capacity %>
+              </span>
+
+              <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+                <% if team.male_slots.positive? && team.female_slots.zero? %>
+                  m <%= team.assigned_male_count %>/<%= team.male_slots %>
+                <% elsif team.female_slots.positive? && team.male_slots.zero? %>
+                  w <%= team.assigned_female_count %>/<%= team.female_slots %>
+                <% elsif team.male_slots.positive? || team.female_slots.positive? %>
+                  m/w <%= team.assigned_male_count %>/<%= team.male_slots %> | <%= team.assigned_female_count %>/<%= team.female_slots %>
+                <% else %>
+                  m/w <%= team.assigned_male_count %> | <%= team.assigned_female_count %>
+                <% end %>
+              </span>
+
+              <% if team.responsible_slots.positive? %>
+                <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                  V <%= team.assigned_responsible_count %>/<%= team.responsible_slots %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+          <%= link_to admin_camp_teams_path(@camp, modal: "edit_team", camp_team_id: team.id), class: "opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-600 transition" do %>
+            <i data-lucide="pencil" class="w-4 h-4"></i>
+          <% end %>
+        </div>
+
+        <div class="mt-4">
+          <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Eingeteilte Mitarbeiter</p>
+
+          <% if team.assigned_camp_applications.any? %>
+            <div class="grid grid-cols-2 gap-2 mt-3">
+              <% team.assigned_camp_applications.sort_by { |application| [application.user.last_name.to_s, application.user.first_name.to_s] }.each do |application| %>
+                <div
+                  class="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm transition hover:ring-1 hover:ring-blue-400 dark:border-slate-700"
+                  data-action="click->application-modal#open"
+                  data-assignment-path="<%= admin_camp_application_assignment_path(application) %>"
+                  data-application-id="<%= application.id %>"
+                  data-name="<%= application.user.first_name %> <%= application.user.last_name %>"
+                  data-email="<%= application.user.email %>"
+                  data-birthdate="<%= application.user.birthdate.present? ? l(application.user.birthdate) : '-' %>"
+                  data-phone="<%= application.user.phone %>"
+                  data-first-aider="<%= application.user.first_aider? ? 'Ja' : 'Nein' %>"
+                  data-sound-tech="<%= application.user.sound_tech? ? 'Ja' : 'Nein' %>"
+                  data-instruments="<%= application.user.instruments.to_s.gsub('"', '&quot;') %>"
+                  data-other-skills="<%= application.user.other_skills.to_s.gsub('"', '&quot;') %>"
+                  data-camps="<%= application.camps.map(&:name).join(', ') %>"
+                  data-camp-teams="<%= json_escape(application.camps.includes(:camp_teams).map { |camp| { id: camp.id, name: camp.name, teams: camp.camp_teams.ordered.map { |camp_team| { id: camp_team.id, name: camp_team.name, responsible_slots: camp_team.responsible_slots } } } }.to_json) %>"
+                  data-assigned-camp-id="<%= application.assigned_camp&.id %>"
+                  data-assigned-camp-name="<%= application.assigned_camp&.name %>"
+                  data-assigned-camp-team-id="<%= application.assigned_camp_team_id %>"
+                  data-assigned-team="<%= application.assigned_camp_team&.name %>"
+                  data-assigned-as-responsible="<%= application.assigned_as_responsible? ? 'true' : 'false' %>"
+                  data-team="<%= application.team_preference %>"
+                  data-responsible="<%= application.responsible? ? 'Ja' : 'Nein' %>"
+                  data-motivation="<%= application.motivation.to_s.gsub('"', '&quot;') %>"
+                  data-comment="<%= application.comment.to_s.gsub('"', '&quot;') %>"
+                  data-health="<%= application.health_restrictions? ? 'Ja' : 'Nein' %>"
+                  data-health-details="<%= application.health_restrictions_details.to_s.gsub('"', '&quot;') %>"
+                >
+                  <div>
+                    <p class="font-medium text-slate-900 dark:text-slate-100">
+                      <%= application.user.first_name %> <%= application.user.last_name %>
+                    </p>
+                    <p class="text-slate-500 dark:text-slate-400">
+                      <%= application.user.gender == "male" ? "m" : application.user.gender == "female" ? "w" : "-" %>
+                    </p>
+                  </div>
+
+                  <% if application.assigned_as_responsible? %>
+                    <span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                      verantwortlich
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Noch niemand eingeteilt.</p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div data-application-modal-target="overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+    <div class="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-bold">Anmeldung</h3>
+        <button data-action="click->application-modal#close" class="text-xl">×</button>
+      </div>
+
+      <div data-application-modal-target="content" class="mt-4 text-sm text-slate-700 dark:text-slate-300">
+      </div>
+    </div>
+  </div>
+  <% if params[:modal] == "edit_team" && @camp_team %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Team bearbeiten</h3>
+          <%= link_to "×", admin_camp_teams_path(@camp), class: "text-2xl leading-none text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" %>
+        </div>
+
+        <%= form_with model: @camp_team, url: admin_camp_team_path(@camp, @camp_team), method: :patch, class: "mt-6 space-y-4" do |f| %>
+          <div>
+            <%= f.label :name, "Teamname", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+            <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <%= f.label :capacity, "Gesamtplaetze", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.number_field :capacity, min: 0, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+
+            <div>
+              <%= f.label :responsible_slots, "Verantwortlichen-Plaetze", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.number_field :responsible_slots, min: 0, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <%= f.label :male_slots, "Maennliche Plaetze", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.number_field :male_slots, min: 0, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+
+            <div>
+              <%= f.label :female_slots, "Weibliche Plaetze", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.number_field :female_slots, min: 0, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.label :position, "Reihenfolge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+            <%= f.number_field :position, min: 0, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-2">
+            <%= link_to "Abbrechen", admin_camp_teams_path(@camp), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

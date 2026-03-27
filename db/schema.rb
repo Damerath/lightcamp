@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_26_104500) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_26_113000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,9 +38,26 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_26_104500) do
     t.text "health_restrictions_details"
     t.bigint "assigned_camp_id"
     t.string "assigned_team"
+    t.bigint "assigned_camp_team_id"
+    t.boolean "assigned_as_responsible", default: false, null: false
     t.index ["assigned_camp_id"], name: "index_camp_applications_on_assigned_camp_id"
+    t.index ["assigned_camp_team_id"], name: "index_camp_applications_on_assigned_camp_team_id"
     t.index ["user_id"], name: "index_camp_applications_on_user_id"
     t.index ["year_id"], name: "index_camp_applications_on_year_id"
+  end
+
+  create_table "camp_teams", force: :cascade do |t|
+    t.bigint "camp_id", null: false
+    t.string "name", null: false
+    t.integer "capacity", default: 0, null: false
+    t.integer "male_slots", default: 0, null: false
+    t.integer "female_slots", default: 0, null: false
+    t.integer "responsible_slots", default: 0, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["camp_id", "name"], name: "index_camp_teams_on_camp_id_and_name", unique: true
+    t.index ["camp_id"], name: "index_camp_teams_on_camp_id"
   end
 
   create_table "camps", force: :cascade do |t|
@@ -81,8 +98,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_26_104500) do
 
   add_foreign_key "camp_application_choices", "camp_applications"
   add_foreign_key "camp_application_choices", "camps"
+  add_foreign_key "camp_applications", "camp_teams", column: "assigned_camp_team_id"
   add_foreign_key "camp_applications", "camps", column: "assigned_camp_id"
   add_foreign_key "camp_applications", "users"
   add_foreign_key "camp_applications", "years"
+  add_foreign_key "camp_teams", "camps"
   add_foreign_key "camps", "years"
 end

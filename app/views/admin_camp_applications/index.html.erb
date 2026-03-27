@@ -1,15 +1,13 @@
-<div
-  data-controller="application-modal"
-  data-application-modal-team-options-value="<%= json_escape(@team_options.to_json) %>"
-  class="space-y-8"
->
-  <div>
-    <h2 class="text-2xl font-bold">Camp-Anmeldungen</h2>
-    <p class="mt-1 text-slate-600 dark:text-slate-400">
-      Hier siehst du alle eingegangenen Anmeldungen.
-    </p>
+<div data-controller="application-modal" class="space-y-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold">Camp-Anmeldungen</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        Hier siehst du alle eingegangenen Anmeldungen.
+      </p>
+    </div>
+    <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
   </div>
-
   <div>
     <%= form_with url: admin_camp_applications_path, method: :get, local: true, class: "flex items-center gap-3" do %>
       <label for="year_id" class="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -30,7 +28,7 @@
     <div>Camps</div>
     <div>Team</div>
     <div>Bemerkung</div>
-    <div>Zuteilung</div>
+    <div>Einteilung</div>
   </div>
 
   <div class="space-y-3">
@@ -44,11 +42,17 @@
         data-email="<%= application.user.email %>"
         data-birthdate="<%= application.user.birthdate.present? ? l(application.user.birthdate) : '-' %>"
         data-phone="<%= application.user.phone %>"
+        data-first-aider="<%= application.user.first_aider? ? 'Ja' : 'Nein' %>"
+        data-sound-tech="<%= application.user.sound_tech? ? 'Ja' : 'Nein' %>"
+        data-instruments="<%= application.user.instruments.to_s.gsub('"', '&quot;') %>"
+        data-other-skills="<%= application.user.other_skills.to_s.gsub('"', '&quot;') %>"
         data-camps="<%= application.camps.map(&:name).join(', ') %>"
-        data-available-camps="<%= json_escape(application.camps.map { |camp| { id: camp.id, name: camp.name } }.to_json) %>"
-        data-assigned-camp-id="<%= application.assigned_camp_id %>"
+        data-camp-teams="<%= json_escape(application.camps.includes(:camp_teams).map { |camp| { id: camp.id, name: camp.name, teams: camp.camp_teams.ordered.map { |team| { id: team.id, name: team.name, responsible_slots: team.responsible_slots } } } }.to_json) %>"
+        data-assigned-camp-id="<%= application.assigned_camp&.id %>"
         data-assigned-camp-name="<%= application.assigned_camp&.name %>"
-        data-assigned-team="<%= application.assigned_team %>"
+        data-assigned-camp-team-id="<%= application.assigned_camp_team_id %>"
+        data-assigned-team="<%= application.assigned_camp_team&.name %>"
+        data-assigned-as-responsible="<%= application.assigned_as_responsible? ? 'true' : 'false' %>"
         data-team="<%= application.team_preference %>"
         data-responsible="<%= application.responsible? ? 'Ja' : 'Nein' %>"
         data-motivation="<%= application.motivation.to_s.gsub('"', '&quot;') %>"
@@ -78,7 +82,7 @@
 
         <div class="text-sm text-emerald-500 dark:text-emerald-400">
           <% if application.confirmed? %>
-            <%= application.assigned_camp.name %><%= application.assigned_team.present? ? " - #{application.assigned_team}" : "" %>
+            <%= application.assigned_camp.name %> - <%= application.assigned_camp_team.name %><%= application.assigned_as_responsible? ? " (verantwortlich)" : "" %>
           <% end %>
         </div>
       </div>
