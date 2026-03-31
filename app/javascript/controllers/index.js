@@ -10,3 +10,5 @@ import CampApplicationController from "./camp_application_controller"
 application.register("camp-application", CampApplicationController)
 import ApplicationModalController from "./application_modal_controller"
 application.register("application-modal", ApplicationModalController)
+import DatepickerController from "./datepicker_controller"
+application.register("datepicker", DatepickerController)

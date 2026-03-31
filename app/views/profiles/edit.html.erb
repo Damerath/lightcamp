@@ -6,7 +6,7 @@
         Bitte vervollständige deine Daten, bevor du dich für ein Camp anmelden kannst.
       </p>
     </div>
-    <%= link_to "Zur Dashboard", root_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    <%= link_to "Zur Dashboard", root_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
   </div>
 
   <% if @user.errors.any? %>
@@ -29,30 +29,44 @@
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
           <%= f.label :first_name, "Vorname", class: "block text-sm font-medium" %>
-          <%= f.text_field :first_name, class: "w-full rounded-lg border px-3 py-2" %>
+          <%= f.text_field :first_name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
 
         <div>
           <%= f.label :last_name, "Nachname", class: "block text-sm font-medium" %>
-          <%= f.text_field :last_name, class: "w-full rounded-lg border px-3 py-2" %>
+          <%= f.text_field :last_name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
           <%= f.label :gender, "Geschlecht", class: "block text-sm font-medium" %>
-          <%= f.select :gender, [["Männlich", "male"], ["Weiblich", "female"]], { prompt: "Bitte wählen" }, class: "w-full rounded-lg border px-3 py-2" %>
+          <%= f.select :gender, [["Männlich", "male"], ["Weiblich", "female"]], { prompt: "Bitte wählen" }, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
 
         <div>
           <%= f.label :birthdate, "Geburtsdatum", class: "block text-sm font-medium" %>
-          <%= f.date_field :birthdate, class: "w-full rounded-lg border px-3 py-2" %>
+          <div class="relative" data-controller="datepicker">
+            <%= f.hidden_field :birthdate, value: @user.birthdate&.strftime("%Y-%m-%d"), data: { datepicker_target: "value" } %>
+            <input
+              type="text"
+              value="<%= @user.birthdate&.strftime('%d.%m.%Y') %>"
+              class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+              autocomplete="off"
+              placeholder="TT.MM.JJJJ"
+              data-datepicker-target="input"
+              data-action="click->datepicker#open focus->datepicker#open"
+            >
+            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+              <i data-lucide="calendar-days" class="h-4 w-4"></i>
+            </button>
+          </div>
         </div>
       </div>
 
       <div>
         <%= f.label :phone, "Telefonnummer", class: "block text-sm font-medium" %>
-        <%= f.text_field :phone, class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.text_field :phone, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
     </div>
 
@@ -60,24 +74,32 @@
     <div class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow space-y-4">
       <h3 class="text-lg font-semibold">Fähigkeiten & Qualifikationen</h3>
 
-      <div class="flex items-center gap-2">
-        <%= f.check_box :first_aider %>
-        <%= f.label :first_aider, "Ersthelfer" %>
-      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-red-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-red-500 dark:hover:bg-slate-800">
+          <%= f.check_box :first_aider, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+          <div>
+            <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Ersthelfer</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Ich habe einen gültigen Ersthelferschein</p>
+          </div>
+        </label>
 
-      <div class="flex items-center gap-2">
-        <%= f.check_box :sound_tech %>
-        <%= f.label :sound_tech, "Tontechnik" %>
+        <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-red-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-red-500 dark:hover:bg-slate-800">
+          <%= f.check_box :sound_tech, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+          <div>
+            <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Tontechnik</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Ich kann bei Technik, Aufbau oder Ton unterstuetzen.</p>
+          </div>
+        </label>
       </div>
 
       <div>
         <%= f.label :instruments, "Instrumente", class: "block text-sm font-medium" %>
-        <%= f.text_field :instruments, placeholder: "z. B. Gitarre, Klavier", class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.text_field :instruments, placeholder: "z. B. Gitarre, Klavier", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
       <div>
         <%= f.label :other_skills, "Sonstige Fähigkeiten", class: "block text-sm font-medium" %>
-        <%= f.text_area :other_skills, rows: 3, class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.text_area :other_skills, rows: 3, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
     </div>
 

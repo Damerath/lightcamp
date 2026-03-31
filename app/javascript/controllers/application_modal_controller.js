@@ -86,9 +86,12 @@ export default class extends Controller {
             </div>
           </div>
 
-          <label class="flex items-center gap-2 text-sm">
-            <input type="checkbox" name="camp_application[assigned_as_responsible]" value="1" ${el.dataset.assignedAsResponsible === "true" ? "checked" : ""} data-role="assigned-responsible-checkbox">
-            Als verantwortliche Person zuteilen
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-red-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-red-500 dark:hover:bg-slate-800" data-role="assigned-responsible-card">
+            <input type="checkbox" name="camp_application[assigned_as_responsible]" value="1" ${el.dataset.assignedAsResponsible === "true" ? "checked" : ""} class="mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" data-role="assigned-responsible-checkbox">
+            <div>
+              <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Als verantwortliche Person zuteilen</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Nur sinnvoll, wenn das gewaehlte Team Verantwortlichen-Plaetze hat.</p>
+            </div>
           </label>
           <p class="text-xs text-slate-500 dark:text-slate-400" data-role="responsible-hint"></p>
 
@@ -165,7 +168,8 @@ export default class extends Controller {
   refreshResponsibleHint() {
     const hint = this.contentTarget.querySelector('[data-role="responsible-hint"]')
     const checkbox = this.contentTarget.querySelector('[data-role="assigned-responsible-checkbox"]')
-    if (!hint || !checkbox) return
+    const card = this.contentTarget.querySelector('[data-role="assigned-responsible-card"]')
+    if (!hint || !checkbox || !card) return
 
     const selectedCamp = this.campTeams.find((camp) => String(camp.id) === String(this.selectedCampId))
     const selectedTeam = selectedCamp?.teams.find((team) => String(team.id) === String(this.selectedCampTeamId))
@@ -174,18 +178,21 @@ export default class extends Controller {
       hint.textContent = "Waehle zuerst ein Team aus."
       checkbox.disabled = true
       checkbox.checked = false
+      this.updateResponsibleCardState(card, true)
       return
     }
 
     if (selectedTeam.responsible_slots > 0) {
       hint.textContent = `Dieses Team hat ${selectedTeam.responsible_slots} Verantwortlichen-Platz${selectedTeam.responsible_slots === 1 ? "" : "e"}.`
       checkbox.disabled = false
+      this.updateResponsibleCardState(card, false)
       return
     }
 
     hint.textContent = "Dieses Team hat keinen Verantwortlichen-Platz."
     checkbox.disabled = true
     checkbox.checked = false
+    this.updateResponsibleCardState(card, true)
   }
 
   syncHiddenAssignmentField() {
@@ -193,6 +200,19 @@ export default class extends Controller {
     if (!hiddenField) return
 
     hiddenField.value = this.selectedCampTeamId || ""
+  }
+
+  updateResponsibleCardState(card, disabled) {
+    const disabledClasses = ["cursor-not-allowed", "opacity-60", "hover:border-slate-300", "hover:bg-white", "dark:hover:border-slate-600", "dark:hover:bg-slate-900"]
+    const enabledClasses = ["cursor-pointer", "hover:border-red-300", "hover:bg-slate-50", "dark:hover:border-red-500", "dark:hover:bg-slate-800"]
+
+    card.classList.remove(...disabledClasses, ...enabledClasses)
+
+    if (disabled) {
+      card.classList.add(...disabledClasses)
+    } else {
+      card.classList.add(...enabledClasses)
+    }
   }
 
   csrfToken() {

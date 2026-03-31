@@ -7,7 +7,7 @@
         Melde dich als Mitarbeiter für Lightcamp an!
       </p>
     </div>
-    <%= link_to "Zum Dashboard", root_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    <%= link_to "Zum Dashboard", root_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
   </div>
   <%= form_with model: @camp_application, url: camp_application_path, local: true, class: "space-y-6" do |f| %>
     <div class="rounded-lg bg-white dark:bg-slate-800 p-6 shadow space-y-4">
@@ -19,10 +19,10 @@
         <%= f.hidden_field :year_id, value: @active_year.id %>
 
         <% @active_year.camps.each do |camp| %>
-          <label class="flex items-center justify-between gap-4 rounded-lg border px-3 py-2">
-            <div class="flex items-center gap-2">
-              <%= check_box_tag "camp_application[camp_ids][]", camp.id, false %>
-              <span><%= camp.name %></span>
+          <label class="flex w-full cursor-pointer items-center justify-between gap-4 rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800">
+            <div class="flex items-center gap-3">
+              <%= check_box_tag "camp_application[camp_ids][]", camp.id, false, class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+              <span class="text-sm font-medium"><%= camp.name %></span>
             </div>
 
             <% if @already_applied_camp_ids.include?(camp.id) %>
@@ -36,12 +36,26 @@
 
       <div>
         <%= f.label :commitment, "Verbindlichkeit", class: "block text-sm font-medium" %>
-        <%= f.select :commitment, [["Verbindlich", "binding"], ["Noch unsicher", "unsure"]], { prompt: "Bitte wählen" }, class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.select :commitment, [["Verbindlich", "binding"], ["Noch unsicher", "unsure"]], { prompt: "Bitte wählen" }, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
       <div>
         <%= f.label :uncertain_until, "Falls noch unsicher: Ab wann können wir mit einer festen Antwort rechnen?", class: "block text-sm font-medium" %>
-        <%= f.date_field :uncertain_until, class: "w-full rounded-lg border px-3 py-2" %>
+        <div class="relative" data-controller="datepicker">
+          <%= f.hidden_field :uncertain_until, value: @camp_application.uncertain_until&.strftime("%Y-%m-%d"), data: { datepicker_target: "value" } %>
+          <input
+            type="text"
+            value="<%= @camp_application.uncertain_until&.strftime('%d.%m.%Y') %>"
+            class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+            autocomplete="off"
+            placeholder="TT.MM.JJJJ"
+            data-datepicker-target="input"
+            data-action="click->datepicker#open focus->datepicker#open"
+          >
+          <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+            <i data-lucide="calendar-days" class="h-4 w-4"></i>
+          </button>
+        </div>
       </div>
 
       <div>
@@ -49,38 +63,44 @@
         <%= f.select :team_preference,
           CampApplication::TEAM_OPTIONS,
           { prompt: "Bitte wählen" },
-          class: "w-full rounded-lg border px-3 py-2" %>
+          class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
-      <div class="flex items-center gap-2">
-        <%= f.check_box :responsible %>
-        <%= f.label :responsible, "Ich bin bereit, in meinem Bereich Verantwortung zu übernehmen." %>
-      </div>
+      <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:bg-slate-800">
+        <%= f.check_box :responsible, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+        <div>
+          <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Verantwortung übernehmen</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Ich bin bereit, in meinem Bereich Verantwortung zu uebernehmen.</p>
+        </div>
+      </label>
 
       <div>
         <%= f.label :comment, "Bemerkung zur Teamauswahl", class: "block text-sm font-medium" %>
-        <%= f.text_area :comment, rows: 3, class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.text_area :comment, rows: 3, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
-      <div class="flex items-center gap-2">
-        <%= f.check_box :health_restrictions %>
-        <%= f.label :health_restrictions, "Ich habe Allergien oder gesundheitliche Einschränkungen." %>
-      </div>
+      <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:bg-slate-700">
+        <%= f.check_box :health_restrictions, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+        <div>
+          <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Gesundheitliche Einschränkungen</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Ich habe Allergien oder gesundheitliche Einschränkungen.</p>
+        </div>
+      </label>
 
       <div>
         <%= f.label :health_restrictions_details, "Falls ja: Welche?", class: "block text-sm font-medium" %>
-        <%= f.text_area :health_restrictions_details, rows: 3, class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.text_area :health_restrictions_details, rows: 3, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
       <div>
         <%= f.label :motivation, "Warum willst du mitmachen?", class: "block text-sm font-medium" %>
-        <%= f.text_area :motivation, rows: 4, class: "w-full rounded-lg border px-3 py-2" %>
+        <%= f.text_area :motivation, rows: 4, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
     </div>
 
     <div class="flex justify-end">
-      <%= f.submit "Anmeldung speichern", class: "rounded-lg bg-red-600 px-5 py-2 text-white hover:bg-red-700" %>
+      <%= f.submit "Anmeldung speichern", class: "rounded-lg bg-blue-400 px-5 py-2 text-white hover:bg-red-700" %>
     </div>
   <% end %>
 </div>
