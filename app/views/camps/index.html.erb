@@ -2,25 +2,47 @@
   <div>
     <h2 class="text-2xl font-bold">Meine Camps</h2>
     <p class="mt-1 text-slate-600 dark:text-slate-400">
-      Hier findest du deine Camps nach Jahr sortiert.
+      Hier findest du deine Teamseiten nach Jahr sortiert.
     </p>
   </div>
 
-  <% @years.each do |year| %>
-    <div>
-      <h3 class="mb-3 text-lg font-semibold">
-        <%= year.name %>
-      </h3>
+  <% if @assigned_teams_by_year.any? %>
+    <% @assigned_teams_by_year.sort_by { |year, _| year.name.to_s }.reverse_each do |year, applications| %>
+      <div>
+        <h3 class="mb-3 text-lg font-semibold">
+          <%= year.name %>
+        </h3>
 
-      <div class="grid gap-4 sm:grid-cols-<%= [year.camps.count, 3].min %>">
-        <% year.camps.each do |camp| %>
-          <div class="rounded-lg bg-white dark:bg-slate-800 p-5 shadow">
-            <h4 class="font-semibold text-slate-900 dark:text-slate-100">
-              <%= camp.name %>
-            </h4>
-          </div>
-        <% end %>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <% applications.sort_by { |application| [application.assigned_camp.name.to_s, application.assigned_camp_team.workspace_label.to_s] }.each do |application| %>
+            <% workspace_team = application.assigned_camp_team.workspace_team %>
+            <%= link_to camp_team_page_path(workspace_team.camp, workspace_team), class: "rounded-lg bg-white dark:bg-slate-800 p-5 shadow transition hover:ring-1 hover:ring-blue-400" do %>
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h4 class="font-semibold text-slate-900 dark:text-slate-100">
+                    <%= application.assigned_camp_team.workspace_label %>
+                  </h4>
+                  <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    <%= application.assigned_camp_team.year_shared_team? ? "Bereich für #{application.assigned_camp.year.name}" : application.assigned_camp.name %>
+                  </p>
+                </div>
+
+                <% if application.assigned_as_responsible? %>
+                  <span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                    verantwortlich
+                  </span>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
       </div>
+    <% end %>
+  <% else %>
+    <div class="rounded-lg bg-white p-5 shadow dark:bg-slate-800">
+      <p class="text-slate-500 dark:text-slate-300">
+        Du bist aktuell noch keinem Team zugeteilt.
+      </p>
     </div>
   <% end %>
 </div>

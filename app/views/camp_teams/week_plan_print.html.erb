@@ -1,0 +1,110 @@
+<div class="space-y-6 week-plan-print">
+  <div class="print-toolbar flex items-center justify-between gap-4 border-b border-slate-200 pb-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500">
+        <%= @camp.year.name %> · <%= @camp.name %>
+      </p>
+      <h1 class="text-3xl font-bold text-slate-900">Wochenplan <%= @camp_team.workspace_label %></h1>
+      <p class="mt-1 text-sm text-slate-600">
+        Druckansicht im Querformat ohne Bearbeitungs-Elemente.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button type="button" onclick="window.print()" class="inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
+        Drucken
+      </button>
+      <% back_path = current_user&.admin? ? admin_camp_team_page_path(@camp, @camp_team, section: "week_plan") : camp_team_page_path(@camp, @camp_team, section: "week_plan") %>
+      <%= link_to "Zurueck", back_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" %>
+    </div>
+  </div>
+
+  <% if @camp_program_week_dates.blank? %>
+    <div class="rounded-2xl border border-dashed border-slate-300 px-6 py-10 text-center text-slate-500">
+      Fuer dieses Camp ist noch kein Von-/Bis-Datum hinterlegt.
+    </div>
+  <% else %>
+    <% timeline_start_hour = 7 %>
+    <% timeline_end_hour = 24 %>
+    <% hour_height = 52 %>
+    <% timeline_height = (timeline_end_hour - timeline_start_hour) * hour_height %>
+    <% time_column_width = 4.25 %>
+    <% day_column_width = @camp_program_week_dates.size >= 8 ? 8.7 : 9.4 %>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-300 bg-slate-300" style="page-break-inside: avoid;">
+      <div class="grid gap-px" style="grid-template-columns: <%= time_column_width %>rem repeat(<%= @camp_program_week_dates.size %>, minmax(<%= day_column_width %>rem, 1fr));">
+        <div class="bg-slate-100 px-2 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
+          Zeit
+        </div>
+
+        <% @camp_program_week_dates.each do |planned_on| %>
+          <% week_day = @camp_program_week_days_by_date[planned_on] %>
+          <div class="bg-slate-100 px-2 py-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-sm font-semibold text-slate-900"><%= l(planned_on, format: "%d.%m.") %></p>
+                <p class="text-[11px] text-slate-500"><%= l(planned_on, format: "%A") %></p>
+              </div>
+              <% if week_day&.label.present? %>
+                <span class="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-medium text-slate-700"><%= week_day.label %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="relative bg-white" style="height: <%= timeline_height %>px;">
+          <% (timeline_start_hour..timeline_end_hour).each do |hour| %>
+            <% top = (hour - timeline_start_hour) * hour_height %>
+            <% break if hour == timeline_end_hour %>
+            <div class="absolute inset-x-0 border-t border-slate-200" style="top: <%= top %>px;"></div>
+            <div class="absolute left-0 -translate-y-1/2 px-2 text-xs font-medium text-slate-500" style="top: <%= top %>px;">
+              <%= format("%02d:00", hour) %>
+            </div>
+          <% end %>
+        </div>
+
+        <% @camp_program_week_dates.each do |planned_on| %>
+          <% week_day = @camp_program_week_days_by_date[planned_on] %>
+          <% blocks = week_day.present? ? week_day.camp_program_week_blocks.ordered.select(&:visible_to_others?) : [] %>
+
+          <div class="relative bg-white" style="height: <%= timeline_height %>px;">
+            <% (timeline_start_hour..timeline_end_hour).each do |hour| %>
+              <% top = (hour - timeline_start_hour) * hour_height %>
+              <% break if hour == timeline_end_hour %>
+              <div class="absolute inset-x-0 border-t border-slate-100" style="top: <%= top %>px;"></div>
+            <% end %>
+
+            <% if blocks.empty? %>
+              <div class="absolute inset-x-2 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-2 py-2 text-[11px] text-slate-500" style="top: 0.5rem;">
+                Noch nichts geplant
+              </div>
+            <% else %>
+              <% blocks.each_with_index do |block, index| %>
+                <% next_start = blocks[index + 1]&.starts_at_minutes || (timeline_end_hour * 60) %>
+                <% block_start = [[block.starts_at_minutes, timeline_start_hour * 60].max, timeline_end_hour * 60].min %>
+                <% block_end = [[next_start, block_start + 30].max, timeline_end_hour * 60].min %>
+                <% top = ((block_start - (timeline_start_hour * 60)) / 60.0) * hour_height %>
+                <% height = [((block_end - block_start) / 60.0) * hour_height - 4, 18].max %>
+                <% compact_block = height < 42 %>
+
+                <div class="absolute inset-x-1.5 overflow-hidden rounded-lg border px-2 py-1.5 shadow-sm <%= block.color_card_classes %>" style="top: <%= top + 2 %>px; height: <%= height %>px;">
+                  <% if compact_block %>
+                    <div class="flex items-center gap-1.5">
+                      <p class="shrink-0 text-[10px] font-semibold opacity-80"><%= block.starts_at_label %></p>
+                      <p class="truncate text-[11px] font-semibold leading-tight"><%= block.title %></p>
+                    </div>
+                  <% else %>
+                    <p class="text-[10px] font-semibold opacity-80"><%= block.starts_at_label %></p>
+                    <div class="mt-0.5 flex items-start justify-between gap-1.5">
+                      <p class="min-w-0 text-[11px] font-semibold leading-tight"><%= block.title %></p>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -15,6 +15,10 @@ class User < ApplicationRecord
     phone.present?
   end
 
+  def display_name
+    [first_name, last_name].compact.join(" ").presence || email
+  end
+
   private
 
   def set_default_role

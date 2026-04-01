@@ -1,0 +1,41 @@
+<div class="print-toolbar mb-4 flex items-center justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">Küchenplan</h1>
+    <p class="mt-1 text-sm text-slate-500">
+      <%= @camp.name %> · <%= @camp_team.workspace_label %>
+    </p>
+  </div>
+  <div class="flex gap-3">
+    <% back_path = current_user&.admin? ? admin_camp_team_page_path(@camp, @camp_team, section: "kitchen_plan") : camp_team_page_path(@camp, @camp_team, section: "kitchen_plan") %>
+    <%= link_to "Zurück", back_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" %>
+    <button onclick="window.print()" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">Drucken</button>
+  </div>
+</div>
+
+<div class="rounded-2xl border border-slate-300 bg-white">
+  <% if @camp_kitchen_day_plans.any? %>
+    <div class="grid overflow-hidden" style="grid-template-columns: repeat(<%= @camp_kitchen_day_plans.size %>, minmax(0, 1fr));">
+      <% @camp_kitchen_day_plans.each do |day_plan| %>
+        <div class="<%= day_plan == @camp_kitchen_day_plans.first ? '' : 'border-l border-slate-300' %>">
+          <div class="border-b border-slate-300 bg-slate-50 px-4 py-3">
+            <p class="text-sm font-semibold text-slate-900"><%= l(day_plan.planned_on, format: "%A") %></p>
+            <p class="text-xs text-slate-500"><%= l(day_plan.planned_on, format: "%d.%m.%Y") %></p>
+          </div>
+          <% [
+            ["Frühstück", day_plan.breakfast],
+            ["Mittag", day_plan.lunch],
+            ["Abendessen", day_plan.dinner],
+            ["Snack", day_plan.snack]
+          ].each_with_index do |(label, value), index| %>
+            <div class="<%= index.zero? ? '' : 'border-t border-slate-200' %> px-4 py-3">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500"><%= label %></p>
+              <div class="mt-2 min-h-[5.5rem] whitespace-pre-wrap text-sm text-slate-900"><%= value.presence || " " %></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="px-4 py-6 text-sm text-slate-500">Kein Küchenplan vorhanden.</div>
+  <% end %>
+</div>

@@ -1,0 +1,114 @@
+<div class="space-y-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Listenverwaltung</p>
+      <h2 class="text-2xl font-bold">Sportmaterial</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        Hier pflegst du die zentrale Materialliste für neue Sport-Teams.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Zur Teamverwaltung", admin_team_templates_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+    <div>
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Default-Materialliste</h3>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+        Diese Standardliste wird für neue Sport-Teams als Ausgangspunkt übernommen.
+      </p>
+    </div>
+
+    <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+      <div class="grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_8rem_auto] gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100">
+        <% next_direction = @sort_column == "name" && @sort_direction == "asc" ? "desc" : "asc" %>
+        <div>
+          <%= link_to admin_sport_material_list_path(sort: "name", direction: next_direction), class: "inline-flex items-center gap-1 hover:text-red-600" do %>
+            <span>Gegenstand</span>
+            <% if @sort_column == "name" %>
+              <span class="text-xs"><%= @sort_direction == "asc" ? "↑" : "↓" %></span>
+            <% end %>
+          <% end %>
+        </div>
+        <% next_direction = @sort_column == "quantity" && @sort_direction == "asc" ? "desc" : "asc" %>
+        <div>
+          <%= link_to admin_sport_material_list_path(sort: "quantity", direction: next_direction), class: "inline-flex items-center gap-1 hover:text-red-600" do %>
+            <span>Menge</span>
+            <% if @sort_column == "quantity" %>
+              <span class="text-xs"><%= @sort_direction == "asc" ? "↑" : "↓" %></span>
+            <% end %>
+          <% end %>
+        </div>
+        <% next_direction = @sort_column == "storage_location" && @sort_direction == "asc" ? "desc" : "asc" %>
+        <div>
+          <%= link_to admin_sport_material_list_path(sort: "storage_location", direction: next_direction), class: "inline-flex items-center gap-1 hover:text-red-600" do %>
+            <span>Ort</span>
+            <% if @sort_column == "storage_location" %>
+              <span class="text-xs"><%= @sort_direction == "asc" ? "↑" : "↓" %></span>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="text-right">Aktionen</div>
+      </div>
+      <div class="divide-y divide-slate-200 dark:divide-slate-700">
+        <% @sport_material_items.each do |item| %>
+          <%= form_with model: item, url: admin_sport_material_item_path(item), method: :patch, class: "grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_8rem_auto] gap-3 px-4 py-3" do |f| %>
+            <div>
+              <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.text_field :quantity, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.text_field :storage_location, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="flex justify-end gap-2">
+              <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              <%= link_to "Entfernen", admin_sport_material_item_path(item), data: { turbo_method: :delete, turbo_confirm: "Default-Material wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <%= form_with model: TeamTemplateSportMaterialItem.new, url: admin_sport_material_items_path, class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_auto]" do |f| %>
+      <div>
+        <%= f.label :name, "Neues Default-Material", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :name, placeholder: "z. B. Hockeyschläger", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+      <div>
+        <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :quantity, placeholder: "z. B. 4x", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+      <div>
+        <%= f.label :storage_location, "Ort", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :storage_location, placeholder: "z. B. S8", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+      <div class="flex items-end">
+        <%= f.submit "Default-Material hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+      </div>
+    <% end %>
+
+    <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
+      <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Änderungsprotokoll</h4>
+      <div class="mt-3 space-y-2">
+        <% if @sport_material_changes.any? %>
+          <% @sport_material_changes.each do |change| %>
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-900/60">
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <span><%= l(change.created_at, format: "%d.%m.%Y %H:%M") %></span>
+                <span><%= change.actor_name %></span>
+              </div>
+              <p class="mt-1 font-medium text-slate-900 dark:text-slate-100"><%= change.material_name %></p>
+              <p class="mt-1 text-slate-600 dark:text-slate-300"><%= change.change_summary %></p>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Änderungen protokolliert.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

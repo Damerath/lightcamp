@@ -18,8 +18,10 @@
           </span>
         <% end %>
       <% end %>
-      <%= link_to "Für Camps 2026 anmelden", camp_application_path,
-        class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+      <% if @active_year.present? %>
+        <%= link_to "Für Camps #{@active_year.name} anmelden", camp_application_path,
+          class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+      <% end %>
     </div>
 
     <% unless current_user.profile_complete? %>
@@ -39,9 +41,35 @@
   <div class="bg-white dark:bg-slate-800 shadow rounded-lg shadow p-6">
     <h3 class="text-lg font-semibold mb-4">Meine Camps</h3>
 
-    <p class="text-slate-500 dark:text-slate-300">
-      Du bist aktuell noch keinem Camp zugewiesen.
-    </p>
+    <% if @active_assigned_team_applications.any? %>
+      <div class="space-y-3">
+        <% @active_assigned_team_applications.each do |application| %>
+          <% workspace_team = application.assigned_camp_team.workspace_team %>
+          <%= link_to camp_team_page_path(workspace_team.camp, workspace_team), class: "flex items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 transition hover:ring-1 hover:ring-blue-400 dark:border-slate-700" do %>
+            <div>
+              <p class="font-medium text-slate-900 dark:text-slate-100">
+                <%= application.assigned_camp_team.year_shared_team? ? "#{application.assigned_camp.year.name} · Campstory" : "#{application.assigned_camp.year.name} · #{application.assigned_camp.name}" %>
+              </p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                Teamseite <%= application.assigned_camp_team.workspace_label %>
+              </p>
+            </div>
+
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+              öffnen
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-slate-500 dark:text-slate-300">
+        <% if @active_year.present? %>
+          Du bist aktuell noch keinem Team im aktiven Camp-Jahr <%= @active_year.name %> zugewiesen.
+        <% else %>
+          Aktuell ist kein Camp-Jahr aktiv.
+        <% end %>
+      </p>
+    <% end %>
   </div>
 
 </div>

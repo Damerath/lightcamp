@@ -81,9 +81,7 @@
           <div>
             <div class="flex flex-wrap items-center gap-2">
               
-              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                <%= team.name %>
-              </h3>
+              <%= link_to team.name, admin_camp_team_page_path(@camp, team), class: "text-lg font-semibold text-slate-900 hover:text-red-600 dark:text-slate-100 dark:hover:text-red-400" %>
 
               <span class="rounded-full px-2.5 py-1 text-xs font-medium <%= total_status_class %>">
                 Ges. <%= team.assigned_count %>/<%= team.capacity %>
@@ -156,7 +154,7 @@
                   </div>
 
                   <% if application.assigned_as_responsible? %>
-                    <span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                    <span class="rounded-full px-2 py-1 text-xs font-medium text-amber-700 bg-amber-100 dark:bg-amber-900 dark:text-amber-200">
                       verantwortlich
                     </span>
                   <% end %>

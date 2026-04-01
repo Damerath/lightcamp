@@ -1,0 +1,1335 @@
+<div class="space-y-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        <%= @camp_team.year_shared_team? ? "#{@camp.year.name} · Jahresbereich" : "#{@camp.year.name} · #{@camp.name}" %>
+      </p>
+      <h2 class="text-2xl font-bold"><%= @camp_team.workspace_label %></h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        <%= if @camp_team.media_team?
+              "Gemeinsamer Medienbereich fuer Foto und Video."
+            elsif @camp_team.year_shared_team?
+              "Gemeinsamer Bereich ueber alle Freizeiten dieses Jahres."
+            else
+              "Teamseite mit gemeinsamen Infos, Links und ToDos."
+            end %>
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to "Zur Teamview", admin_camp_teams_path(@camp), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Zur Campverwaltung", admin_camps_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    </div>
+  </div>
+
+  <div class="inline-flex rounded-lg border border-slate-300 bg-white p-1 shadow-sm dark:border-slate-600 dark:bg-slate-800">
+    <% [
+      ["overview", "Übersicht"],
+      ["description", "Aufgabenbeschreibung"],
+      ["todos", "ToDos"],
+      ["shopping", "Einkaufsliste"]
+    ].each do |key, label| %>
+      <% active = @section == key %>
+      <%= link_to label, admin_camp_team_page_path(@camp, @camp_team, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @camp_team.sport_team? %>
+      <% active = @section == "sport_plan" %>
+      <%= link_to "Sportplan", admin_camp_team_page_path(@camp, @camp_team, section: "sport_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <% active = @section == "material_list" %>
+      <%= link_to "Materialliste", admin_camp_team_page_path(@camp, @camp_team, section: "material_list"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @camp_team.kitchen_team? %>
+      <% active = @section == "kitchen_plan" %>
+      <%= link_to "Küchenplan", admin_camp_team_page_path(@camp, @camp_team, section: "kitchen_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @camp_team.diy_team? %>
+      <% active = @section == "diy_plan" %>
+      <%= link_to "DIY-Plan", admin_camp_team_page_path(@camp, @camp_team, section: "diy_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @camp_team.camp_leader_team? %>
+      <% active = @section == "room_plan" %>
+      <%= link_to "Zimmerplan", admin_camp_team_page_path(@camp, @camp_team, section: "room_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @camp_team.program_team? %>
+      <% active = @section == "program" %>
+      <%= link_to "Tagesplan", admin_camp_team_page_path(@camp, @camp_team, section: "program"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @week_plan_available %>
+      <% active = @section == "week_plan" %>
+      <%= link_to "Wochenplan", admin_camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+  </div>
+
+  <% if %w[program week_plan sport_plan material_list kitchen_plan diy_plan room_plan].include?(@section) %>
+    <div class="space-y-6">
+  <% else %>
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div class="space-y-6">
+  <% end %>
+      <% if @section == "overview" %>
+        <% if @camp_team.shows_internal_meeting? %>
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Interner nächster Termin</h3>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                  Halte hier den nächsten internen Teamtermin fest.
+                </p>
+              </div>
+              <% if @camp_team.next_internal_meeting_at.present? %>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+                  <%= l(@camp_team.next_internal_meeting_at, format: :long) %>
+                </span>
+              <% end %>
+            </div>
+
+            <%= form_with model: @camp_team, url: admin_camp_team_path(@camp, @camp_team), method: :patch, class: "mt-5 space-y-4" do |f| %>
+              <%= hidden_field_tag :from, "team_page" %>
+              <%= hidden_field_tag :section, "overview" %>
+              <%= hidden_field_tag :return_to, admin_camp_team_page_path(@camp, @camp_team, section: "overview") %>
+              <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_11rem]">
+                <div>
+                  <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Datum</label>
+                  <div class="relative" data-controller="datepicker" data-datepicker-default-to-today-value="true">
+                    <%= f.hidden_field :next_internal_meeting_on, value: @camp_team.next_internal_meeting_at&.to_date&.strftime("%Y-%m-%d"), data: { datepicker_target: "value" } %>
+                    <input
+                      type="text"
+                      value="<%= @camp_team.next_internal_meeting_at&.strftime('%d.%m.%Y') %>"
+                      class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                      autocomplete="off"
+                      placeholder="TT.MM.JJJJ"
+                      data-datepicker-target="input"
+                      data-action="click->datepicker#open focus->datepicker#open"
+                    >
+                    <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+                      <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <%= f.label :next_internal_meeting_time, "Uhrzeit", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                    <%= f.select :next_internal_meeting_hour,
+                      options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @camp_team.next_internal_meeting_at&.strftime("%H")),
+                      { prompt: "Std" },
+                      class: "block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
+                    <%= f.select :next_internal_meeting_minute,
+                      options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @camp_team.next_internal_meeting_at&.strftime("%M")),
+                      { prompt: "Min" },
+                      class: "block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <%= f.submit "Termin speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Wichtige Links</h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Zentrale Default-Links kommen aus der Teamverwaltung. Alles, was du hier hinzufügst, gilt nur für dieses Camp.
+            </p>
+          </div>
+
+          <div class="mt-5 space-y-3">
+            <% if @team_template_links.any? %>
+              <% @team_template_links.each do |link| %>
+                <div class="flex items-center justify-between gap-4 rounded-lg border border-sky-200 bg-sky-50/70 px-4 py-3 dark:border-sky-900/60 dark:bg-sky-950/20">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <p class="font-medium text-slate-900 dark:text-slate-100"><%= link.title %></p>
+                      <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-900/60 dark:text-sky-200">Default</span>
+                    </div>
+                    <%= link_to link.url, link.url, target: "_blank", rel: "noreferrer", class: "text-sm text-blue-600 hover:underline dark:text-blue-400" %>
+                  </div>
+                  <%= link_to "Verwalten", admin_team_template_path(@camp_team.team_template), class: "text-sm font-medium text-sky-700 hover:text-sky-800 dark:text-sky-300" %>
+                </div>
+              <% end %>
+            <% end %>
+
+            <% if @camp_team_links.any? %>
+              <% @camp_team_links.each do |link| %>
+                <div class="flex items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <p class="font-medium text-slate-900 dark:text-slate-100"><%= link.title %></p>
+                      <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">Camp</span>
+                    </div>
+                    <%= link_to link.url, link.url, target: "_blank", rel: "noreferrer", class: "text-sm text-blue-600 hover:underline dark:text-blue-400" %>
+                  </div>
+                  <%= link_to "Entfernen", admin_camp_team_link_path(@camp, @camp_team, link), data: { turbo_method: :delete, turbo_confirm: "Link wirklich entfernen?" }, class: "text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400" %>
+                </div>
+              <% end %>
+            <% elsif @team_template_links.empty? %>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Links hinterlegt.</p>
+            <% end %>
+          </div>
+
+          <%= form_with model: CampTeamLink.new, url: admin_camp_team_links_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.3fr_auto]" do |f| %>
+            <div>
+              <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="flex items-end">
+              <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+        </div>
+      <% elsif @section == "description" %>
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Aufgabenbeschreibung</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Dieser Text ist zentral für den Team-Typ hinterlegt und gilt für alle gleich benannten Teams.
+              </p>
+            </div>
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+              Vorlage: <%= @camp_team.team_template&.name || @camp_team.name %>
+            </span>
+          </div>
+
+          <%= form_with model: @camp_team, url: admin_camp_team_path(@camp, @camp_team), method: :patch, class: "mt-5 space-y-5" do |f| %>
+            <%= hidden_field_tag :from, "team_page" %>
+            <%= hidden_field_tag :section, "description" %>
+            <%= hidden_field_tag :return_to, admin_camp_team_page_path(@camp, @camp_team, section: "description") %>
+            <div>
+              <%= f.label :custom_description, "Camp-spezifische Team-Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_area :custom_description, value: @camp_team.custom_description.presence || @camp_team.team_template&.description, rows: 14, placeholder: "Leer lassen, um den zentralen Default zu verwenden.", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <% if @camp_team.supports_responsible_description? %>
+              <div>
+                <%= f.label :custom_responsible_description, "Camp-spezifische Zusatzbeschreibung für Verantwortliche", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.text_area :custom_responsible_description, value: @camp_team.custom_responsible_description.presence || @camp_team.team_template&.responsible_description, rows: 10, placeholder: "Leer lassen, um den zentralen Default zu verwenden.", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+            <% end %>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/30 dark:text-slate-300">
+              Der zentrale Default wird unter <%= link_to "Teamverwaltung", admin_team_templates_path, class: "font-medium text-red-600 hover:text-red-700 dark:text-red-400" %> gepflegt. Alles, was du hier einträgst, gilt nur für <span class="font-medium"><%= @camp.name %></span>.
+            </div>
+            <div class="flex justify-end">
+              <%= f.submit "Aufgabenbeschreibung speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+        </div>
+      <% elsif @section == "todos" %>
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">ToDo-Liste</h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Verwalte hier die camp-spezifischen Aufgaben des Teams.
+            </p>
+          </div>
+
+          <div class="mt-5 space-y-3">
+            <% if @camp_team_todos.any? %>
+              <% @camp_team_todos.each do |todo| %>
+                <div class="flex items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
+                  <div class="flex items-center gap-3">
+                    <%= form_with model: todo, url: admin_camp_team_todo_path(@camp, @camp_team, todo), method: :patch do |f| %>
+                      <%= f.check_box :completed, { checked: todo.completed, onchange: "this.form.requestSubmit()", class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600 dark:border-slate-600 dark:bg-slate-900" }, "1", "0" %>
+                    <% end %>
+                    <p class="<%= todo.completed? ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-900 dark:text-slate-100' %>">
+                      <%= todo.title %>
+                    </p>
+                  </div>
+                  <%= link_to "Entfernen", admin_camp_team_todo_path(@camp, @camp_team, todo), data: { turbo_method: :delete, turbo_confirm: "ToDo wirklich entfernen?" }, class: "text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400" %>
+                </div>
+              <% end %>
+            <% else %>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine ToDos angelegt.</p>
+            <% end %>
+          </div>
+
+          <%= form_with model: CampTeamTodo.new, url: admin_camp_team_todos_path(@camp, @camp_team), class: "mt-5 flex gap-3" do |f| %>
+            <%= f.text_field :title, placeholder: "Neue Aufgabe...", class: "flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+          <% end %>
+        </div>
+      <% elsif @section == "sport_plan" %>
+        <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+        <div class="space-y-4">
+          <div class="rounded-2xl bg-white p-4 shadow dark:bg-slate-800">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Eingeteilte Mitarbeiter</h3>
+                <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Kompakter Teamüberblick für den Sportplan.</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <% if @assigned_applications.any? %>
+                  <% @assigned_applications.each do |application| %>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200">
+                      <span><%= [application.user.first_name, application.user.last_name].compact.join(" ").presence || application.user.email %></span>
+                      <% if application.assigned_as_responsible? %>
+                        <span class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">V</span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% else %>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">Noch niemand eingeteilt.</p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Sportplan</h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Freisport und Pflichsport im schnellen Wochenblick pro Camptag.
+            </p>
+          </div>
+
+          <% if @camp.day_range.blank? %>
+            <div class="mt-5 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              Bitte pflegt zuerst beim Camp ein Von- und Bis-Datum.
+            </div>
+          <% else %>
+            <div class="mt-5">
+              <div class="grid overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 dark:border-slate-700 dark:bg-slate-900/30" style="grid-template-columns: repeat(<%= @camp_sport_day_plans.size %>, minmax(0, 1fr));">
+                <% @camp_sport_day_plans.each do |sport_day_plan| %>
+                  <div class="<%= sport_day_plan == @camp_sport_day_plans.first ? '' : 'border-l border-slate-200 dark:border-slate-700' %> p-4">
+                    <div class="border-b border-slate-200 pb-3 dark:border-slate-700">
+                      <p class="text-sm font-semibold text-slate-900 dark:text-slate-100"><%= l(sport_day_plan.planned_on, format: "%A") %></p>
+                      <p class="text-xs text-slate-500 dark:text-slate-400"><%= l(sport_day_plan.planned_on, format: "%d.%m.%Y") %></p>
+                    </div>
+
+                    <%= form_with model: sport_day_plan, url: admin_camp_sport_day_plan_path(@camp, @camp_team, sport_day_plan), method: :patch, class: "mt-4 space-y-3" do |f| %>
+                      <div>
+                        <%= f.label :free_sport, "Freisport", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                        <%= f.text_area :free_sport, rows: 3, placeholder: "z. B. Volleyball, Frisbee, Basketball", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      </div>
+                      <div>
+                        <%= f.label :required_sport, "Pflichsport", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                        <%= f.text_area :required_sport, rows: 3, placeholder: "z. B. Stationenlauf oder Turnier", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      </div>
+                      <div class="flex justify-end pt-0.5">
+                        <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Turniervorlage</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Feste Vorlage mit 10 Runden. Ihr passt nur Zeit, Gruppennamen und Stationsnamen an.
+              </p>
+            </div>
+            <%= link_to "Druckansicht", admin_camp_team_sport_tournament_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+          </div>
+
+          <div class="mt-5 space-y-5">
+          <%= form_with model: @camp_sport_tournament_plan, url: admin_camp_sport_tournament_plan_path(@camp, @camp_team), method: :patch, class: "space-y-5" do |f| %>
+            <div class="grid gap-4 xl:grid-cols-[11rem_12rem_minmax(0,1fr)]">
+              <div>
+                <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Startzeit</label>
+                <div class="grid grid-cols-[4.75rem_0.2rem_4.75rem] items-center gap-2">
+                  <%= f.select :start_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @camp_sport_tournament_plan.start_hour), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
+                  <%= f.select :start_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @camp_sport_tournament_plan.start_minute), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+              </div>
+              <div>
+                <%= f.label :round_interval_minutes, "Rundenabstand", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.select :round_interval_minutes, options_for_select([10, 15, 20, 25, 30].map { |minutes| ["#{minutes} Minuten", minutes] }, @camp_sport_tournament_plan.round_interval_minutes), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :round_note, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.text_field :round_note, placeholder: CampSportTournamentPlan::DEFAULT_ROUND_NOTE, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-2">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
+                <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Gruppennamen</h4>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Nur den allgemeinen Namen eintragen. `J` und `M` werden automatisch ergänzt.</p>
+                <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+                  <% 5.times do |index| %>
+                    <% number = index + 1 %>
+                    <div>
+                      <%= f.label :"group#{number}_name", "Gruppe #{number}", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                      <%= f.text_field :"group#{number}_name", placeholder: "Gruppe #{number}", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
+                <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Stationsnamen</h4>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Hier benennt ihr die Stationen für die Druckvorlage um.</p>
+                <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+                  <% 5.times do |index| %>
+                    <% number = index + 1 %>
+                    <div>
+                      <%= f.label :"station#{number}_name", "Station #{number}", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                      <%= f.text_field :"station#{number}_name", placeholder: number == 5 ? "Station 5 / Pause" : "Station #{number}", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2">
+              <%= button_to "Turniervorlage leeren", reset_admin_camp_sport_tournament_plan_path(@camp, @camp_team), method: :post, data: { turbo_confirm: "Wirklich alle Einträge auf den Standard zurücksetzen?" }, form_class: "inline", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              <%= f.submit "Turniervorlage speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+          </div>
+
+          <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+            <div class="overflow-x-auto">
+              <table class="min-w-full border-collapse text-sm">
+                <thead class="bg-slate-50 dark:bg-slate-900/40">
+                  <tr>
+                    <th class="border-b border-slate-200 px-3 py-2 text-left font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">Zeit</th>
+                    <th class="border-b border-slate-200 px-3 py-2 text-right font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100">Runde</th>
+                    <% 5.times do |index| %>
+                      <th class="border-b border-slate-200 px-3 py-2 text-left font-semibold text-slate-900 dark:border-slate-700 dark:text-slate-100"><%= @camp_sport_tournament_plan.station_name(index + 1) %></th>
+                    <% end %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @camp_sport_tournament_plan.round_rows.each_with_index do |row, row_index| %>
+                    <tr class="<%= row_index.odd? ? 'bg-slate-50/50 dark:bg-slate-900/20' : '' %>">
+                      <td class="border-b border-slate-200 px-3 py-2 font-medium text-slate-900 dark:border-slate-800 dark:text-slate-100"><%= row[:time_label] %></td>
+                      <td class="border-b border-slate-200 px-3 py-2 text-right font-medium text-slate-700 dark:border-slate-800 dark:text-slate-300"><%= row[:round] %></td>
+                      <% row[:slots].each do |slot| %>
+                        <td class="border-b border-slate-200 px-3 py-2 text-slate-700 dark:border-slate-800 dark:text-slate-300"><%= slot[:value] %></td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+      <% elsif @section == "material_list" %>
+        <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Materialliste</h3>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Aktueller Überblick über das Sportmaterial. Änderungen werden automatisch protokolliert.
+                  </p>
+                </div>
+                <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:bg-amber-900/60 dark:text-amber-100">admin bearbeitet</span>
+              </div>
+
+              <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div class="grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_8rem_auto] gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100">
+                  <div>Gegenstand</div>
+                  <div>Menge</div>
+                  <div>Ort</div>
+                  <div class="text-right">Aktionen</div>
+                </div>
+                <div class="divide-y divide-slate-200 dark:divide-slate-700">
+                  <% @camp_sport_material_items.each do |item| %>
+                    <%= form_with model: item, url: admin_camp_sport_material_item_path(@camp, @camp_team, item), method: :patch, class: "grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_8rem_auto] gap-3 px-4 py-3" do |f| %>
+                      <div>
+                        <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      </div>
+                      <div>
+                        <%= f.text_field :quantity, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      </div>
+                      <div>
+                        <%= f.text_field :storage_location, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      </div>
+                      <div class="flex justify-end gap-2">
+                        <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                        <%= link_to "Löschen", admin_camp_sport_material_item_path(@camp, @camp_team, item), data: { turbo_method: :delete, turbo_confirm: "Material wirklich löschen?" }, class: "inline-flex rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+
+              <%= form_with model: CampSportMaterialItem.new, url: admin_camp_sport_material_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_auto]" do |f| %>
+                <div>
+                  <%= f.label :name, "Neues Material", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :name, placeholder: "z. B. Hockeyschläger", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div>
+                  <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :quantity, placeholder: "z. B. 4x", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div>
+                  <%= f.label :storage_location, "Ort", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :storage_location, placeholder: "z. B. S8", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div class="flex items-end">
+                  <%= f.submit "Material hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+                </div>
+              <% end %>
+
+              <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
+                <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Änderungsverlauf</h4>
+                <div class="mt-3 space-y-2">
+                  <% if @camp_sport_material_changes.any? %>
+                    <% @camp_sport_material_changes.each do |change| %>
+                      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-900/60">
+                        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
+                          <span><%= l(change.created_at, format: "%d.%m.%Y %H:%M") %></span>
+                          <span><%= change.actor_name %></span>
+                        </div>
+                        <p class="mt-1 font-medium text-slate-900 dark:text-slate-100"><%= change.material_name %></p>
+                        <p class="mt-1 text-slate-600 dark:text-slate-300"><%= change.change_summary %></p>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Änderungen protokolliert.</p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% elsif @section == "kitchen_plan" %>
+        <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-white p-4 shadow dark:bg-slate-800">
+              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Eingeteilte Mitarbeiter</h3>
+                  <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Kompakter Teamüberblick für den Küchenplan.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <% if @assigned_applications.any? %>
+                    <% @assigned_applications.each do |application| %>
+                      <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200">
+                        <span><%= [application.user.first_name, application.user.last_name].compact.join(" ").presence || application.user.email %></span>
+                        <% if application.assigned_as_responsible? %>
+                          <span class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">V</span>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Noch niemand eingeteilt.</p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Küchenplan</h3>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Frühstück, Mittag, Abendessen und Snack im Wochenblick pro Camptag.
+                  </p>
+                </div>
+                <%= link_to "Druckansicht", admin_camp_team_kitchen_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              </div>
+
+              <% if @camp.day_range.blank? %>
+                <div class="mt-5 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                  Bitte pflegt zuerst beim Camp ein Von- und Bis-Datum.
+                </div>
+              <% else %>
+                <div class="mt-5">
+                  <div class="grid overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 dark:border-slate-700 dark:bg-slate-900/30" style="grid-template-columns: repeat(<%= @camp_kitchen_day_plans.size %>, minmax(0, 1fr));">
+                    <% @camp_kitchen_day_plans.each do |kitchen_day_plan| %>
+                      <div class="<%= kitchen_day_plan == @camp_kitchen_day_plans.first ? '' : 'border-l border-slate-200 dark:border-slate-700' %> p-4">
+                        <div class="border-b border-slate-200 pb-3 dark:border-slate-700">
+                          <p class="text-sm font-semibold text-slate-900 dark:text-slate-100"><%= l(kitchen_day_plan.planned_on, format: "%A") %></p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400"><%= l(kitchen_day_plan.planned_on, format: "%d.%m.%Y") %></p>
+                        </div>
+
+                        <%= form_with model: kitchen_day_plan, url: admin_camp_kitchen_day_plan_path(@camp, @camp_team, kitchen_day_plan), method: :patch, class: "mt-4 space-y-3" do |f| %>
+                          <div>
+                            <%= f.label :breakfast, "Frühstück", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                            <%= f.text_area :breakfast, rows: 2, placeholder: "z. B. Brötchen, Müsli, Obst", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          </div>
+                          <div>
+                            <%= f.label :lunch, "Mittag", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                            <%= f.text_area :lunch, rows: 2, placeholder: "z. B. Nudeln mit Soße", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          </div>
+                          <div>
+                            <%= f.label :dinner, "Abendessen", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                            <%= f.text_area :dinner, rows: 2, placeholder: "z. B. Brotzeit oder warmes Essen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          </div>
+                          <div>
+                            <%= f.label :snack, "Snack", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                            <%= f.text_area :snack, rows: 2, placeholder: "z. B. Obst, Kuchen, Abend-Snack", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          </div>
+                          <div class="flex justify-end pt-0.5">
+                            <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% elsif @section == "diy_plan" %>
+        <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+          <div class="space-y-4">
+            <div class="rounded-2xl bg-white p-4 shadow dark:bg-slate-800">
+              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Eingeteilte Mitarbeiter</h3>
+                  <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Kompakter Teamüberblick für den DIY-Plan.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <% if @assigned_applications.any? %>
+                    <% @assigned_applications.each do |application| %>
+                      <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200">
+                        <span><%= [application.user.first_name, application.user.last_name].compact.join(" ").presence || application.user.email %></span>
+                        <% if application.assigned_as_responsible? %>
+                          <span class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">V</span>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Noch niemand eingeteilt.</p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">DIY-Plan</h3>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Allgemeines Angebot und Spezial des Tages im Wochenblick pro Camptag.
+                  </p>
+                </div>
+                <%= link_to "Druckansicht", admin_camp_team_diy_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              </div>
+
+              <% if @camp.day_range.blank? %>
+                <div class="mt-5 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                  Bitte pflegt zuerst beim Camp ein Von- und Bis-Datum.
+                </div>
+              <% else %>
+                <div class="mt-5">
+                  <div class="grid overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 dark:border-slate-700 dark:bg-slate-900/30" style="grid-template-columns: repeat(<%= @camp_diy_day_plans.size %>, minmax(0, 1fr));">
+                    <% @camp_diy_day_plans.each do |diy_day_plan| %>
+                      <div class="<%= diy_day_plan == @camp_diy_day_plans.first ? '' : 'border-l border-slate-200 dark:border-slate-700' %> p-4">
+                        <div class="border-b border-slate-200 pb-3 dark:border-slate-700">
+                          <p class="text-sm font-semibold text-slate-900 dark:text-slate-100"><%= l(diy_day_plan.planned_on, format: "%A") %></p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400"><%= l(diy_day_plan.planned_on, format: "%d.%m.%Y") %></p>
+                        </div>
+
+                        <%= form_with model: diy_day_plan, url: admin_camp_diy_day_plan_path(@camp, @camp_team, diy_day_plan), method: :patch, class: "mt-4 space-y-3" do |f| %>
+                          <div>
+                            <div class="mb-1.5 flex items-center justify-between gap-2">
+                              <%= f.label :general_offer, "Allgemeines Angebot", class: "block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                              <%= button_to "Für alle Tage", apply_general_offer_to_all_admin_camp_diy_day_plan_path(@camp, @camp_team, diy_day_plan), method: :post, params: { camp_diy_day_plan: { general_offer: diy_day_plan.general_offer } }, class: "inline-flex rounded-md border border-slate-300 px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                            </div>
+                            <%= f.text_area :general_offer, rows: 3, placeholder: "z. B. Offene Bastelstationen, Werken, Karten gestalten", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          </div>
+                          <div>
+                            <%= f.label :daily_special, "Spezial des Tages", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
+                            <%= f.text_area :daily_special, rows: 3, placeholder: "z. B. Makramee, Holzschild, Fotowand", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          </div>
+                          <div class="flex justify-end pt-0.5">
+                            <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% elsif @section == "room_plan" %>
+        <div class="space-y-6">
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Zimmerplan</h3>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                  Verteile hier die Mitarbeitenden auf Zimmer und zusätzliche Schlafmöglichkeiten dieses Camps.
+                </p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+                  <%= @camp_room_candidates.size %> Mitarbeitende
+                </span>
+                <%= link_to "Druckansicht", admin_camp_team_room_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              </div>
+            </div>
+
+            <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <% @camp_sleeping_places.each do |place| %>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h4 class="text-base font-semibold text-slate-900 dark:text-slate-100"><%= place.name %></h4>
+                        <% if place.family_only? %>
+                          <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">Familie</span>
+                        <% elsif place.custom? %>
+                          <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-900/60 dark:text-sky-200">Extra</span>
+                        <% end %>
+                      </div>
+                      <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                        <%= place.capacity %> Plätze<%= place.details.present? && !place.family_only? ? " · #{place.details}" : "" %>
+                      </p>
+                    </div>
+                    <span class="rounded-full <%= place.occupancy_count > place.capacity ? 'bg-red-100 text-red-700 dark:bg-red-900/60 dark:text-red-200' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200' %> px-2.5 py-1 text-xs font-medium">
+                      <%= place.occupancy_count %>/<%= place.capacity %>
+                    </span>
+                  </div>
+
+                  <div class="mt-4 space-y-2">
+                    <% assigned_people = @camp_room_assignments_by_place_id[place.id] || [] %>
+                    <% extra_people = @camp_room_people_by_place_id[place.id] || [] %>
+                    <% if assigned_people.any? %>
+                      <% assigned_people.each do |application| %>
+                        <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                          <p class="text-sm font-medium text-slate-900 dark:text-slate-100"><%= [application.user.first_name, application.user.last_name].compact.join(" ") %></p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400"><%= application.assigned_camp_team&.name || "-" %></p>
+                        </div>
+                      <% end %>
+                    <% end %>
+                    <% extra_people.each do |person| %>
+                      <div class="rounded-lg border border-sky-200 bg-sky-50/70 px-3 py-2 dark:border-sky-900/60 dark:bg-sky-950/20">
+                        <p class="text-sm font-medium text-slate-900 dark:text-slate-100"><%= person.name %></p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400"><%= person.kind_label %><%= person.related_camp_application&.user.present? ? " · zu #{person.related_camp_application.user.first_name} #{person.related_camp_application.user.last_name}" : "" %></p>
+                      </div>
+                    <% end %>
+                    <% if assigned_people.empty? && extra_people.empty? %>
+                      <p class="text-sm text-slate-500 dark:text-slate-400">Noch niemand zugewiesen.</p>
+                    <% end %>
+                  </div>
+
+                  <% if place.custom? %>
+                    <div class="mt-4 flex justify-end">
+                      <%= link_to "Entfernen", admin_camp_sleeping_place_path(@camp, @camp_team, place), data: { turbo_method: :delete, turbo_confirm: "Diese Schlafmöglichkeit wirklich entfernen?" }, class: "text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Weitere Schlafmöglichkeit hinzufügen</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Für Wohnwagen, Zelt oder andere Sonderfälle kannst du hier zusätzliche Plätze anlegen.
+              </p>
+            </div>
+
+            <%= form_with model: CampSleepingPlace.new, url: admin_camp_sleeping_places_path(@camp, @camp_team), class: "mt-5 grid gap-4 md:grid-cols-[1.1fr_8rem_1fr_auto]" do |f| %>
+              <div>
+                <%= f.label :name, "Name", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.text_field :name, placeholder: "z. B. Wohnwagen Müller", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :capacity, "Plätze", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.number_field :capacity, min: 1, value: 1, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :details, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.text_field :details, placeholder: "z. B. Zelt, Wohnwagen, Gästezimmer", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div class="flex items-end">
+                <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Mitarbeitende zuweisen</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Weise jedem Mitarbeitenden einen Schlafplatz zu oder lasse ihn bewusst unzugeteilt.
+              </p>
+            </div>
+
+            <div class="mt-5 space-y-3">
+              <% @camp_room_candidates.each do |application| %>
+                <%= form_with model: application, url: admin_camp_sleeping_assignment_path(@camp, @camp_team, application), method: :patch, class: "grid gap-3 rounded-xl border border-slate-200 px-4 py-3 md:grid-cols-[minmax(0,1fr)_15rem_auto] md:items-center dark:border-slate-700" do |f| %>
+                  <div>
+                    <p class="font-medium text-slate-900 dark:text-slate-100"><%= [application.user.first_name, application.user.last_name].compact.join(" ") %></p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">
+                      <%= application.assigned_camp_team&.name || "-" %>
+                      <% if application.assigned_as_responsible? %>
+                        · verantwortlich
+                      <% end %>
+                    </p>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      Aktuell: <%= application.camp_sleeping_place&.name || "Nicht zugewiesen" %>
+                    </p>
+                  </div>
+                  <div>
+                    <%= f.select :camp_sleeping_place_id, options_for_select([["Nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| ["#{place.name} (#{place.occupancy_count}/#{place.capacity})", place.id] }, application.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  </div>
+                  <div class="flex justify-end">
+                    <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Weitere Personen</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Hier kannst du Ehepartner, Kinder oder Gäste zusätzlich erfassen und einem Schlafplatz zuweisen.
+              </p>
+            </div>
+
+            <%= form_with model: CampRoomPerson.new, url: admin_camp_room_people_path(@camp, @camp_team), class: "mt-5 grid gap-4 lg:grid-cols-4" do |f| %>
+              <div>
+                <%= f.label :name, "Name", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.text_field :name, placeholder: "z. B. Anna Müller", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :kind, "Typ", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :related_camp_application_id, "Gehört zu", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :camp_sleeping_place_id, "Schlafplatz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :notes, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <%= f.text_field :notes, placeholder: "z. B. reist später an", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div class="flex items-end">
+                <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+              </div>
+            <% end %>
+
+            <div class="mt-5 space-y-3">
+              <% if @camp_room_people.any? %>
+                <% @camp_room_people.each do |person| %>
+                  <%= form_with model: person, url: admin_camp_room_person_path(@camp, @camp_team, person), method: :patch, class: "grid gap-3 rounded-xl border border-slate-200 px-4 py-3 lg:grid-cols-3 lg:items-center dark:border-slate-700" do |f| %>
+                    <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }, person.kind), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }, person.related_camp_application_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }, person.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :notes, placeholder: "Hinweis", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <div class="flex justify-end gap-2">
+                      <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                      <%= link_to "Entfernen", admin_camp_room_person_path(@camp, @camp_team, person), data: { turbo_method: :delete, turbo_confirm: "Diese Person wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+                    </div>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine zusätzlichen Personen erfasst.</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% elsif @section == "shopping" %>
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Einkaufsliste</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Verwalte hier camp-spezifische Einkäufe und Besorgungen für das Team.
+              </p>
+            </div>
+            <%= link_to "Druckansicht", admin_camp_team_shopping_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+          </div>
+
+          <div class="mt-5 space-y-3">
+            <% if @camp_team_shopping_items.any? %>
+              <% @camp_team_shopping_items.each do |item| %>
+                <div class="flex items-start justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
+                  <div class="flex items-start gap-3">
+                    <%= form_with model: item, url: admin_camp_team_shopping_item_path(@camp, @camp_team, item), method: :patch do |f| %>
+                      <%= f.check_box :purchased, { checked: item.purchased, onchange: "this.form.requestSubmit()", class: "mt-1 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600 dark:border-slate-600 dark:bg-slate-900" }, "1", "0" %>
+                    <% end %>
+                    <div>
+                      <p class="<%= item.purchased? ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-900 dark:text-slate-100' %> font-medium">
+                        <%= item.name %>
+                        <% if item.quantity.present? %>
+                          <span class="ml-2 text-sm font-normal text-slate-500 dark:text-slate-400"><%= item.quantity %></span>
+                        <% end %>
+                      </p>
+                      <% if item.notes.present? %>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400"><%= item.notes %></p>
+                      <% end %>
+                    </div>
+                  </div>
+                  <%= link_to "Entfernen", admin_camp_team_shopping_item_path(@camp, @camp_team, item), data: { turbo_method: :delete, turbo_confirm: "Eintrag wirklich entfernen?" }, class: "text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400" %>
+                </div>
+              <% end %>
+            <% else %>
+              <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Einträge in der Einkaufsliste.</p>
+            <% end %>
+          </div>
+
+          <%= form_with model: CampTeamShoppingItem.new, url: admin_camp_team_shopping_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[minmax(0,1.2fr)_10rem] lg:grid-cols-[minmax(0,1.2fr)_10rem_minmax(0,1fr)_auto]" do |f| %>
+            <div>
+              <%= f.label :name, "Artikel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :name, placeholder: "z. B. Becher", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :quantity, placeholder: "z. B. 3 Packungen", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.label :notes, "Notiz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :notes, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="flex items-end">
+              <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+        </div>
+      <% elsif @section == "program" %>
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Tagesplan</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Der normale Camp-Tag für die Programmleiter. Unsichtbare Blöcke bleiben später für andere Bereiche verborgen.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <%= link_to "Block hinzufügen", admin_camp_team_page_path(@camp, @camp_team, section: "program", modal: "new_program_block"), class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+              <%= button_to "Standard wiederherstellen", reset_admin_camp_program_blocks_path(@camp, @camp_team), method: :post, data: { turbo_confirm: "Den aktuellen Tagesplan wirklich durch den Standard ersetzen?" }, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            </div>
+          </div>
+
+          <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900/30">
+            <% @camp_program_blocks.each_with_index do |block, index| %>
+              <div class="<%= index.positive? ? 'border-t border-slate-200 dark:border-slate-700' : '' %> px-4 py-2.5 sm:px-5">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div class="flex min-w-0 items-center gap-3">
+                    <span class="h-3 w-3 shrink-0 rounded-full <%= block.color_accent_class %>"></span>
+                    <div class="w-16 shrink-0 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      <%= block.starts_at_label %>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="truncate font-medium text-slate-900 dark:text-slate-100"><%= block.title %></span>
+                        <% unless block.visible_to_others? %>
+                          <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                            versteckt
+                          </span>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-end gap-2">
+                    <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "program", modal: "edit_program_block", program_block_id: block.id), class: "inline-flex rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" do %>
+                      <i data-lucide="pencil" class="h-4 w-4"></i>
+                    <% end %>
+                    <%= link_to admin_camp_program_block_path(@camp, @camp_team, block), data: { turbo_method: :delete, turbo_confirm: "Block wirklich löschen?" }, class: "inline-flex rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" do %>
+                      <i data-lucide="trash-2" class="h-4 w-4"></i>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% elsif @section == "week_plan" %>
+        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Wochenplan</h3>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                <%= @week_plan_read_only ? "Die veröffentlichte Leseansicht für dieses Camp." : "Der Wochenplan zeigt eure Camp-Tage im Überblick. Die Blockhöhe orientiert sich jeweils am nächsten Startpunkt." %>
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <%= link_to "Druckansicht", admin_camp_team_week_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              <% if @camp_team.program_team? %>
+                <%= form_with model: @camp_team, url: admin_camp_team_path(@camp, @camp_team), method: :patch do |f| %>
+                  <%= hidden_field_tag :from, "team_page" %>
+                  <%= hidden_field_tag :section, "week_plan" %>
+                  <%= hidden_field_tag :return_to, admin_camp_team_page_path(@camp, @camp_team, section: "week_plan") %>
+                  <%= f.hidden_field :week_plan_published, value: @camp_team.week_plan_published? ? "0" : "1" %>
+                  <%= f.submit(@camp_team.week_plan_published? ? "Veröffentlichung aufheben" : "Wochenplan veröffentlichen", class: "inline-flex rounded-lg #{ @camp_team.week_plan_published? ? 'border border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-900 dark:text-amber-300 dark:hover:bg-amber-950/40' : 'bg-red-600 text-white hover:bg-red-700' } px-4 py-2 text-sm font-medium") %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <% if @camp_team.program_team? && @camp_team.week_plan_published? %>
+            <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200">
+              Dieser Wochenplan ist aktuell für alle anderen Teams dieses Camps sichtbar.
+            </div>
+          <% elsif @week_plan_read_only %>
+            <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300">
+              Dies ist eine veröffentlichte Leseansicht. Änderungen nehmt ihr weiterhin im Bereich der Programmleiter vor.
+            </div>
+          <% end %>
+
+          <% if @camp_program_week_dates.blank? %>
+            <div class="mt-5 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              Bitte pflege zuerst beim Camp ein Von- und Bis-Datum. Danach koennen wir hier die echten Camp-Tage anzeigen.
+            </div>
+          <% else %>
+            <% timeline_start_hour = 7 %>
+            <% timeline_end_hour = 24 %>
+            <% hour_height = 72 %>
+            <% timeline_height = (timeline_end_hour - timeline_start_hour) * hour_height %>
+            <% time_column_width = 4.75 %>
+            <% day_column_width = @camp_program_week_dates.size >= 8 ? 10.0 : 11.0 %>
+
+            <div class="relative left-1/2 mt-6 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+              <div class="overflow-x-auto pb-2">
+                <div class="min-w-[980px]">
+                  <div class="grid gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 dark:border-slate-700 dark:bg-slate-700" style="grid-template-columns: <%= time_column_width %>rem repeat(<%= @camp_program_week_dates.size %>, minmax(<%= day_column_width %>rem, 1fr));">
+                  <div class="bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    Zeit
+                  </div>
+
+                  <% @camp_program_week_dates.each do |planned_on| %>
+                    <% week_day = @camp_program_week_days_by_date[planned_on] %>
+                    <div class="bg-slate-50 px-4 py-3 dark:bg-slate-800">
+                      <div class="flex items-start justify-between gap-3">
+                        <div>
+                          <p class="text-sm font-semibold text-slate-900 dark:text-slate-100"><%= l(planned_on, format: "%d.%m.") %></p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400"><%= l(planned_on, format: "%A") %></p>
+                        </div>
+
+                        <% if week_day&.label.present? %>
+                          <span class="rounded-full border border-sky-200 bg-sky-100 px-2.5 py-1 text-[11px] font-medium text-sky-800 dark:border-sky-900/70 dark:bg-sky-950/40 dark:text-sky-200">
+                            <%= week_day.label %>
+                          </span>
+                        <% end %>
+                      </div>
+
+                      <div class="mt-3 flex flex-wrap gap-2">
+                        <% if week_day.present? && !@week_plan_read_only %>
+                          <%= form_with model: week_day, url: admin_camp_program_week_day_path(@camp, @camp_team, week_day), method: :patch do |f| %>
+                            <%= f.hidden_field :mode, value: "default_plan" %>
+                            <%= f.submit "Tagesplan einfügen", class: "inline-flex rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-slate-100 dark:text-slate-900" %>
+                          <% end %>
+                          <%= link_to "Block +", admin_camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "new_week_block", week_day_id: week_day.id), class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                          <%= link_to "Hinweis", admin_camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "edit_week_day", week_day_id: week_day.id), class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                          <%= link_to "Tag löschen", admin_camp_program_week_day_path(@camp, @camp_team, week_day), data: { turbo_method: :delete, turbo_confirm: "Diesen Camp-Tag wirklich aus dem Wochenplan entfernen?" }, class: "inline-flex rounded-lg border border-red-300 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40" %>
+                        <% elsif !@week_plan_read_only %>
+                          <%= form_with url: admin_camp_program_week_days_path(@camp, @camp_team), method: :post do |f| %>
+                            <%= f.hidden_field :planned_on, value: planned_on.iso8601, name: "camp_program_week_day[planned_on]" %>
+                            <%= f.hidden_field :mode, value: "default_plan", name: "camp_program_week_day[mode]" %>
+                            <%= f.submit "Tagesplan einfügen", class: "inline-flex rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-slate-100 dark:text-slate-900" %>
+                          <% end %>
+                          <%= form_with url: admin_camp_program_week_days_path(@camp, @camp_team), method: :post do |f| %>
+                            <%= f.hidden_field :planned_on, value: planned_on.iso8601, name: "camp_program_week_day[planned_on]" %>
+                            <%= f.hidden_field :mode, value: "custom", name: "camp_program_week_day[mode]" %>
+                            <%= hidden_field_tag :open_modal, "new_week_block" %>
+                            <%= f.submit "Block +", class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                          <% end %>
+                          <%= form_with url: admin_camp_program_week_days_path(@camp, @camp_team), method: :post do |f| %>
+                            <%= f.hidden_field :planned_on, value: planned_on.iso8601, name: "camp_program_week_day[planned_on]" %>
+                            <%= f.hidden_field :mode, value: "custom", name: "camp_program_week_day[mode]" %>
+                            <%= hidden_field_tag :open_modal, "edit_week_day" %>
+                            <%= f.submit "Hinweis", class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+
+                  <div class="relative bg-white dark:bg-slate-900/30" style="height: <%= timeline_height %>px;">
+                    <% (timeline_start_hour..timeline_end_hour).each do |hour| %>
+                      <% top = (hour - timeline_start_hour) * hour_height %>
+                      <% break if hour == timeline_end_hour %>
+                      <div class="absolute inset-x-0 border-t border-slate-200 dark:border-slate-700" style="top: <%= top %>px;"></div>
+                      <div class="absolute left-0 -translate-y-1/2 px-3 text-sm font-medium text-slate-500 dark:text-slate-400" style="top: <%= top %>px;">
+                        <%= format("%02d:00", hour) %>
+                      </div>
+                    <% end %>
+                  </div>
+
+                  <% @camp_program_week_dates.each do |planned_on| %>
+                    <% week_day = @camp_program_week_days_by_date[planned_on] %>
+                    <% blocks = week_day.present? ? week_day.camp_program_week_blocks.ordered.to_a : [] %>
+
+                    <div class="relative bg-white dark:bg-slate-900/30" style="height: <%= timeline_height %>px;">
+                      <% (timeline_start_hour..timeline_end_hour).each do |hour| %>
+                        <% top = (hour - timeline_start_hour) * hour_height %>
+                        <% break if hour == timeline_end_hour %>
+                        <div class="absolute inset-x-0 border-t border-slate-100 dark:border-slate-800" style="top: <%= top %>px;"></div>
+                      <% end %>
+
+                      <% if blocks.empty? %>
+                        <div class="absolute inset-x-3 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-3 py-3 text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400" style="top: 0.75rem;">
+                          Noch nichts geplant
+                        </div>
+                      <% else %>
+                        <% blocks.each_with_index do |block, index| %>
+                          <% next_start = blocks[index + 1]&.starts_at_minutes || (timeline_end_hour * 60) %>
+                          <% block_start = [[block.starts_at_minutes, timeline_start_hour * 60].max, timeline_end_hour * 60].min %>
+                          <% block_end = [[next_start, block_start + 5].max, timeline_end_hour * 60].min %>
+                          <% top = ((block_start - (timeline_start_hour * 60)) / 60.0) * hour_height %>
+                          <% raw_height = ((block_end - block_start) / 60.0) * hour_height %>
+                          <% compact_block = raw_height < 54 %>
+                          <% height = compact_block ? [raw_height - 2, 14].max : [raw_height - 6, 22].max %>
+                          <% ultra_compact_block = height < 18 %>
+                          <% block_classes = block.color_card_classes %>
+
+                          <div class="absolute inset-x-2 overflow-hidden rounded-xl border shadow-sm <%= block_classes %> <%= compact_block ? 'px-2.5 py-1.5 pr-9' : 'px-3 py-2' %>" style="top: <%= top + 3 %>px; height: <%= height %>px;">
+                            <% if compact_block %>
+                              <% if ultra_compact_block %>
+                                <% unless @week_plan_read_only %>
+                                  <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "edit_week_block", week_block_id: block.id), class: "absolute right-1 top-1/2 -translate-y-1/2 inline-flex h-4 w-4 items-center justify-center rounded border border-current/20 bg-white/70 hover:bg-white dark:bg-slate-900/50 dark:hover:bg-slate-900" do %>
+                                    <i data-lucide="pencil" class="h-2.5 w-2.5"></i>
+                                  <% end %>
+                                <% end %>
+                                <div class="flex h-full items-center gap-1.5 pr-4">
+                                  <p class="shrink-0 text-[10px] font-semibold leading-none opacity-80"><%= block.starts_at_label %></p>
+                                  <p class="truncate text-[11px] font-semibold leading-none"><%= block.title %></p>
+                                </div>
+                              <% else %>
+                                <% unless @week_plan_read_only %>
+                                  <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "edit_week_block", week_block_id: block.id), class: "absolute right-1.5 top-1.5 inline-flex rounded-md border border-current/20 bg-white/70 px-1.5 py-1 text-xs font-medium hover:bg-white dark:bg-slate-900/50 dark:hover:bg-slate-900" do %>
+                                    <i data-lucide="pencil" class="h-3 w-3"></i>
+                                  <% end %>
+                                <% end %>
+                                <div class="flex items-center gap-2">
+                                  <p class="shrink-0 text-xs font-semibold opacity-80"><%= block.starts_at_label %></p>
+                                  <p class="truncate text-[13px] font-semibold leading-tight"><%= block.title %></p>
+                                </div>
+                              <% end %>
+                            <% else %>
+                              <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                  <p class="text-xs font-semibold opacity-80"><%= block.starts_at_label %></p>
+                                  <div class="mt-1 flex items-start justify-between gap-2">
+                                    <p class="min-w-0 text-sm font-semibold leading-snug"><%= block.title %></p>
+                                    <% unless block.visible_to_others? %>
+                                      <div class="shrink-0 rounded-full bg-black/10 px-2 py-0.5 text-[11px] font-medium dark:bg-white/10">
+                                        versteckt
+                                      </div>
+                                    <% end %>
+                                  </div>
+                                </div>
+
+                                <% unless @week_plan_read_only %>
+                                  <div class="flex items-center gap-1">
+                                    <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "edit_week_block", week_block_id: block.id), class: "inline-flex rounded-md border border-current/20 bg-white/70 px-2 py-1 text-xs font-medium hover:bg-white dark:bg-slate-900/50 dark:hover:bg-slate-900" do %>
+                                      <i data-lucide="pencil" class="h-3.5 w-3.5"></i>
+                                    <% end %>
+                                  </div>
+                                <% end %>
+                              </div>
+                            <% end %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% unless %w[program week_plan sport_plan material_list kitchen_plan diy_plan room_plan].include?(@section) %>
+      </div>
+
+      <aside class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Eingeteilte Mitarbeiter</h3>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+        <%= @camp_team.year_shared_team? ? "Die aktuelle Besetzung dieses Bereichs ueber alle Freizeiten des Jahres." : "Die aktuelle Teamzusammensetzung dieses Camp-Teams." %>
+      </p>
+
+      <div class="mt-5 space-y-3">
+        <% if @assigned_applications.any? %>
+          <% @assigned_applications.each do |application| %>
+            <div class="rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="font-medium text-slate-900 dark:text-slate-100">
+                    <%= application.user.first_name %> <%= application.user.last_name %>
+                  </p>
+                  <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                    <span><%= application.user.gender == "male" ? "m" : application.user.gender == "female" ? "w" : "-" %></span>
+                    <% if @camp_team.media_team? && application.assigned_camp_team.present? %>
+                      <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
+                        <%= application.assigned_camp_team.name %>
+                      </span>
+                    <% elsif @camp_team.year_shared_team? && application.assigned_camp.present? %>
+                      <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
+                        <%= application.assigned_camp.name %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+
+                <% if application.assigned_as_responsible? %>
+                  <span class="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                    verantwortlich
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Noch niemand eingeteilt.</p>
+        <% end %>
+      </div>
+      </aside>
+    </div>
+    <% end %>
+
+  <% if @program_block_modal.present? %>
+    <% editing = @program_block_modal.persisted? %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4">
+      <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-800">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100"><%= editing ? "Block bearbeiten" : "Block hinzufügen" %></h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Zeit, Titel und Sichtbarkeit dieses Tagesplan-Blocks.</p>
+          </div>
+          <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "program"), class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" do %>
+            <i data-lucide="x" class="h-4 w-4"></i>
+          <% end %>
+        </div>
+
+        <%= form_with model: @program_block_modal, url: editing ? admin_camp_program_block_path(@camp, @camp_team, @program_block_modal) : admin_camp_program_blocks_path(@camp, @camp_team), method: editing ? :patch : :post, class: "mt-5 space-y-4" do |f| %>
+          <div class="grid gap-4 md:grid-cols-[10.5rem_minmax(0,1fr)]">
+            <div class="min-w-0">
+              <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Uhrzeit</label>
+              <div class="grid grid-cols-[4.75rem_auto_4.75rem] items-center gap-2">
+                <%= f.select :starts_at_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @program_block_modal.try(:start_hour)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
+                <%= f.select :starts_at_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @program_block_modal.try(:start_minute)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+            </div>
+
+            <div class="min-w-0">
+              <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+          </div>
+
+          <label class="flex items-center gap-3 rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
+            <%= f.check_box :visible_to_others, { checked: @program_block_modal.visible_to_others != false }, "1", "0" %>
+            Für andere sichtbar
+          </label>
+          <div>
+            <%= f.label :color, "Farbe", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+            <%= f.select :color,
+              options_for_select(CampProgramBlock::COLOR_THEMES.map { |key, config| [config[:label], key] }, @program_block_modal.color.presence || "blue"),
+              {},
+              class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          </div>
+
+          <div class="flex items-center justify-end gap-3">
+            <%= link_to "Abbrechen", admin_camp_team_page_path(@camp, @camp_team, section: "program"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            <%= f.submit(editing ? "Speichern" : "Block hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @program_week_block_modal.present? %>
+    <% editing = @program_week_block_modal.persisted? %>
+    <% week_day = editing ? @program_week_block_modal.camp_program_week_day : @camp_team.camp_program_week_days.find_by(id: params[:week_day_id]) %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4">
+      <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-800">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100"><%= editing ? "Wochenplan-Block bearbeiten" : "Wochenplan-Block hinzufügen" %></h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= week_day&.label %> · eigener Tagesblock</p>
+          </div>
+          <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" do %>
+            <i data-lucide="x" class="h-4 w-4"></i>
+          <% end %>
+        </div>
+
+        <%= form_with model: @program_week_block_modal, url: editing ? admin_camp_program_week_block_path(@camp, @camp_team, @program_week_block_modal.camp_program_week_day, @program_week_block_modal) : admin_camp_program_week_blocks_path(@camp, @camp_team, week_day), method: editing ? :patch : :post, class: "mt-5 space-y-4" do |f| %>
+          <div class="grid gap-4 md:grid-cols-[10.5rem_minmax(0,1fr)]">
+            <div class="min-w-0">
+              <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Uhrzeit</label>
+              <div class="grid grid-cols-[4.75rem_auto_4.75rem] items-center gap-2">
+                <%= f.select :starts_at_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @program_week_block_modal.try(:start_hour)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
+                <%= f.select :starts_at_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @program_week_block_modal.try(:start_minute)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+            </div>
+            <div class="min-w-0">
+              <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+          </div>
+          <label class="flex items-center gap-3 rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
+            <%= f.check_box :visible_to_others, { checked: @program_week_block_modal.visible_to_others != false }, "1", "0" %>
+            Für andere sichtbar
+          </label>
+          <div>
+            <%= f.label :color, "Farbe", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+            <%= f.select :color,
+              options_for_select(CampProgramBlock::COLOR_THEMES.map { |key, config| [config[:label], key] }, @program_week_block_modal.color.presence || "blue"),
+              {},
+              class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <% if editing %>
+                <%= link_to "Löschen", admin_camp_program_week_block_path(@camp, @camp_team, @program_week_block_modal.camp_program_week_day, @program_week_block_modal), data: { turbo_method: :delete, turbo_confirm: "Diesen Block wirklich löschen?" }, class: "inline-flex rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40" %>
+              <% end %>
+            </div>
+            <div class="flex items-center gap-3">
+            <%= link_to "Abbrechen", admin_camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            <%= f.submit(editing ? "Speichern" : "Block hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @program_week_day_modal.present? %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4">
+      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-800">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Tageshinweis</h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= @program_week_day_modal.day_label %></p>
+          </div>
+          <%= link_to admin_camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" do %>
+            <i data-lucide="x" class="h-4 w-4"></i>
+          <% end %>
+        </div>
+
+        <%= form_with model: @program_week_day_modal, url: admin_camp_program_week_day_path(@camp, @camp_team, @program_week_day_modal), method: :patch, class: "mt-5 space-y-4" do |f| %>
+          <div>
+            <%= f.label :label, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+            <%= f.text_field :label, placeholder: "z. B. Anreisetag oder Exkursion", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          </div>
+          <div class="flex items-center justify-end gap-3">
+            <%= link_to "Abbrechen", admin_camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

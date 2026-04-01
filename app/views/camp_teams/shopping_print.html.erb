@@ -1,0 +1,94 @@
+<div class="space-y-8">
+  <div class="print-toolbar flex items-center justify-between gap-4 border-b border-slate-200 pb-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500">
+        <%= @camp.year.name %> · <%= @camp.name %>
+      </p>
+      <h1 class="text-3xl font-bold text-slate-900">Einkaufsliste <%= @camp_team.name %></h1>
+      <p class="mt-1 text-sm text-slate-600">
+        Druckansicht fuer die offene Team-Einkaufsliste.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button type="button" onclick="window.print()" class="inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
+        Drucken
+      </button>
+      <% back_path = current_user&.admin? ? admin_camp_team_page_path(@camp, @camp_team, section: "shopping") : camp_team_page_path(@camp, @camp_team, section: "shopping") %>
+      <%= link_to "Zurueck", back_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" %>
+    </div>
+  </div>
+
+  <div class="flex items-end justify-between gap-4 border-b border-slate-200 pb-4">
+    <div>
+      <p class="text-sm text-slate-500">Erstellt am</p>
+      <p class="text-base font-medium text-slate-900"><%= l(Time.zone.now, format: :long) %></p>
+    </div>
+    <div class="text-right">
+      <p class="text-sm text-slate-500">Offene Eintraege</p>
+      <p class="text-2xl font-bold text-slate-900"><%= @open_shopping_items.count %></p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <h2 class="text-lg font-semibold text-slate-900">Offen</h2>
+
+    <% if @open_shopping_items.any? %>
+      <div class="overflow-hidden rounded-2xl border border-slate-200">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="w-12 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"></th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Artikel</th>
+              <th class="w-48 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Menge</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Notiz</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 bg-white">
+            <% @open_shopping_items.each do |item| %>
+              <tr>
+                <td class="px-4 py-4 align-top">
+                  <span class="mt-0.5 block h-5 w-5 rounded border border-slate-400"></span>
+                </td>
+                <td class="px-4 py-4 align-top font-medium text-slate-900"><%= item.name %></td>
+                <td class="px-4 py-4 align-top text-slate-700"><%= item.quantity.presence || "-" %></td>
+                <td class="px-4 py-4 align-top text-slate-700"><%= item.notes.presence || "-" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="rounded-2xl border border-dashed border-slate-300 px-6 py-10 text-center text-slate-500">
+        Keine offenen Eintraege in der Einkaufsliste.
+      </div>
+    <% end %>
+  </div>
+
+  <% if @completed_shopping_items.any? %>
+    <div class="space-y-4">
+      <h2 class="text-lg font-semibold text-slate-900">Bereits erledigt</h2>
+
+      <div class="overflow-hidden rounded-2xl border border-slate-200">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Artikel</th>
+              <th class="w-48 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Menge</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Notiz</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 bg-white">
+            <% @completed_shopping_items.each do |item| %>
+              <tr>
+                <td class="px-4 py-4 align-top text-slate-500 line-through"><%= item.name %></td>
+                <td class="px-4 py-4 align-top text-slate-500"><%= item.quantity.presence || "-" %></td>
+                <td class="px-4 py-4 align-top text-slate-500"><%= item.notes.presence || "-" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -22,31 +22,35 @@
 }
 
 .datepicker-picker {
-  width: 19rem;
-  border: 1px solid rgb(203 213 225);
-  border-radius: 1rem;
+  width: min(18.5rem, calc(100vw - 2rem));
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.75rem;
   background: rgb(255 255 255);
-  box-shadow: 0 20px 40px rgb(15 23 42 / 0.18);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   padding: 1rem;
 }
 
+[data-datepicker-target="input"] {
+  min-width: 11rem;
+}
+
 .datepicker-header {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .datepicker-title {
   margin-bottom: 0.5rem;
   text-align: center;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: rgb(51 65 85);
+  font-weight: 500;
+  color: rgb(17 24 39);
 }
 
 .datepicker-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .datepicker-controls .prev-btn,
@@ -67,25 +71,25 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 0.75rem;
-  background: rgb(248 250 252);
-  color: rgb(71 85 105);
+  border-radius: 0.5rem;
+  background: rgb(255 255 255);
+  color: rgb(107 114 128);
 }
 
 .datepicker-controls .prev-btn:hover,
 .datepicker-controls .next-btn:hover,
 .datepicker-controls .view-switch:hover {
-  background: rgb(241 245 249);
-  color: rgb(15 23 42);
+  background: rgb(243 244 246);
+  color: rgb(17 24 39);
 }
 
 .datepicker-controls .view-switch {
   flex: 1;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   background: rgb(255 255 255);
-  color: rgb(15 23 42);
+  color: rgb(17 24 39);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.625rem 0.75rem;
 }
 
@@ -111,7 +115,7 @@
   height: 2rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgb(100 116 139);
+  color: rgb(107 114 128);
 }
 
 .datepicker-cell {
@@ -119,40 +123,40 @@
   align-items: center;
   justify-content: center;
   min-height: 2.5rem;
-  border-radius: 0.75rem;
-  color: rgb(51 65 85);
+  border-radius: 0.5rem;
+  color: rgb(75 85 99);
   font-size: 0.875rem;
   font-weight: 500;
 }
 
 .datepicker-cell:hover {
-  background: rgb(241 245 249);
+  background: rgb(243 244 246);
 }
 
 .datepicker-cell.prev,
 .datepicker-cell.next {
-  color: rgb(148 163 184);
+  color: rgb(156 163 175);
 }
 
 .datepicker-cell.today {
-  background: rgb(254 242 242);
-  color: rgb(185 28 28);
+  background: rgb(243 244 246);
+  color: rgb(17 24 39);
 }
 
 .datepicker-cell.highlighted,
 .datepicker-cell.range,
 .datepicker-cell.range-end {
-  background: rgb(241 245 249);
+  background: rgb(239 246 255);
 }
 
 .datepicker-cell.range-start,
 .datepicker-cell.selected {
-  background: rgb(220 38 38);
+  background: rgb(29 78 216);
   color: rgb(255 255 255);
 }
 
 .datepicker-cell.focused {
-  outline: 2px solid rgb(248 113 113);
+  outline: 2px solid rgb(191 219 254);
   outline-offset: -2px;
 }
 
@@ -160,7 +164,7 @@
 .datepicker-cell.disabled:hover,
 .dow.disabled {
   cursor: not-allowed;
-  color: rgb(148 163 184);
+  color: rgb(209 213 219);
   background: transparent;
 }
 
@@ -175,41 +179,41 @@
 .datepicker-footer .today-btn,
 .datepicker-footer .clear-btn {
   flex: 1;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.625rem 0.875rem;
 }
 
 .datepicker-footer .today-btn {
-  background: rgb(220 38 38);
+  background: rgb(29 78 216);
   color: rgb(255 255 255);
 }
 
 .datepicker-footer .today-btn:hover {
-  background: rgb(185 28 28);
+  background: rgb(30 64 175);
 }
 
 .datepicker-footer .clear-btn {
-  border: 1px solid rgb(203 213 225);
-  background: rgb(248 250 252);
-  color: rgb(71 85 105);
+  border: 1px solid rgb(229 231 235);
+  background: rgb(255 255 255);
+  color: rgb(75 85 99);
 }
 
 .datepicker-footer .clear-btn:hover {
-  background: rgb(241 245 249);
+  background: rgb(243 244 246);
 }
 
 @media (prefers-color-scheme: dark) {
   .datepicker-picker {
-    border-color: rgb(71 85 105);
-    background: rgb(15 23 42);
+    border-color: rgb(55 65 81);
+    background: rgb(31 41 55);
   }
 
   .datepicker-title,
   .datepicker-controls .view-switch,
   .datepicker-cell {
-    color: rgb(226 232 240);
+    color: rgb(249 250 251);
   }
 
   .datepicker-controls .prev-btn,
@@ -219,8 +223,8 @@
   .datepicker-cell.highlighted,
   .datepicker-cell.range,
   .datepicker-cell.range-end {
-    background: rgb(30 41 59);
-    color: rgb(226 232 240);
+    background: rgb(55 65 81);
+    color: rgb(243 244 246);
   }
 
   .datepicker-controls .prev-btn:hover,
@@ -228,22 +232,33 @@
   .datepicker-controls .view-switch:hover,
   .datepicker-footer .clear-btn:hover,
   .datepicker-cell:hover {
-    background: rgb(51 65 85);
+    background: rgb(75 85 99);
   }
 
   .dow {
-    color: rgb(148 163 184);
+    color: rgb(156 163 175);
   }
 
   .datepicker-cell.prev,
   .datepicker-cell.next,
   .datepicker-cell.disabled,
   .dow.disabled {
-    color: rgb(100 116 139);
+    color: rgb(107 114 128);
   }
 
   .datepicker-cell.today {
-    background: rgb(69 10 10);
-    color: rgb(254 202 202);
+    background: rgb(55 65 81);
+    color: rgb(249 250 251);
+  }
+
+  .datepicker-cell.range-start,
+  .datepicker-cell.selected,
+  .datepicker-footer .today-btn {
+    background: rgb(37 99 235);
+    color: rgb(255 255 255);
+  }
+
+  .datepicker-footer .today-btn:hover {
+    background: rgb(29 78 216);
   }
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lightcamp HQ</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <style>
+      <% if %w[week_plan_print sport_tournament_print kitchen_plan_print diy_plan_print].include?(action_name) %>
+        @page { size: A4 landscape; margin: 10mm; }
+      <% end %>
+      @media print {
+        .print-toolbar { display: none !important; }
+        body { background: #fff !important; color: #0f172a !important; }
+      }
+    </style>
+  </head>
+
+  <body class="bg-white text-slate-900">
+    <main class="<%= %w[week_plan_print sport_tournament_print kitchen_plan_print diy_plan_print].include?(action_name) ? 'mx-auto max-w-none px-4 py-6' : 'mx-auto max-w-4xl px-6 py-8' %>">
+      <%= yield %>
+    </main>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

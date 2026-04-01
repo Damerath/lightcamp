@@ -53,7 +53,9 @@
                 <i data-lucide="pencil" class="w-4 h-4"></i>
               <% end %>
               </h4>
-            <%= link_to "Teamview", admin_camp_teams_path(camp), class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            <div class="flex items-center gap-2">
+              <%= link_to "Teamview", admin_camp_teams_path(camp), class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            </div>
           </div>
         <% end %>
       </div>
@@ -130,7 +132,7 @@
   <% end %>
   <% if params[:modal] == "new_camp" %>
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-      <div class="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl dark:bg-slate-800">
+      <div class="w-full max-w-xl rounded-2xl bg-white p-6 text-center shadow-xl dark:bg-slate-800">
         <div class="flex justify-end">
           <%= link_to "×", admin_camps_path, class: "text-2xl leading-none text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" %>
         </div>
@@ -156,6 +158,46 @@
               <%= f.collection_select :year_id, Year.order(name: :desc), :id, :name, { prompt: "Jahr auswählen" }, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
 
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <%= f.label :start_on, "Von", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <div class="relative" data-controller="datepicker">
+                  <%= f.hidden_field :start_on, value: nil, data: { datepicker_target: "value" } %>
+                  <input
+                    type="text"
+                    value=""
+                    class="w-full min-w-0 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                    autocomplete="off"
+                    placeholder="TT.MM.JJJJ"
+                    data-datepicker-target="input"
+                    data-action="click->datepicker#open focus->datepicker#open"
+                  >
+                  <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+                    <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <%= f.label :end_on, "Bis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <div class="relative" data-controller="datepicker">
+                  <%= f.hidden_field :end_on, value: nil, data: { datepicker_target: "value" } %>
+                  <input
+                    type="text"
+                    value=""
+                    class="w-full min-w-0 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                    autocomplete="off"
+                    placeholder="TT.MM.JJJJ"
+                    data-datepicker-target="input"
+                    data-action="click->datepicker#open focus->datepicker#open"
+                  >
+                  <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+                    <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div class="flex justify-center gap-3 pt-2">
               <%= link_to "Abbrechen", admin_camps_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
               <%= f.submit "Camp erstellen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700" %>
@@ -168,7 +210,7 @@
   <% if params[:modal] == "edit_camp" && @camp %>
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
       
-      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800 text-center">
+      <div class="w-full max-w-xl rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800 text-center">
         
         <div class="flex justify-end">
           <%= link_to "×", admin_camps_path, class: "text-2xl leading-none text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" %>
@@ -191,6 +233,46 @@
             <div>
               <%= f.label :year_id, "Jahr", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
               <%= f.collection_select :year_id, Year.order(name: :desc), :id, :name, {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <%= f.label :start_on, "Von", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <div class="relative" data-controller="datepicker">
+                  <%= f.hidden_field :start_on, value: @camp.start_on&.strftime("%Y-%m-%d"), data: { datepicker_target: "value" } %>
+                  <input
+                    type="text"
+                    value="<%= @camp.start_on&.strftime('%d.%m.%Y') %>"
+                    class="w-full min-w-0 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                    autocomplete="off"
+                    placeholder="TT.MM.JJJJ"
+                    data-datepicker-target="input"
+                    data-action="click->datepicker#open focus->datepicker#open"
+                  >
+                  <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+                    <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <%= f.label :end_on, "Bis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                <div class="relative" data-controller="datepicker">
+                  <%= f.hidden_field :end_on, value: @camp.end_on&.strftime("%Y-%m-%d"), data: { datepicker_target: "value" } %>
+                  <input
+                    type="text"
+                    value="<%= @camp.end_on&.strftime('%d.%m.%Y') %>"
+                    class="w-full min-w-0 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                    autocomplete="off"
+                    placeholder="TT.MM.JJJJ"
+                    data-datepicker-target="input"
+                    data-action="click->datepicker#open focus->datepicker#open"
+                  >
+                  <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 dark:text-slate-500" data-action="click->datepicker#open">
+                    <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div class="flex justify-between items-center pt-2">

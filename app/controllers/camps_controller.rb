@@ -1,6 +1,12 @@
 class CampsController < ApplicationController
   def index
-    @years = Year.includes(:camps).order(name: :desc)
+    applications = current_user.camp_applications
+      .includes(assigned_camp: :year, assigned_camp_team: { camp: :year })
+      .where.not(assigned_camp_team_id: nil)
+
+    @assigned_teams_by_year = applications
+      .select(&:assigned_camp_team)
+      .group_by { |application| application.assigned_camp.year }
   end
 
   def create
@@ -34,6 +40,6 @@ class CampsController < ApplicationController
   private
 
   def camp_params
-    params.require(:camp).permit(:name, :year_id)
+    params.require(:camp).permit(:name, :year_id, :start_on, :end_on)
   end
 end
