@@ -13,79 +13,169 @@
     </div>
   </div>
 
-  <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
-    <%= form_with model: @team_template, url: admin_team_template_path(@team_template), method: :patch, class: "space-y-5" do |f| %>
-      <div>
-        <%= f.label :description, "Teambeschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.text_area :description, rows: 18, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-      </div>
+  <div class="inline-flex rounded-lg border border-slate-300 bg-white p-1 shadow-sm dark:border-slate-600 dark:bg-slate-800">
+    <% [
+      ["description", "Aufgabenbeschreibung"],
+      ["links", "Links"],
+      ["downloads", "Downloads"]
+    ].each do |key, label| %>
+      <% active = @section == key %>
+      <%= link_to label, admin_team_template_path(@team_template, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+  </div>
 
-      <% if @team_template.supports_responsible_description? %>
+  <% if @section == "description" %>
+    <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+      <%= form_with model: @team_template, url: admin_team_template_path(@team_template), method: :patch, class: "space-y-5" do |f| %>
         <div>
-          <%= f.label :responsible_description, "Beschreibung für Verantwortliche", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_area :responsible_description, rows: 14, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.label :description, "Teambeschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.text_area :description, rows: 18, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
-      <% end %>
 
-      <div class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4 dark:border-slate-700 dark:bg-slate-900/30">
-        <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Übernahme beim Speichern</p>
-        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Damit entscheidest du, für welche Teamseiten bestehende lokale Camp-Überschreibungen wieder auf den neuen Default gezogen werden.
-        </p>
-
-        <div class="mt-4 flex flex-wrap justify-end gap-3">
-          <%= button_tag "Für folgende Jahre speichern", type: :submit, name: "propagate_scope", value: "future_years", data: { turbo_confirm: "Neue Vorlage speichern und nur für folgende Jahre übernehmen? Aktuelle und vergangene Camps behalten dann ihre bisherigen Texte." }, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
-          <%= button_tag "Für alle speichern", type: :submit, name: "propagate_scope", value: "all", data: { turbo_confirm: "Neue Vorlage speichern und für alle Camps übernehmen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
-    <div>
-      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Links</h3>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-        Diese wichtigen Links erscheinen automatisch auf allen Teamseiten dieses Typs.
-      </p>
-    </div>
-
-    <div class="mt-5 space-y-3">
-      <% if @team_template_links.any? %>
-        <% @team_template_links.each do |link| %>
-          <%= form_with model: link, url: admin_team_template_link_path(@team_template, link), method: :patch, class: "rounded-xl border border-slate-200 px-4 py-4 dark:border-slate-700" do |f| %>
-            <div class="grid gap-4 md:grid-cols-[1fr_1.5fr_auto]">
-              <div>
-                <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-              </div>
-              <div>
-                <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.url_field :url, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-              </div>
-              <div class="flex items-end justify-end gap-3">
-                <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
-                <%= link_to "Entfernen", admin_team_template_link_path(@team_template, link), data: { turbo_method: :delete, turbo_confirm: "Link wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
-              </div>
-            </div>
-          <% end %>
+        <% if @team_template.supports_responsible_description? %>
+          <div>
+            <%= f.label :responsible_description, "Beschreibung für Verantwortliche", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+            <%= f.text_area :responsible_description, rows: 14, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          </div>
         <% end %>
-      <% else %>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Links hinterlegt.</p>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4 dark:border-slate-700 dark:bg-slate-900/30">
+          <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Übernahme beim Speichern</p>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            Damit entscheidest du, für welche Teamseiten bestehende lokale Camp-Überschreibungen wieder auf den neuen Default gezogen werden.
+          </p>
+
+          <div class="mt-4 flex flex-wrap justify-end gap-3">
+            <%= button_tag "Für folgende Jahre speichern", type: :submit, name: "propagate_scope", value: "future_years", data: { turbo_confirm: "Neue Vorlage speichern und nur für folgende Jahre übernehmen? Aktuelle und vergangene Camps behalten dann ihre bisherigen Texte." }, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+            <%= button_tag "Für alle speichern", type: :submit, name: "propagate_scope", value: "all", data: { turbo_confirm: "Neue Vorlage speichern und für alle Camps übernehmen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+          </div>
+        </div>
       <% end %>
     </div>
+  <% elsif @section == "links" %>
+    <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+      <div>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Links</h3>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          Diese wichtigen Links erscheinen automatisch auf allen Teamseiten dieses Typs.
+        </p>
+      </div>
 
-    <%= form_with model: TeamTemplateLink.new, url: admin_team_template_links_path(@team_template), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.4fr_auto]" do |f| %>
+      <div class="mt-5 space-y-3">
+        <% if @team_template_links.any? %>
+          <% @team_template_links.each do |link| %>
+            <%= form_with model: link, url: admin_team_template_link_path(@team_template, link), method: :patch, class: "rounded-xl border border-slate-200 px-4 py-4 dark:border-slate-700" do |f| %>
+              <div class="grid gap-4 md:grid-cols-[1fr_1.5fr_auto]">
+                <div>
+                  <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div>
+                  <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.url_field :url, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div class="flex items-end justify-end gap-3">
+                  <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                  <%= link_to "Entfernen", admin_team_template_link_path(@team_template, link), data: { turbo_method: :delete, turbo_confirm: "Link wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Links hinterlegt.</p>
+        <% end %>
+      </div>
+
+      <%= form_with model: TeamTemplateLink.new, url: admin_team_template_links_path(@team_template), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.4fr_auto]" do |f| %>
+        <div>
+          <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+        <div>
+          <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+        <div class="flex items-end">
+          <%= f.submit "Link hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+        </div>
+      <% end %>
+    </div>
+  <% elsif @section == "downloads" %>
+    <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
       <div>
-        <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Default-Downloads</h3>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          Diese Dateien erscheinen automatisch im Download-Reiter aller Teamseiten dieses Typs.
+        </p>
       </div>
-      <div>
-        <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+
+      <div class="mt-5 space-y-3">
+        <% if @team_template_download_items.any? %>
+          <% @team_template_download_items.each do |item| %>
+            <%= form_with model: item, url: admin_team_template_download_item_path(@team_template, item), method: :patch, class: "rounded-xl border border-slate-200 px-4 py-4 dark:border-slate-700" do |f| %>
+              <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_minmax(0,1fr)_auto]">
+                <div>
+                  <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div>
+                  <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div data-controller="file-upload">
+                  <%= f.label :file, "Datei ersetzen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <% input_id = "#{dom_id(item, :file)}_input" %>
+                  <%= f.file_field :file, id: input_id, class: "sr-only", data: { file_upload_target: "input", action: "change->file-upload#changed" } %>
+                  <button type="button" data-action="file-upload#pick" data-file-upload-target="trigger" class="inline-flex rounded-lg border border-slate-300 bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 transition dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+                    Datei auswählen
+                  </button>
+                  <div data-file-upload-target="selection" class="mt-2 hidden items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <span data-file-upload-target="filename" class="truncate"></span>
+                    <button type="button" data-action="file-upload#clear" class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+                      x
+                    </button>
+                  </div>
+                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400"><%= item.file.filename.to_s %> · <%= number_to_human_size(item.file.byte_size) %></p>
+                </div>
+                <div class="flex items-end justify-end gap-3">
+                  <%= link_to "Download", rails_blob_path(item.file, disposition: "attachment"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                  <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                  <%= link_to "Entfernen", admin_team_template_download_item_path(@team_template, item), data: { turbo_method: :delete, turbo_confirm: "Default-Datei wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Default-Dateien hinterlegt.</p>
+        <% end %>
       </div>
-      <div class="flex items-end">
-        <%= f.submit "Link hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
-      </div>
-    <% end %>
-  </div>
+
+      <%= form_with model: DownloadItem.new, url: admin_team_template_download_items_path(@team_template), class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_minmax(0,1fr)]" do |f| %>
+        <div>
+          <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+        <div>
+          <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+        <div data-controller="file-upload">
+          <%= f.label :file, "Datei", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.file_field :file, id: "new_team_template_download_file", class: "sr-only", data: { file_upload_target: "input", action: "change->file-upload#changed" } %>
+          <button type="button" data-action="file-upload#pick" data-file-upload-target="trigger" class="inline-flex rounded-lg border border-slate-300 bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 transition dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+            Datei auswählen
+          </button>
+          <div data-file-upload-target="selection" class="mt-2 hidden items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span data-file-upload-target="filename" class="truncate"></span>
+            <button type="button" data-action="file-upload#clear" class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+              x
+            </button>
+          </div>
+        </div>
+        <div class="flex items-end">
+          <%= f.submit "Default-Datei hochladen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 </div>

@@ -1,0 +1,36 @@
+<div class="space-y-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Listenverwaltung</p>
+      <h2 class="text-2xl font-bold">Medizinische Versorgung</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        Fortlaufender globaler Bestand für die Krankenpflege. Änderungen werden zentral mitgeschrieben.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    </div>
+  </div>
+
+  <div class="relative left-1/2 w-screen max-w-7xl -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+    <%= render "shared/medical_supply_sections",
+      title: "Bestandsliste",
+      description: "Pflege hier Medikamente, Salben, Werkzeuge, Verbandsmaterial und Sonstiges. Diese Liste läuft campübergreifend weiter.",
+      items_by_category: @medical_supply_items,
+      changes: @medical_supply_changes,
+      can_manage: true,
+      show_history: true,
+      create_url: admin_medical_supply_items_path,
+      item_path_builder: ->(item) { admin_medical_supply_item_path(item) },
+      print_path_builder: nil,
+      badge_text: "global gepflegt",
+      badge_classes: "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-100",
+      category_hints: {
+        "Medikamente" => "Tabletten, Tropfen und Mittel zur Einnahme.",
+        "Salben" => "Cremes, Gele und punktuelle Behandlungen.",
+        "Werkzeuge" => "Hilfsmittel wie Schere, Pinzette oder Zeckenzange.",
+        "Verbandsmaterial" => "Desinfektion, Kompressen, Binden und Pflaster.",
+        "Sonstiges" => "Weitere Hilfsmittel und Verbrauchsmaterialien."
+      } %>
+  </div>
+</div>

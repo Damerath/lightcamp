@@ -3,6 +3,7 @@ class TeamTemplate < ApplicationRecord
   has_many :team_template_links, dependent: :destroy
   has_many :team_template_sport_material_items, dependent: :destroy
   has_many :team_template_sport_material_changes, dependent: :destroy
+  has_many :download_items, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 

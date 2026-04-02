@@ -27,7 +27,8 @@
       ["overview", "Übersicht"],
       ["description", "Aufgabenbeschreibung"],
       ["todos", "ToDos"],
-      ["shopping", "Einkaufsliste"]
+      ["shopping", "Einkaufsliste"],
+      ["downloads", "Downloads"]
     ].each do |key, label| %>
       <% active = @section == key %>
       <%= link_to label, camp_team_page_path(@camp, @camp_team, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
@@ -37,6 +38,10 @@
       <%= link_to "Sportplan", camp_team_page_path(@camp, @camp_team, section: "sport_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
       <% active = @section == "material_list" %>
       <%= link_to "Materialliste", camp_team_page_path(@camp, @camp_team, section: "material_list"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+    <% end %>
+    <% if @camp_team.medical_team? %>
+      <% active = @section == "medical_supplies" %>
+      <%= link_to "Medizinische Versorgung", camp_team_page_path(@camp, @camp_team, section: "medical_supplies"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.kitchen_team? %>
       <% active = @section == "kitchen_plan" %>
@@ -60,7 +65,7 @@
     <% end %>
   </div>
 
-  <% if %w[program week_plan sport_plan material_list kitchen_plan diy_plan room_plan].include?(@section) %>
+  <% if %w[program week_plan sport_plan material_list medical_supplies kitchen_plan diy_plan room_plan].include?(@section) %>
     <div class="space-y-6">
   <% else %>
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
@@ -264,6 +269,16 @@
             <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
           <% end %>
         </div>
+      <% elsif @section == "downloads" %>
+        <%= render "shared/download_items_list",
+          default_items: @team_template_download_items,
+          local_items: @camp_team_download_items,
+          can_manage_local: @can_manage_local_downloads,
+          create_local_url: camp_team_download_items_path(@camp, @camp_team),
+          local_item_path_builder: ->(item) { camp_team_download_item_path(@camp, @camp_team, item) },
+          local_title: "Team-Dateien",
+          local_description: "Eigene Dateien für dieses Team und dieses Camp.",
+          local_badge: "teamintern" %>
       <% elsif @section == "sport_plan" %>
         <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
         <div class="space-y-4">
@@ -433,14 +448,13 @@
         </div>
         </div>
       <% elsif @section == "material_list" %>
-        <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
-          <div class="space-y-4">
-            <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+        <div class="space-y-4">
+          <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Materialliste</h3>
                   <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                    Aktueller Überblick über das Sportmaterial. Änderungen werden automatisch protokolliert.
+                    Gemeinsame, fortlaufende Materialliste für den Sportbereich. Änderungen werden zentral protokolliert.
                   </p>
                 </div>
                 <% if @can_manage_sport_materials %>
@@ -451,10 +465,11 @@
               </div>
 
               <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
-                <div class="grid <%= @can_manage_sport_materials ? 'grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_8rem_auto]' : 'grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_8rem]' %> gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100">
+                <div class="grid <%= @can_manage_sport_materials ? 'grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_minmax(0,1.2fr)_auto]' : 'grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_minmax(0,1.2fr)]' %> gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100">
                   <div>Gegenstand</div>
                   <div>Menge</div>
                   <div>Ort</div>
+                  <div>Anmerkungen</div>
                   <% if @can_manage_sport_materials %>
                     <div class="text-right">Aktionen</div>
                   <% end %>
@@ -462,7 +477,7 @@
                 <div class="divide-y divide-slate-200 dark:divide-slate-700">
                   <% @camp_sport_material_items.each do |item| %>
                     <% if @can_manage_sport_materials %>
-                      <%= form_with model: item, url: camp_sport_material_item_path(@camp, @camp_team, item), method: :patch, class: "grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_8rem_auto] gap-3 px-4 py-3" do |f| %>
+                      <%= form_with model: item, url: camp_sport_material_item_path(@camp, @camp_team, item), method: :patch, class: "grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_minmax(0,1.2fr)_auto] gap-3 px-4 py-3" do |f| %>
                         <div>
                           <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                         </div>
@@ -472,16 +487,20 @@
                         <div>
                           <%= f.text_field :storage_location, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                         </div>
+                        <div>
+                          <%= f.text_field :notes, placeholder: "z. B. defekt", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                        </div>
                         <div class="flex justify-end gap-2">
                           <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
                           <%= link_to "Löschen", camp_sport_material_item_path(@camp, @camp_team, item), data: { turbo_method: :delete, turbo_confirm: "Material wirklich löschen?" }, class: "inline-flex rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700" %>
                         </div>
                       <% end %>
                     <% else %>
-                      <div class="grid grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_8rem] gap-3 px-4 py-3 text-sm">
+                      <div class="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_minmax(0,1.2fr)] gap-3 px-4 py-3 text-sm">
                         <div class="text-slate-900 dark:text-slate-100"><%= item.name %></div>
                         <div class="text-slate-700 dark:text-slate-300"><%= item.quantity %></div>
                         <div class="text-slate-700 dark:text-slate-300"><%= item.storage_location %></div>
+                        <div class="text-slate-700 dark:text-slate-300"><%= item.notes.presence || "—" %></div>
                       </div>
                     <% end %>
                   <% end %>
@@ -489,7 +508,7 @@
               </div>
 
               <% if @can_manage_sport_materials %>
-                <%= form_with model: CampSportMaterialItem.new, url: camp_sport_material_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_auto]" do |f| %>
+                <%= form_with model: TeamTemplateSportMaterialItem.new, url: camp_sport_material_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_minmax(0,1.2fr)_auto]" do |f| %>
                   <div>
                     <%= f.label :name, "Neues Material", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
                     <%= f.text_field :name, placeholder: "z. B. Hockeyschläger", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
@@ -501,6 +520,10 @@
                   <div>
                     <%= f.label :storage_location, "Ort", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
                     <%= f.text_field :storage_location, placeholder: "z. B. S8", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  </div>
+                  <div>
+                    <%= f.label :notes, "Anmerkungen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                    <%= f.text_field :notes, placeholder: "z. B. defekt / reparieren", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                   <div class="flex items-end">
                     <%= f.submit "Material hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -529,8 +552,29 @@
                   </div>
                 </div>
               <% end %>
-            </div>
           </div>
+        </div>
+      <% elsif @section == "medical_supplies" %>
+        <div class="relative left-1/2 w-screen max-w-7xl -translate-x-1/2 px-4 sm:px-6 xl:px-8">
+          <%= render "shared/medical_supply_sections",
+            title: "Medizinische Versorgung",
+            description: "Fortlaufender Bestand für Medikamente, Verbandsmaterial und Hilfsmittel. Die Liste wird zentral geführt.",
+            items_by_category: @medical_supply_items,
+            changes: @medical_supply_changes,
+            can_manage: @can_manage_medical_supplies,
+            show_history: @can_manage_medical_supplies,
+            create_url: camp_medical_supply_items_path(@camp, @camp_team),
+            item_path_builder: ->(item) { camp_medical_supply_item_path(@camp, @camp_team, item) },
+            print_path_builder: ->(category) { camp_team_medical_supplies_print_path(@camp, @camp_team, category: category) },
+            badge_text: (@can_manage_medical_supplies ? "bearbeitbar" : "nur Ansicht"),
+            badge_classes: (@can_manage_medical_supplies ? "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-100" : "bg-slate-100 text-slate-700 dark:bg-slate-900/60 dark:text-slate-300"),
+            category_hints: {
+              "Medikamente" => "Tabletten, Tropfen und Mittel zur Einnahme.",
+              "Salben" => "Cremes, Gele und punktuelle Behandlungen.",
+              "Werkzeuge" => "Hilfsmittel wie Schere, Pinzette oder Zeckenzange.",
+              "Verbandsmaterial" => "Desinfektion, Kompressen, Binden und Pflaster.",
+              "Sonstiges" => "Weitere Hilfsmittel und Verbrauchsmaterialien."
+            } %>
         </div>
       <% elsif @section == "kitchen_plan" %>
         <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
@@ -1176,7 +1220,7 @@
           <% end %>
         </div>
       <% end %>
-    <% unless %w[program week_plan sport_plan material_list kitchen_plan diy_plan room_plan].include?(@section) %>
+    <% unless %w[program week_plan sport_plan material_list medical_supplies kitchen_plan diy_plan room_plan].include?(@section) %>
       </div>
 
       <aside class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get "camps/:camp_id/teams/:id/kitchen_plan_print", to: "camp_teams#kitchen_plan_print", as: :camp_team_kitchen_plan_print
   get "camps/:camp_id/teams/:id/diy_plan_print", to: "camp_teams#diy_plan_print", as: :camp_team_diy_plan_print
   get "camps/:camp_id/teams/:id/room_plan_print", to: "camp_teams#room_plan_print", as: :camp_team_room_plan_print
+  get "camps/:camp_id/teams/:id/medical_supplies_print", to: "camp_teams#medical_supplies_print", as: :camp_team_medical_supplies_print
   patch "camps/:camp_id/teams/:id", to: "camp_teams#update"
   post "camps/:camp_id/teams/:team_id/sleeping_places", to: "camp_sleeping_places#create", as: :camp_sleeping_places
   patch "camps/:camp_id/teams/:team_id/sleeping_places/:id", to: "camp_sleeping_places#update", as: :camp_sleeping_place
@@ -26,6 +27,9 @@ Rails.application.routes.draw do
   post "camps/:camp_id/teams/:team_id/links", to: "camp_team_links#create", as: :camp_team_links
   patch "camps/:camp_id/teams/:team_id/links/:id", to: "camp_team_links#update", as: :camp_team_link
   delete "camps/:camp_id/teams/:team_id/links/:id", to: "camp_team_links#destroy"
+  post "camps/:camp_id/teams/:team_id/download_items", to: "camp_team_download_items#create", as: :camp_team_download_items
+  patch "camps/:camp_id/teams/:team_id/download_items/:id", to: "camp_team_download_items#update", as: :camp_team_download_item
+  delete "camps/:camp_id/teams/:team_id/download_items/:id", to: "camp_team_download_items#destroy"
   post "camps/:camp_id/teams/:team_id/todos", to: "camp_team_todos#create", as: :camp_team_todos
   patch "camps/:camp_id/teams/:team_id/todos/:id", to: "camp_team_todos#update", as: :camp_team_todo
   delete "camps/:camp_id/teams/:team_id/todos/:id", to: "camp_team_todos#destroy"
@@ -36,6 +40,9 @@ Rails.application.routes.draw do
   post "camps/:camp_id/teams/:team_id/sport_material_items", to: "camp_sport_material_items#create", as: :camp_sport_material_items
   patch "camps/:camp_id/teams/:team_id/sport_material_items/:id", to: "camp_sport_material_items#update", as: :camp_sport_material_item
   delete "camps/:camp_id/teams/:team_id/sport_material_items/:id", to: "camp_sport_material_items#destroy"
+  post "camps/:camp_id/teams/:team_id/medical_supplies", to: "medical_supply_items#create", as: :camp_medical_supply_items
+  patch "camps/:camp_id/teams/:team_id/medical_supplies/:id", to: "medical_supply_items#update", as: :camp_medical_supply_item
+  delete "camps/:camp_id/teams/:team_id/medical_supplies/:id", to: "medical_supply_items#destroy"
   patch "camps/:camp_id/teams/:team_id/kitchen_day_plans/:id", to: "camp_kitchen_day_plans#update", as: :camp_kitchen_day_plan
   patch "camps/:camp_id/teams/:team_id/diy_day_plans/:id", to: "camp_diy_day_plans#update", as: :camp_diy_day_plan
   post "camps/:camp_id/teams/:team_id/diy_day_plans/:id/apply_general_offer_to_all", to: "camp_diy_day_plans#apply_general_offer_to_all", as: :apply_general_offer_to_all_camp_diy_day_plan
@@ -55,10 +62,18 @@ Rails.application.routes.draw do
   patch "users/:id", to: "users#update", as: :user
   delete "users/:id", to: "users#destroy"
   get "admin", to: "admin#index"
+  get "admin/downloads", to: "admin_download_items#index", as: :admin_download_items
+  post "admin/downloads/items", to: "admin_download_items#create", as: :admin_download_items_create
+  patch "admin/downloads/items/:id", to: "admin_download_items#update", as: :admin_download_item
+  delete "admin/downloads/items/:id", to: "admin_download_items#destroy"
   get "admin/lists/sport_materials", to: "admin_sport_material_lists#show", as: :admin_sport_material_list
   post "admin/lists/sport_materials/items", to: "admin_sport_material_lists#create", as: :admin_sport_material_items
   patch "admin/lists/sport_materials/items/:id", to: "admin_sport_material_lists#update", as: :admin_sport_material_item
   delete "admin/lists/sport_materials/items/:id", to: "admin_sport_material_lists#destroy"
+  get "admin/lists/medical_supplies", to: "admin_medical_supply_lists#show", as: :admin_medical_supply_list
+  post "admin/lists/medical_supplies/items", to: "admin_medical_supply_lists#create", as: :admin_medical_supply_items
+  patch "admin/lists/medical_supplies/items/:id", to: "admin_medical_supply_lists#update", as: :admin_medical_supply_item
+  delete "admin/lists/medical_supplies/items/:id", to: "admin_medical_supply_lists#destroy"
   get "admin/camps", to: "admin_camps#index"
   get "admin/camps/:camp_id/teams", to: "admin_camp_teams#index", as: :admin_camp_teams
   get "admin/camps/:camp_id/teams/:id", to: "admin_camp_teams#show", as: :admin_camp_team_page
@@ -68,6 +83,7 @@ Rails.application.routes.draw do
   get "admin/camps/:camp_id/teams/:id/kitchen_plan_print", to: "admin_camp_teams#kitchen_plan_print", as: :admin_camp_team_kitchen_plan_print
   get "admin/camps/:camp_id/teams/:id/diy_plan_print", to: "admin_camp_teams#diy_plan_print", as: :admin_camp_team_diy_plan_print
   get "admin/camps/:camp_id/teams/:id/room_plan_print", to: "admin_camp_teams#room_plan_print", as: :admin_camp_team_room_plan_print
+  get "admin/camps/:camp_id/teams/:id/medical_supplies_print", to: "admin_camp_teams#medical_supplies_print", as: :admin_camp_team_medical_supplies_print
   patch "admin/camps/:camp_id/teams/:id", to: "admin_camp_teams#update", as: :admin_camp_team
   post "admin/camps/:camp_id/teams/:team_id/sleeping_places", to: "admin_camp_sleeping_places#create", as: :admin_camp_sleeping_places
   patch "admin/camps/:camp_id/teams/:team_id/sleeping_places/:id", to: "admin_camp_sleeping_places#update", as: :admin_camp_sleeping_place
@@ -79,6 +95,9 @@ Rails.application.routes.draw do
   post "admin/camps/:camp_id/teams/:team_id/links", to: "admin_camp_team_links#create", as: :admin_camp_team_links
   patch "admin/camps/:camp_id/teams/:team_id/links/:id", to: "admin_camp_team_links#update", as: :admin_camp_team_link
   delete "admin/camps/:camp_id/teams/:team_id/links/:id", to: "admin_camp_team_links#destroy"
+  post "admin/camps/:camp_id/teams/:team_id/download_items", to: "admin_camp_team_download_items#create", as: :admin_camp_team_download_items
+  patch "admin/camps/:camp_id/teams/:team_id/download_items/:id", to: "admin_camp_team_download_items#update", as: :admin_camp_team_download_item
+  delete "admin/camps/:camp_id/teams/:team_id/download_items/:id", to: "admin_camp_team_download_items#destroy"
   post "admin/camps/:camp_id/teams/:team_id/todos", to: "admin_camp_team_todos#create", as: :admin_camp_team_todos
   patch "admin/camps/:camp_id/teams/:team_id/todos/:id", to: "admin_camp_team_todos#update", as: :admin_camp_team_todo
   delete "admin/camps/:camp_id/teams/:team_id/todos/:id", to: "admin_camp_team_todos#destroy"
@@ -89,6 +108,9 @@ Rails.application.routes.draw do
   post "admin/camps/:camp_id/teams/:team_id/sport_material_items", to: "admin_camp_sport_material_items#create", as: :admin_camp_sport_material_items
   patch "admin/camps/:camp_id/teams/:team_id/sport_material_items/:id", to: "admin_camp_sport_material_items#update", as: :admin_camp_sport_material_item
   delete "admin/camps/:camp_id/teams/:team_id/sport_material_items/:id", to: "admin_camp_sport_material_items#destroy"
+  post "admin/camps/:camp_id/teams/:team_id/medical_supplies", to: "admin_medical_supply_items#create", as: :admin_camp_medical_supply_items
+  patch "admin/camps/:camp_id/teams/:team_id/medical_supplies/:id", to: "admin_medical_supply_items#update", as: :admin_camp_medical_supply_item
+  delete "admin/camps/:camp_id/teams/:team_id/medical_supplies/:id", to: "admin_medical_supply_items#destroy"
   patch "admin/camps/:camp_id/teams/:team_id/kitchen_day_plans/:id", to: "admin_camp_kitchen_day_plans#update", as: :admin_camp_kitchen_day_plan
   patch "admin/camps/:camp_id/teams/:team_id/diy_day_plans/:id", to: "admin_camp_diy_day_plans#update", as: :admin_camp_diy_day_plan
   post "admin/camps/:camp_id/teams/:team_id/diy_day_plans/:id/apply_general_offer_to_all", to: "admin_camp_diy_day_plans#apply_general_offer_to_all", as: :apply_general_offer_to_all_admin_camp_diy_day_plan
@@ -110,6 +132,9 @@ Rails.application.routes.draw do
   post "admin/team_templates/:team_template_id/links", to: "admin_team_template_links#create", as: :admin_team_template_links
   patch "admin/team_templates/:team_template_id/links/:id", to: "admin_team_template_links#update", as: :admin_team_template_link
   delete "admin/team_templates/:team_template_id/links/:id", to: "admin_team_template_links#destroy"
+  post "admin/team_templates/:team_template_id/download_items", to: "admin_team_template_download_items#create", as: :admin_team_template_download_items
+  patch "admin/team_templates/:team_template_id/download_items/:id", to: "admin_team_template_download_items#update", as: :admin_team_template_download_item
+  delete "admin/team_templates/:team_template_id/download_items/:id", to: "admin_team_template_download_items#destroy"
   get "admin/camp_applications", to: "admin_camp_applications#index"
   patch "admin/camp_applications/:id/assignment", to: "admin_camp_applications#update_assignment", as: :admin_camp_application_assignment
   get "years", to: "years#index"

@@ -1,0 +1,55 @@
+<div class="print-toolbar mb-4 flex items-center justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">Medizinische Versorgung</h1>
+    <p class="mt-1 text-sm text-slate-500">
+      <%= @camp.name %> · <%= @camp_team.workspace_label %> · <%= @medical_supply_category %>
+    </p>
+  </div>
+  <div class="flex gap-3">
+    <% back_path = current_user&.admin? ? admin_camp_team_page_path(@camp, @camp_team, section: "medical_supplies") : camp_team_page_path(@camp, @camp_team, section: "medical_supplies") %>
+    <%= link_to "Zurück", back_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" %>
+    <button onclick="window.print()" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">Drucken</button>
+  </div>
+</div>
+
+<section class="overflow-hidden rounded-2xl border border-slate-300 bg-white">
+  <div class="border-b border-slate-300 bg-slate-50 px-5 py-4">
+    <h2 class="text-lg font-semibold text-slate-900"><%= @medical_supply_category %></h2>
+    <p class="mt-1 text-sm text-slate-500">Stand vom <%= l(Time.zone.now, format: "%d.%m.%Y %H:%M") %></p>
+  </div>
+
+  <div class="overflow-hidden">
+    <table class="min-w-full border-collapse text-sm">
+      <thead class="bg-slate-50">
+        <tr>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Verwendungszweck</th>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Artikel</th>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Menge</th>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Ablauf</th>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Anmerkungen</th>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Fehlt</th>
+          <th class="border-b border-slate-300 px-3 py-2 text-left font-semibold text-slate-900">Angebr.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @medical_supply_items_for_print.any? %>
+          <% @medical_supply_items_for_print.each_with_index do |item, index| %>
+            <tr class="<%= index.odd? ? 'bg-slate-50/50' : '' %>">
+              <td class="border-b border-slate-200 px-3 py-2 text-slate-700"><%= item.usage_purpose.presence || "—" %></td>
+              <td class="border-b border-slate-200 px-3 py-2 font-medium text-slate-900"><%= item.name %></td>
+              <td class="border-b border-slate-200 px-3 py-2 text-slate-700"><%= item.quantity.presence || "—" %></td>
+              <td class="border-b border-slate-200 px-3 py-2 text-slate-700"><%= item.expires_on_label.presence || "—" %></td>
+              <td class="border-b border-slate-200 px-3 py-2 text-slate-700"><%= item.notes.presence || "—" %></td>
+              <td class="border-b border-slate-200 px-3 py-2 text-slate-700"><%= item.missing? ? "Ja" : "Nein" %></td>
+              <td class="border-b border-slate-200 px-3 py-2 text-slate-700"><%= item.opened? ? "Ja" : "Nein" %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="7" class="px-3 py-6 text-sm text-slate-500">Keine Einträge in dieser Kategorie vorhanden.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

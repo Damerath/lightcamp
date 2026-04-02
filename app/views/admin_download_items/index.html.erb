@@ -1,0 +1,22 @@
+<div class="space-y-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Adminbereich</p>
+      <h2 class="text-2xl font-bold">Admin-Downloads</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">
+        Dateien in diesem Bereich sind nur für Admins sichtbar.
+      </p>
+    </div>
+    <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+  </div>
+
+  <%= render "shared/download_items_list",
+    default_items: [],
+    local_items: @download_items,
+    can_manage_local: true,
+    create_local_url: admin_download_items_create_path,
+    local_item_path_builder: ->(item) { admin_download_item_path(item) },
+    local_title: "Admin-Dateien",
+    local_description: "Interne Dateien nur für Admins.",
+    local_badge: "nur admins" %>
+</div>

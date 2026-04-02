@@ -3,7 +3,7 @@ class AdminSportMaterialListsController < ApplicationController
   before_action :set_sport_team_template
 
   def show
-    @sort_column = params[:sort].presence_in(%w[name quantity storage_location]) || "storage_location"
+    @sort_column = params[:sort].presence_in(%w[name quantity storage_location notes]) || "storage_location"
     @sort_direction = params[:direction].presence_in(%w[asc desc]) || "asc"
     @sport_material_items = @team_template.team_template_sport_material_items.order(Arel.sql("#{sort_column_sql(@sort_column)} #{@sort_direction}, name ASC, id ASC"))
     @sport_material_changes = @team_template.team_template_sport_material_changes.includes(:user).recent_first.limit(40)
@@ -18,9 +18,9 @@ class AdminSportMaterialListsController < ApplicationController
         user: current_user,
         material_name: item.name,
         change_type: "create",
-        change_summary: "Angelegt: Menge #{item.quantity.presence || '-'}, Ort #{item.storage_location.presence || '-'}"
+        change_summary: "Angelegt: Menge #{item.quantity.presence || '-'}, Ort #{item.storage_location.presence || '-'}, Anmerkung #{item.notes.presence || '-'}"
       )
-      redirect_to admin_sport_material_list_path, notice: "Default-Material wurde gespeichert."
+      redirect_to admin_sport_material_list_path, notice: "Material wurde gespeichert."
     else
       redirect_to admin_sport_material_list_path, alert: item.errors.full_messages.to_sentence
     end
@@ -28,7 +28,7 @@ class AdminSportMaterialListsController < ApplicationController
 
   def update
     item = @team_template.team_template_sport_material_items.find(params[:id])
-    previous = item.attributes.slice("name", "quantity", "storage_location")
+    previous = item.attributes.slice("name", "quantity", "storage_location", "notes")
 
     if item.update(sport_material_item_params)
       summary = build_update_summary(previous, item)
@@ -41,7 +41,7 @@ class AdminSportMaterialListsController < ApplicationController
           change_summary: summary
         )
       end
-      redirect_to admin_sport_material_list_path, notice: "Default-Material wurde aktualisiert."
+      redirect_to admin_sport_material_list_path, notice: "Material wurde aktualisiert."
     else
       redirect_to admin_sport_material_list_path, alert: item.errors.full_messages.to_sentence
     end
@@ -49,7 +49,7 @@ class AdminSportMaterialListsController < ApplicationController
 
   def destroy
     item = @team_template.team_template_sport_material_items.find(params[:id])
-    summary = "Entfernt: Menge #{item.quantity.presence || '-'}, Ort #{item.storage_location.presence || '-'}"
+    summary = "Entfernt: Menge #{item.quantity.presence || '-'}, Ort #{item.storage_location.presence || '-'}, Anmerkung #{item.notes.presence || '-'}"
     material_name = item.name
     item.destroy
 
@@ -61,7 +61,7 @@ class AdminSportMaterialListsController < ApplicationController
       change_summary: summary
     )
 
-    redirect_to admin_sport_material_list_path, notice: "Default-Material wurde entfernt."
+    redirect_to admin_sport_material_list_path, notice: "Material wurde entfernt."
   end
 
   private
@@ -71,7 +71,7 @@ class AdminSportMaterialListsController < ApplicationController
   end
 
   def sport_material_item_params
-    params.require(:team_template_sport_material_item).permit(:name, :quantity, :storage_location)
+    params.require(:team_template_sport_material_item).permit(:name, :quantity, :storage_location, :notes)
   end
 
   def next_position
@@ -84,6 +84,8 @@ class AdminSportMaterialListsController < ApplicationController
       "LOWER(name)"
     when "quantity"
       "LOWER(quantity)"
+    when "notes"
+      "LOWER(notes)"
     else
       "LOWER(storage_location)"
     end
@@ -94,6 +96,7 @@ class AdminSportMaterialListsController < ApplicationController
     changes << "Name von #{previous['name']} auf #{item.name}" if previous["name"] != item.name
     changes << "Menge von #{previous['quantity'].presence || '-'} auf #{item.quantity.presence || '-'}" if previous["quantity"] != item.quantity
     changes << "Ort von #{previous['storage_location'].presence || '-'} auf #{item.storage_location.presence || '-'}" if previous["storage_location"] != item.storage_location
+    changes << "Anmerkung von #{previous['notes'].presence || '-'} auf #{item.notes.presence || '-'}" if previous["notes"] != item.notes
     changes.present? ? "Aktualisiert: #{changes.join('; ')}" : nil
   end
 

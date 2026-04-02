@@ -41,6 +41,7 @@ class CampTeam < ApplicationRecord
   has_many :camp_team_links, dependent: :destroy
   has_many :camp_team_todos, dependent: :destroy
   has_many :camp_team_shopping_items, dependent: :destroy
+  has_many :download_items, dependent: :destroy
   has_many :camp_program_blocks, dependent: :destroy
   has_many :camp_program_week_days, dependent: :destroy
   has_many :camp_sport_day_plans, dependent: :destroy
@@ -110,6 +111,10 @@ class CampTeam < ApplicationRecord
 
   def camp_leader_team?
     name == "Freizeitleiter"
+  end
+
+  def medical_team?
+    name == "Krankenpfleger/-in"
   end
 
   def supports_responsible_description?
@@ -240,6 +245,13 @@ class CampTeam < ApplicationRecord
     return false unless sport_team? && user.present?
 
     user.camp_applications.exists?(assigned_camp_team_id: workspace_team_ids, assigned_as_responsible: true)
+  end
+
+  def medical_supply_manager?(user)
+    return true if user&.admin?
+    return false unless medical_team? && user.present?
+
+    user.camp_applications.exists?(assigned_camp_team_id: workspace_team_ids)
   end
 
   def sync_kitchen_day_plans_to_schedule!

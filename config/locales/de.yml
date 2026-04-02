@@ -1,4 +1,7 @@
 de:
+  errors:
+    messages:
+      blank: "darf nicht leer sein"
   time:
     formats:
       default: "%H:%M"
@@ -53,6 +56,9 @@ de:
       default: "%d.%m.%Y"
   activerecord:
     attributes:
+      download_item:
+        title: "Titel"
+        file: "Datei"
       user:
         first_name: "Vorname"
         last_name: "Nachname"

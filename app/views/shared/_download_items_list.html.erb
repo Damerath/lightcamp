@@ -1,0 +1,139 @@
+<div class="space-y-6">
+  <% if default_items.any? %>
+    <section class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Default-Dateien</h3>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Diese Dateien kommen zentral aus der Teamverwaltung.</p>
+        </div>
+        <% if local_assigns[:default_manage_path].present? %>
+          <%= link_to "Defaults verwalten", default_manage_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+        <% end %>
+      </div>
+
+      <div class="mt-5 space-y-3">
+        <% default_items.each do |item| %>
+          <div class="rounded-xl border border-sky-200 bg-sky-50/60 px-4 py-4 dark:border-sky-900/60 dark:bg-sky-950/20">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <p class="font-medium text-slate-900 dark:text-slate-100"><%= item.title %></p>
+                  <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-900/60 dark:text-sky-200">Default</span>
+                </div>
+                <% if item.description.present? %>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-300"><%= item.description %></p>
+                <% end %>
+                <div class="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                  <span><%= item.file.filename.to_s %></span>
+                  <span><%= number_to_human_size(item.file.byte_size) %></span>
+                </div>
+              </div>
+              <%= link_to "Download", rails_blob_path(item.file, disposition: "attachment"), class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100"><%= local_title %></h3>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= local_description %></p>
+      </div>
+      <% if local_assigns[:local_badge].present? %>
+        <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:bg-amber-900/60 dark:text-amber-100"><%= local_badge %></span>
+      <% end %>
+    </div>
+
+    <div class="mt-5 space-y-3">
+      <% if local_items.any? %>
+        <% local_items.each do |item| %>
+          <% if can_manage_local %>
+            <%= form_with model: item, url: local_item_path_builder.call(item), method: :patch, class: "rounded-xl border border-slate-200 px-4 py-4 dark:border-slate-700" do |f| %>
+              <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_minmax(0,1fr)_auto]">
+                <div>
+                  <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div>
+                  <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                </div>
+                <div data-controller="file-upload">
+                  <%= f.label :file, "Datei ersetzen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+                  <% input_id = "#{dom_id(item, :file)}_input" %>
+                  <%= f.file_field :file, id: input_id, class: "sr-only", data: { file_upload_target: "input", action: "change->file-upload#changed" } %>
+                  <button type="button" data-action="file-upload#pick" data-file-upload-target="trigger" class="inline-flex rounded-lg border border-slate-300 bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 transition dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+                    Datei auswählen
+                  </button>
+                  <div data-file-upload-target="selection" class="mt-2 hidden items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <span data-file-upload-target="filename" class="truncate"></span>
+                    <button type="button" data-action="file-upload#clear" class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+                      x
+                    </button>
+                  </div>
+                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400"><%= item.file.filename.to_s %> · <%= number_to_human_size(item.file.byte_size) %></p>
+                </div>
+                <div class="flex items-end justify-end gap-2">
+                  <%= link_to "Download", rails_blob_path(item.file, disposition: "attachment"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                  <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                  <%= link_to "Entfernen", local_item_path_builder.call(item), data: { turbo_method: :delete, turbo_confirm: "Datei wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="rounded-xl border border-slate-200 px-4 py-4 dark:border-slate-700">
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <p class="font-medium text-slate-900 dark:text-slate-100"><%= item.title %></p>
+                  <% if item.description.present? %>
+                    <p class="mt-1 text-sm text-slate-600 dark:text-slate-300"><%= item.description %></p>
+                  <% end %>
+                  <div class="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><%= item.file.filename.to_s %></span>
+                    <span><%= number_to_human_size(item.file.byte_size) %></span>
+                  </div>
+                </div>
+                <%= link_to "Download", rails_blob_path(item.file, disposition: "attachment"), class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Dateien vorhanden.</p>
+      <% end %>
+    </div>
+
+    <% if can_manage_local %>
+      <%= form_with model: DownloadItem.new, url: create_local_url, class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_minmax(0,1fr)]" do |f| %>
+        <div>
+          <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+        <div>
+          <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+        <div data-controller="file-upload">
+          <%= f.label :file, "Datei", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <% input_id = "new_download_item_file_#{local_title.parameterize}" %>
+          <%= f.file_field :file, id: input_id, class: "sr-only", data: { file_upload_target: "input", action: "change->file-upload#changed" } %>
+          <button type="button" data-action="file-upload#pick" data-file-upload-target="trigger" class="inline-flex rounded-lg border border-slate-300 bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 transition dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+            Datei auswählen
+          </button>
+          <div data-file-upload-target="selection" class="mt-2 hidden items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span data-file-upload-target="filename" class="truncate"></span>
+            <button type="button" data-action="file-upload#clear" class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800">
+              x
+            </button>
+          </div>
+        </div>
+        <div class="flex items-end">
+          <%= f.submit "Datei hochladen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+        </div>
+      <% end %>
+    <% end %>
+  </section>
+</div>

@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_01_150000) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_02_103100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "camp_application_choices", force: :cascade do |t|
     t.bigint "camp_application_id", null: false
@@ -258,6 +286,49 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_01_150000) do
     t.index ["year_id"], name: "index_camps_on_year_id"
   end
 
+  create_table "download_items", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.integer "scope_kind", default: 0, null: false
+    t.bigint "team_template_id"
+    t.bigint "camp_team_id"
+    t.bigint "uploader_id"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["camp_team_id"], name: "index_download_items_on_camp_team_id"
+    t.index ["scope_kind", "position"], name: "idx_download_items_on_scope_and_position"
+    t.index ["team_template_id"], name: "index_download_items_on_team_template_id"
+    t.index ["uploader_id"], name: "index_download_items_on_uploader_id"
+  end
+
+  create_table "medical_supply_changes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "actor_name", default: "", null: false
+    t.string "item_name", null: false
+    t.string "change_type", null: false
+    t.text "change_summary", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_medical_supply_changes_on_created_at"
+    t.index ["user_id"], name: "index_medical_supply_changes_on_user_id"
+  end
+
+  create_table "medical_supply_items", force: :cascade do |t|
+    t.string "category", null: false
+    t.string "usage_purpose", default: "", null: false
+    t.string "name", null: false
+    t.string "quantity", default: "", null: false
+    t.string "expires_on_label", default: "", null: false
+    t.text "notes", default: "", null: false
+    t.boolean "missing", default: false, null: false
+    t.boolean "opened", default: false, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category", "position"], name: "idx_med_supply_items_on_category_and_position"
+  end
+
   create_table "team_template_links", force: :cascade do |t|
     t.bigint "team_template_id", null: false
     t.string "title", null: false
@@ -290,6 +361,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_01_150000) do
     t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "notes"
     t.index ["team_template_id", "position"], name: "index_template_sport_materials_on_template_and_position"
     t.index ["team_template_id"], name: "index_team_template_sport_material_items_on_team_template_id"
   end
@@ -331,6 +403,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_01_150000) do
     t.boolean "registration_open", default: false
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "camp_application_choices", "camp_applications"
   add_foreign_key "camp_application_choices", "camps"
   add_foreign_key "camp_applications", "camp_sleeping_places"
@@ -358,6 +432,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_01_150000) do
   add_foreign_key "camp_teams", "camps"
   add_foreign_key "camp_teams", "team_templates"
   add_foreign_key "camps", "years"
+  add_foreign_key "download_items", "camp_teams"
+  add_foreign_key "download_items", "team_templates"
+  add_foreign_key "download_items", "users", column: "uploader_id"
+  add_foreign_key "medical_supply_changes", "users"
   add_foreign_key "team_template_links", "team_templates"
   add_foreign_key "team_template_sport_material_changes", "team_templates"
   add_foreign_key "team_template_sport_material_changes", "users"

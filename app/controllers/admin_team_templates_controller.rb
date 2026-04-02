@@ -9,7 +9,9 @@ class AdminTeamTemplatesController < ApplicationController
   def show
     @team_template = TeamTemplate.find(params[:id])
     @active_year = Year.find_by(registration_open: true)
+    @section = params[:section].presence_in(%w[description links downloads]) || "description"
     @team_template_links = @team_template.team_template_links.ordered
+    @team_template_download_items = @team_template.download_items.team_template_default.includes(:uploader, file_attachment: :blob).ordered
   end
 
   def update

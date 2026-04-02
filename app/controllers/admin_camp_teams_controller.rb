@@ -1,7 +1,7 @@
 class AdminCampTeamsController < ApplicationController
   before_action :require_admin
   before_action :set_camp
-  before_action :set_camp_team, only: [:show, :update, :shopping_print, :week_plan_print, :sport_tournament_print, :kitchen_plan_print, :diy_plan_print, :room_plan_print]
+  before_action :set_camp_team, only: [:show, :update, :shopping_print, :week_plan_print, :sport_tournament_print, :kitchen_plan_print, :diy_plan_print, :room_plan_print, :medical_supplies_print]
   layout :resolve_layout
 
   def index
@@ -19,11 +19,12 @@ class AdminCampTeamsController < ApplicationController
     @week_plan_source_team = @camp_team.program_team? ? @camp_team : @camp_team.published_week_plan_source_team
     @week_plan_available = @week_plan_source_team.present?
     @week_plan_read_only = @week_plan_available && @week_plan_source_team != @camp_team
-    allowed_sections = %w[overview description todos shopping]
+    allowed_sections = %w[overview description todos shopping downloads]
     if @camp_team.sport_team?
       allowed_sections << "sport_plan"
       allowed_sections << "material_list"
     end
+    allowed_sections << "medical_supplies" if @camp_team.medical_team?
     allowed_sections << "kitchen_plan" if @camp_team.kitchen_team?
     allowed_sections << "diy_plan" if @camp_team.diy_team?
     allowed_sections << "room_plan" if @camp_team.camp_leader_team?
@@ -32,16 +33,24 @@ class AdminCampTeamsController < ApplicationController
     @section = params[:section].presence_in(allowed_sections) || "overview"
     @camp_team_links = @camp_team.camp_team_links.ordered
     @team_template_links = @camp_team.team_template&.team_template_links&.ordered || TeamTemplateLink.none
+    @team_template_download_items = @camp_team.team_template.present? ? DownloadItem.default_for_template(@camp_team.team_template).includes(:uploader, file_attachment: :blob) : DownloadItem.none
+    @camp_team_download_items = DownloadItem.local_for_team(@camp_team).includes(:uploader, file_attachment: :blob)
+    @can_manage_local_downloads = true
     @camp_team_todos = @camp_team.camp_team_todos.ordered
     @camp_team_shopping_items = @camp_team.camp_team_shopping_items.ordered
     if @camp_team.sport_team?
       @camp_team.sync_sport_day_plans_to_schedule!
-      @camp_team.ensure_sport_material_items!
+      sport_team_template = TeamTemplate.find_or_create_by!(name: "Sport")
       @camp_sport_day_plans = @camp_team.camp_sport_day_plans.ordered
       @camp_sport_tournament_plan = @camp_team.ensure_sport_tournament_plan!
-      @camp_sport_material_items = @camp_team.camp_sport_material_items.ordered
-      @camp_sport_material_changes = @camp_team.camp_sport_material_changes.includes(:user).recent_first.limit(40)
+      @camp_sport_material_items = sport_team_template.team_template_sport_material_items.ordered
+      @camp_sport_material_changes = sport_team_template.team_template_sport_material_changes.includes(:user).recent_first.limit(40)
       @can_manage_sport_materials = true
+    end
+    if @camp_team.medical_team?
+      @medical_supply_items = MedicalSupplyItem.grouped_for_view
+      @medical_supply_changes = MedicalSupplyChange.recent_first.limit(50)
+      @can_manage_medical_supplies = true
     end
     if @camp_team.kitchen_team?
       @camp_team.sync_kitchen_day_plans_to_schedule!
@@ -115,6 +124,15 @@ class AdminCampTeamsController < ApplicationController
 
     prepare_room_plan_print
     render "camp_teams/room_plan_print"
+  end
+
+  def medical_supplies_print
+    return redirect_to admin_camp_team_page_path(@camp, @camp_team), alert: "Nur fuer die Krankenpflege verfuegbar." unless @camp_team.medical_team?
+
+    prepare_medical_supplies_print
+    return if performed?
+
+    render "camp_teams/medical_supplies_print"
   end
 
   def update
@@ -196,7 +214,7 @@ class AdminCampTeamsController < ApplicationController
   end
 
   def resolve_layout
-    %w[shopping_print week_plan_print sport_tournament_print kitchen_plan_print diy_plan_print room_plan_print].include?(action_name) ? "print" : "application"
+    %w[shopping_print week_plan_print sport_tournament_print kitchen_plan_print diy_plan_print room_plan_print medical_supplies_print].include?(action_name) ? "print" : "application"
   end
 
   def prepare_room_plan_print
@@ -217,6 +235,16 @@ class AdminCampTeamsController < ApplicationController
     @camp_program_week_days = source_team.camp_program_week_days.includes(:camp_program_week_blocks).ordered
     @camp_program_week_days_by_date = @camp_program_week_days.index_by(&:planned_on)
     @camp_program_week_dates = @camp.scheduled? ? @camp.day_range : []
+  end
+
+  def prepare_medical_supplies_print
+    @medical_supply_category = params[:category].to_s
+    unless MedicalSupplyItem::CATEGORY_ORDER.include?(@medical_supply_category)
+      redirect_to admin_camp_team_page_path(@camp, @camp_team, section: "medical_supplies"), alert: "Kategorie nicht gefunden."
+      return
+    end
+
+    @medical_supply_items_for_print = MedicalSupplyItem.ordered.where(category: @medical_supply_category)
   end
 
   def build_program_block_modal
