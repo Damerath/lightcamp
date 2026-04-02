@@ -12,3 +12,5 @@ import ApplicationModalController from "./application_modal_controller"
 application.register("application-modal", ApplicationModalController)
 import DatepickerController from "./datepicker_controller"
 application.register("datepicker", DatepickerController)
+import ConfirmModalController from "./confirm_modal_controller"
+application.register("confirm-modal", ConfirmModalController)

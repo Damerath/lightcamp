@@ -20,7 +20,7 @@
       ["downloads", "Downloads"]
     ].each do |key, label| %>
       <% active = @section == key %>
-      <%= link_to label, admin_team_template_path(@team_template, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to label, admin_team_template_path(@team_template, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
   </div>
 
@@ -29,13 +29,13 @@
       <%= form_with model: @team_template, url: admin_team_template_path(@team_template), method: :patch, class: "space-y-5" do |f| %>
         <div>
           <%= f.label :description, "Teambeschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_area :description, rows: 18, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.text_area :description, rows: 18, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
 
         <% if @team_template.supports_responsible_description? %>
           <div>
             <%= f.label :responsible_description, "Beschreibung für Verantwortliche", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-            <%= f.text_area :responsible_description, rows: 14, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            <%= f.text_area :responsible_description, rows: 14, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
           </div>
         <% end %>
 
@@ -68,11 +68,11 @@
               <div class="grid gap-4 md:grid-cols-[1fr_1.5fr_auto]">
                 <div>
                   <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
                 <div>
                   <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                  <%= f.url_field :url, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.url_field :url, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
                 <div class="flex items-end justify-end gap-3">
                   <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
@@ -89,11 +89,11 @@
       <%= form_with model: TeamTemplateLink.new, url: admin_team_template_links_path(@team_template), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.4fr_auto]" do |f| %>
         <div>
           <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
         <div>
           <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
         <div class="flex items-end">
           <%= f.submit "Link hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -116,11 +116,11 @@
               <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_minmax(0,1fr)_auto]">
                 <div>
                   <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
                 <div>
                   <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                  <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
                 <div data-controller="file-upload">
                   <%= f.label :file, "Datei ersetzen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
@@ -153,11 +153,11 @@
       <%= form_with model: DownloadItem.new, url: admin_team_template_download_items_path(@team_template), class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_minmax(0,1fr)]" do |f| %>
         <div>
           <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
         <div>
           <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
         <div data-controller="file-upload">
           <%= f.label :file, "Datei", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>

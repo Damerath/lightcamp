@@ -47,25 +47,25 @@
                   <%= form_with model: item, url: item_path_builder.call(item), method: :patch, class: "grid grid-cols-[auto_minmax(0,1.4fr)_5rem_7rem_minmax(0,1.2fr)_2.5rem_2.5rem_auto] gap-3 px-4 py-3" do |f| %>
                     <%= f.hidden_field :category, value: item.category %>
                     <div>
-                      <%= f.text_field :usage_purpose, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :usage_purpose, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                     <div>
-                      <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                     <div>
-                      <%= f.text_field :quantity, placeholder: "z. B. 2x", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :quantity, placeholder: "z. B. 2x", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                     <div>
-                      <%= f.text_field :expires_on_label, placeholder: "z. B. 10.2026", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :expires_on_label, placeholder: "z. B. 10.2026", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                     <div>
-                      <%= f.text_field :notes, placeholder: "z. B. Gültig bis..., Nachkaufen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :notes, placeholder: "z. B. Gültig bis..., Nachkaufen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                     <label class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:text-slate-300">
-                      <%= f.check_box :missing, class: "rounded border-slate-300 text-red-600 focus:ring-red-500 dark:border-slate-600 dark:bg-slate-900" %>
+                      <%= f.check_box :missing, class: "rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
                     </label>
                     <label class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:text-slate-300">
-                      <%= f.check_box :opened, class: "rounded border-slate-300 text-red-600 focus:ring-red-500 dark:border-slate-600 dark:bg-slate-900" %>
+                      <%= f.check_box :opened, class: "rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
                     </label>
                     <div class="flex justify-end gap-2">
                       <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
@@ -109,30 +109,30 @@
             <%= f.hidden_field :category, value: category %>
             <div>
               <%= f.label :usage_purpose, "Verwendungszweck", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-              <%= f.text_field :usage_purpose, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :usage_purpose, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :name, "Artikel", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-              <%= f.text_field :name, placeholder: "z. B. Paracetamol", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :name, placeholder: "z. B. Paracetamol", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :quantity, "Menge", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-              <%= f.text_field :quantity, placeholder: "z. B. 2x", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :quantity, placeholder: "z. B. 2x", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :expires_on_label, "Ablauf", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-              <%= f.text_field :expires_on_label, placeholder: "z. B. 10.2026", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :expires_on_label, placeholder: "z. B. 10.2026", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :notes, "Anmerkungen", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-              <%= f.text_field :notes, placeholder: "z. B. Gültig bis..., Nachkaufen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :notes, placeholder: "z. B. Gültig bis..., Nachkaufen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <label class="mt-6 inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:text-slate-300">
-              <%= f.check_box :missing, class: "rounded border-slate-300 text-red-600 focus:ring-red-500 dark:border-slate-600 dark:bg-slate-900" %>
+              <%= f.check_box :missing, class: "rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
               <span>Fehlt</span>
             </label>
             <label class="mt-6 inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:text-slate-300">
-              <%= f.check_box :opened, class: "rounded border-slate-300 text-red-600 focus:ring-red-500 dark:border-slate-600 dark:bg-slate-900" %>
+              <%= f.check_box :opened, class: "rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
               <span>Angebr.</span>
             </label>
             <div class="flex items-end justify-end">

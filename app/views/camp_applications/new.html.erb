@@ -21,7 +21,7 @@
         <% @active_year.camps.each do |camp| %>
           <label class="flex w-full cursor-pointer items-center justify-between gap-4 rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800">
             <div class="flex items-center gap-3">
-              <%= check_box_tag "camp_application[camp_ids][]", camp.id, false, class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+              <%= check_box_tag "camp_application[camp_ids][]", camp.id, false, class: "h-4 w-4 rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
               <span class="text-sm font-medium"><%= camp.name %></span>
             </div>
 
@@ -67,7 +67,7 @@
       </div>
 
       <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:bg-slate-800">
-        <%= f.check_box :responsible, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+        <%= f.check_box :responsible, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
         <div>
           <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Verantwortung übernehmen</p>
           <p class="text-sm text-slate-500 dark:text-slate-400">Ich bin bereit, in meinem Bereich Verantwortung zu uebernehmen.</p>
@@ -80,7 +80,7 @@
       </div>
 
       <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:bg-slate-700">
-        <%= f.check_box :health_restrictions, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+        <%= f.check_box :health_restrictions, class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
         <div>
           <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Gesundheitliche Einschränkungen</p>
           <p class="text-sm text-slate-500 dark:text-slate-400">Ich habe Allergien oder gesundheitliche Einschränkungen.</p>

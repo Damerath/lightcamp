@@ -11,17 +11,17 @@
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-5" }) do |f| %>
       <div>
         <%= f.label :email, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
       <div>
         <%= f.label :password, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.password_field :password, autocomplete: "current-password", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        <%= f.password_field :password, autocomplete: "current-password", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
         <div class="flex items-center gap-2">
-          <%= f.check_box :remember_me, class: "rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
+          <%= f.check_box :remember_me, class: "rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" %>
           <%= f.label :remember_me, class: "text-sm text-slate-600 dark:text-slate-400" %>
         </div>
       <% end %>

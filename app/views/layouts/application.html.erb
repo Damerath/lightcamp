@@ -13,6 +13,51 @@
   </head>
 
   <body class="bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <div
+      data-controller="confirm-modal"
+      class="hidden"
+    >
+      <div
+        data-confirm-modal-target="backdrop"
+        data-action="click->confirm-modal#closeFromBackdrop"
+        class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/60 px-4 opacity-0 transition duration-150"
+      >
+        <div
+          data-confirm-modal-target="panel"
+          class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl opacity-0 translate-y-4 scale-95 transition duration-150 dark:border-slate-700 dark:bg-slate-800"
+        >
+          <div class="flex items-start gap-3">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300">
+              !
+            </div>
+            <div class="min-w-0">
+              <h3 data-confirm-modal-target="title" class="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                Bitte bestätigen
+              </h3>
+              <p data-confirm-modal-target="message" class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300"></p>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end gap-3">
+            <button
+              type="button"
+              data-confirm-modal-target="cancelButton"
+              class="inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+            >
+              Abbrechen
+            </button>
+            <button
+              type="button"
+              data-confirm-modal-target="confirmButton"
+              class="inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+            >
+              Bestätigen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <header class="bg-white dark:bg-slate-800 shadow">
       <div class="mx-auto max-w-5xl px-6 py-4 flex items-center justify-between">
         

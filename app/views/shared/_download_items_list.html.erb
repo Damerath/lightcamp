@@ -55,11 +55,11 @@
               <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_minmax(0,1fr)_auto]">
                 <div>
                   <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
                 <div>
                   <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                  <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
                 <div data-controller="file-upload">
                   <%= f.label :file, "Datei ersetzen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
@@ -110,11 +110,11 @@
       <%= form_with model: DownloadItem.new, url: create_local_url, class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.6fr)_minmax(0,1fr)]" do |f| %>
         <div>
           <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
         <div>
           <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-          <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+          <%= f.text_field :description, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
         </div>
         <div data-controller="file-upload">
           <%= f.label :file, "Datei", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>

@@ -86,8 +86,8 @@ export default class extends Controller {
             </div>
           </div>
 
-          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-red-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-red-500 dark:hover:bg-slate-800" data-role="assigned-responsible-card">
-            <input type="checkbox" name="camp_application[assigned_as_responsible]" value="1" ${el.dataset.assignedAsResponsible === "true" ? "checked" : ""} class="mt-0.5 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" data-role="assigned-responsible-checkbox">
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 transition hover:border-blue-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-blue-500 dark:hover:bg-slate-800" data-role="assigned-responsible-card">
+            <input type="checkbox" name="camp_application[assigned_as_responsible]" value="1" ${el.dataset.assignedAsResponsible === "true" ? "checked" : ""} class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" data-role="assigned-responsible-checkbox">
             <div>
               <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Als verantwortliche Person zuteilen</p>
               <p class="text-sm text-slate-500 dark:text-slate-400">Nur sinnvoll, wenn das gewaehlte Team Verantwortlichen-Plaetze hat.</p>
@@ -204,7 +204,7 @@ export default class extends Controller {
 
   updateResponsibleCardState(card, disabled) {
     const disabledClasses = ["cursor-not-allowed", "opacity-60", "hover:border-slate-300", "hover:bg-white", "dark:hover:border-slate-600", "dark:hover:bg-slate-900"]
-    const enabledClasses = ["cursor-pointer", "hover:border-red-300", "hover:bg-slate-50", "dark:hover:border-red-500", "dark:hover:bg-slate-800"]
+    const enabledClasses = ["cursor-pointer", "hover:border-blue-400", "hover:bg-slate-50", "dark:hover:border-blue-500", "dark:hover:bg-slate-800"]
 
     card.classList.remove(...disabledClasses, ...enabledClasses)
 

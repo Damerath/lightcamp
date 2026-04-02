@@ -31,37 +31,37 @@
       ["downloads", "Downloads"]
     ].each do |key, label| %>
       <% active = @section == key %>
-      <%= link_to label, camp_team_page_path(@camp, @camp_team, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to label, camp_team_page_path(@camp, @camp_team, section: key), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.sport_team? %>
       <% active = @section == "sport_plan" %>
-      <%= link_to "Sportplan", camp_team_page_path(@camp, @camp_team, section: "sport_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Sportplan", camp_team_page_path(@camp, @camp_team, section: "sport_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
       <% active = @section == "material_list" %>
-      <%= link_to "Materialliste", camp_team_page_path(@camp, @camp_team, section: "material_list"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Materialliste", camp_team_page_path(@camp, @camp_team, section: "material_list"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.medical_team? %>
       <% active = @section == "medical_supplies" %>
-      <%= link_to "Medizinische Versorgung", camp_team_page_path(@camp, @camp_team, section: "medical_supplies"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Medizinische Versorgung", camp_team_page_path(@camp, @camp_team, section: "medical_supplies"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.kitchen_team? %>
       <% active = @section == "kitchen_plan" %>
-      <%= link_to "Küchenplan", camp_team_page_path(@camp, @camp_team, section: "kitchen_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Küchenplan", camp_team_page_path(@camp, @camp_team, section: "kitchen_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.diy_team? %>
       <% active = @section == "diy_plan" %>
-      <%= link_to "DIY-Plan", camp_team_page_path(@camp, @camp_team, section: "diy_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "DIY-Plan", camp_team_page_path(@camp, @camp_team, section: "diy_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.camp_leader_team? %>
       <% active = @section == "room_plan" %>
-      <%= link_to "Zimmerplan", camp_team_page_path(@camp, @camp_team, section: "room_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Zimmerplan", camp_team_page_path(@camp, @camp_team, section: "room_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.program_team? %>
       <% active = @section == "program" %>
-      <%= link_to "Tagesplan", camp_team_page_path(@camp, @camp_team, section: "program"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Tagesplan", camp_team_page_path(@camp, @camp_team, section: "program"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @week_plan_available %>
       <% active = @section == "week_plan" %>
-      <%= link_to "Wochenplan", camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-red-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <%= link_to "Wochenplan", camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
   </div>
 
@@ -98,7 +98,7 @@
                     <input
                       type="text"
                       value="<%= @camp_team.next_internal_meeting_at&.strftime('%d.%m.%Y') %>"
-                      class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                      class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
                       autocomplete="off"
                       placeholder="TT.MM.JJJJ"
                       data-datepicker-target="input"
@@ -116,12 +116,12 @@
                     <%= f.select :next_internal_meeting_hour,
                       options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @camp_team.next_internal_meeting_at&.strftime("%H")),
                       { prompt: "Std" },
-                      class: "block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      class: "block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
                     <%= f.select :next_internal_meeting_minute,
                       options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @camp_team.next_internal_meeting_at&.strftime("%M")),
                       { prompt: "Min" },
-                      class: "block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      class: "block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-0 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                 </div>
               </div>
@@ -176,11 +176,11 @@
           <%= form_with model: CampTeamLink.new, url: camp_team_links_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.3fr_auto]" do |f| %>
             <div>
               <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div class="flex items-end">
               <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -250,7 +250,7 @@
                 <div class="flex items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
                   <div class="flex items-center gap-3">
                     <%= form_with model: todo, url: camp_team_todo_path(@camp, @camp_team, todo), method: :patch do |f| %>
-                      <%= f.check_box :completed, { checked: todo.completed, onchange: "this.form.requestSubmit()", class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600 dark:border-slate-600 dark:bg-slate-900" }, "1", "0" %>
+                      <%= f.check_box :completed, { checked: todo.completed, onchange: "this.form.requestSubmit()", class: "h-4 w-4 rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" }, "1", "0" %>
                     <% end %>
                     <p class="<%= todo.completed? ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-900 dark:text-slate-100' %>">
                       <%= todo.title %>
@@ -265,7 +265,7 @@
           </div>
 
           <%= form_with model: CampTeamTodo.new, url: camp_team_todos_path(@camp, @camp_team), class: "mt-5 flex gap-3" do |f| %>
-            <%= f.text_field :title, placeholder: "Neue Aufgabe...", class: "flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            <%= f.text_field :title, placeholder: "Neue Aufgabe...", class: "flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
           <% end %>
         </div>
@@ -330,11 +330,11 @@
                     <%= form_with model: sport_day_plan, url: camp_sport_day_plan_path(@camp, @camp_team, sport_day_plan), method: :patch, class: "mt-4 space-y-3" do |f| %>
                       <div>
                         <%= f.label :free_sport, "Freisport", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                        <%= f.text_area :free_sport, rows: 3, placeholder: "z. B. Volleyball, Frisbee, Basketball", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                        <%= f.text_area :free_sport, rows: 3, placeholder: "z. B. Volleyball, Frisbee, Basketball", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                       </div>
                       <div>
                         <%= f.label :required_sport, "Pflichsport", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                        <%= f.text_area :required_sport, rows: 3, placeholder: "z. B. Stationenlauf oder Turnier", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                        <%= f.text_area :required_sport, rows: 3, placeholder: "z. B. Stationenlauf oder Turnier", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                       </div>
                       <div class="flex justify-end pt-0.5">
                         <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -364,18 +364,18 @@
               <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Startzeit</label>
                 <div class="grid grid-cols-[4.75rem_0.20rem_4.75rem] items-center gap-2">
-                  <%= f.select :start_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @camp_sport_tournament_plan.start_hour), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.select :start_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @camp_sport_tournament_plan.start_hour), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
-                  <%= f.select :start_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @camp_sport_tournament_plan.start_minute), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                  <%= f.select :start_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @camp_sport_tournament_plan.start_minute), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 </div>
               </div>
               <div>
                 <%= f.label :round_interval_minutes, "Rundenabstand", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.select :round_interval_minutes, options_for_select([10, 15, 20, 25, 30].map { |minutes| ["#{minutes} Minuten", minutes] }, @camp_sport_tournament_plan.round_interval_minutes), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :round_interval_minutes, options_for_select([10, 15, 20, 25, 30].map { |minutes| ["#{minutes} Minuten", minutes] }, @camp_sport_tournament_plan.round_interval_minutes), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :round_note, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.text_field :round_note, placeholder: CampSportTournamentPlan::DEFAULT_ROUND_NOTE, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.text_field :round_note, placeholder: CampSportTournamentPlan::DEFAULT_ROUND_NOTE, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
             </div>
 
@@ -388,7 +388,7 @@
                     <% number = index + 1 %>
                     <div>
                       <%= f.label :"group#{number}_name", "Gruppe #{number}", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                      <%= f.text_field :"group#{number}_name", placeholder: "Gruppe #{number}", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :"group#{number}_name", placeholder: "Gruppe #{number}", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                   <% end %>
                 </div>
@@ -402,7 +402,7 @@
                     <% number = index + 1 %>
                     <div>
                       <%= f.label :"station#{number}_name", "Station #{number}", class: "mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                      <%= f.text_field :"station#{number}_name", placeholder: number == 5 ? "Station 5 / Pause" : "Station #{number}", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                      <%= f.text_field :"station#{number}_name", placeholder: number == 5 ? "Station 5 / Pause" : "Station #{number}", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     </div>
                   <% end %>
                 </div>
@@ -479,16 +479,16 @@
                     <% if @can_manage_sport_materials %>
                       <%= form_with model: item, url: camp_sport_material_item_path(@camp, @camp_team, item), method: :patch, class: "grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_minmax(0,1.2fr)_auto] gap-3 px-4 py-3" do |f| %>
                         <div>
-                          <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                         </div>
                         <div>
-                          <%= f.text_field :quantity, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          <%= f.text_field :quantity, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                         </div>
                         <div>
-                          <%= f.text_field :storage_location, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          <%= f.text_field :storage_location, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                         </div>
                         <div>
-                          <%= f.text_field :notes, placeholder: "z. B. defekt", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                          <%= f.text_field :notes, placeholder: "z. B. defekt", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                         </div>
                         <div class="flex justify-end gap-2">
                           <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
@@ -511,19 +511,19 @@
                 <%= form_with model: TeamTemplateSportMaterialItem.new, url: camp_sport_material_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_minmax(0,1.2fr)_auto]" do |f| %>
                   <div>
                     <%= f.label :name, "Neues Material", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                    <%= f.text_field :name, placeholder: "z. B. Hockeyschläger", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :name, placeholder: "z. B. Hockeyschläger", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                   <div>
                     <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                    <%= f.text_field :quantity, placeholder: "z. B. 4x", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :quantity, placeholder: "z. B. 4x", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                   <div>
                     <%= f.label :storage_location, "Ort", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                    <%= f.text_field :storage_location, placeholder: "z. B. S8", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :storage_location, placeholder: "z. B. S8", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                   <div>
                     <%= f.label :notes, "Anmerkungen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                    <%= f.text_field :notes, placeholder: "z. B. defekt / reparieren", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :notes, placeholder: "z. B. defekt / reparieren", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                   <div class="flex items-end">
                     <%= f.submit "Material hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -630,19 +630,19 @@
                         <%= form_with model: kitchen_day_plan, url: camp_kitchen_day_plan_path(@camp, @camp_team, kitchen_day_plan), method: :patch, class: "mt-4 space-y-3" do |f| %>
                           <div>
                             <%= f.label :breakfast, "Frühstück", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                            <%= f.text_area :breakfast, rows: 2, placeholder: "z. B. Brötchen, Müsli, Obst", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= f.text_area :breakfast, rows: 2, placeholder: "z. B. Brötchen, Müsli, Obst", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                           </div>
                           <div>
                             <%= f.label :lunch, "Mittag", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                            <%= f.text_area :lunch, rows: 2, placeholder: "z. B. Nudeln mit Soße", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= f.text_area :lunch, rows: 2, placeholder: "z. B. Nudeln mit Soße", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                           </div>
                           <div>
                             <%= f.label :dinner, "Abendessen", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                            <%= f.text_area :dinner, rows: 2, placeholder: "z. B. Brotzeit oder warmes Essen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= f.text_area :dinner, rows: 2, placeholder: "z. B. Brotzeit oder warmes Essen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                           </div>
                           <div>
                             <%= f.label :snack, "Snack", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                            <%= f.text_area :snack, rows: 2, placeholder: "z. B. Obst, Kuchen, Abend-Snack", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= f.text_area :snack, rows: 2, placeholder: "z. B. Obst, Kuchen, Abend-Snack", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                           </div>
                           <div class="flex justify-end pt-0.5">
                             <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -713,11 +713,11 @@
                               <%= f.label :general_offer, "Allgemeines Angebot", class: "block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
                               <%= button_to "Für alle Tage", apply_general_offer_to_all_camp_diy_day_plan_path(@camp, @camp_team, diy_day_plan), method: :post, params: { camp_diy_day_plan: { general_offer: diy_day_plan.general_offer } }, class: "inline-flex rounded-md border border-slate-300 px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
                             </div>
-                            <%= f.text_area :general_offer, rows: 3, placeholder: "z. B. Offene Bastelstationen, Werken, Karten gestalten", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= f.text_area :general_offer, rows: 3, placeholder: "z. B. Offene Bastelstationen, Werken, Karten gestalten", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                           </div>
                           <div>
                             <%= f.label :daily_special, "Spezial des Tages", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
-                            <%= f.text_area :daily_special, rows: 3, placeholder: "z. B. Makramee, Holzschild, Fotowand", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= f.text_area :daily_special, rows: 3, placeholder: "z. B. Makramee, Holzschild, Fotowand", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                           </div>
                           <div class="flex justify-end pt-0.5">
                             <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -814,15 +814,15 @@
             <%= form_with model: CampSleepingPlace.new, url: camp_sleeping_places_path(@camp, @camp_team), class: "mt-5 grid gap-4 md:grid-cols-[1.1fr_8rem_1fr_auto]" do |f| %>
               <div>
                 <%= f.label :name, "Name", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.text_field :name, placeholder: "z. B. Wohnwagen Müller", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.text_field :name, placeholder: "z. B. Wohnwagen Müller", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :capacity, "Plätze", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.number_field :capacity, min: 1, value: 1, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.number_field :capacity, min: 1, value: 1, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :details, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.text_field :details, placeholder: "z. B. Zelt, Wohnwagen, Gästezimmer", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.text_field :details, placeholder: "z. B. Zelt, Wohnwagen, Gästezimmer", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div class="flex items-end">
                 <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -854,7 +854,7 @@
                     </p>
                   </div>
                   <div>
-                    <%= f.select :camp_sleeping_place_id, options_for_select([["Nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| ["#{place.name} (#{place.occupancy_count}/#{place.capacity})", place.id] }, application.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :camp_sleeping_place_id, options_for_select([["Nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| ["#{place.name} (#{place.occupancy_count}/#{place.capacity})", place.id] }, application.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                   </div>
                   <div class="flex justify-end">
                     <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
@@ -875,23 +875,23 @@
             <%= form_with model: CampRoomPerson.new, url: camp_room_people_path(@camp, @camp_team), class: "mt-5 grid gap-4 lg:grid-cols-[1fr_11rem_14rem_14rem_minmax(0,1fr)_auto]" do |f| %>
               <div>
                 <%= f.label :name, "Name", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.text_field :name, placeholder: "z. B. Anna Müller", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.text_field :name, placeholder: "z. B. Anna Müller", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :kind, "Typ", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :related_camp_application_id, "Gehört zu", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :camp_sleeping_place_id, "Schlafplatz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :notes, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.text_field :notes, placeholder: "z. B. reist später an", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.text_field :notes, placeholder: "z. B. reist später an", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div class="flex items-end">
                 <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -902,11 +902,11 @@
               <% if @camp_room_people.any? %>
                 <% @camp_room_people.each do |person| %>
                   <%= form_with model: person, url: camp_room_person_path(@camp, @camp_team, person), method: :patch, class: "grid gap-3 rounded-xl border border-slate-200 px-4 py-3 lg:grid-cols-[1fr_11rem_14rem_14rem_minmax(0,1fr)_auto_auto] lg:items-center dark:border-slate-700" do |f| %>
-                    <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-                    <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }, person.kind), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-                    <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }, person.related_camp_application_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-                    <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }, person.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-                    <%= f.text_field :notes, placeholder: "Hinweis", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }, person.kind), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }, person.related_camp_application_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }, person.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.text_field :notes, placeholder: "Hinweis", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
                     <%= link_to "Entfernen", camp_room_person_path(@camp, @camp_team, person), data: { turbo_method: :delete, turbo_confirm: "Diese Person wirklich entfernen?" }, class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
                   <% end %>
@@ -935,7 +935,7 @@
                 <div class="flex items-start justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
                   <div class="flex items-start gap-3">
                     <%= form_with model: item, url: camp_team_shopping_item_path(@camp, @camp_team, item), method: :patch do |f| %>
-                      <%= f.check_box :purchased, { checked: item.purchased, onchange: "this.form.requestSubmit()", class: "mt-1 h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600 dark:border-slate-600 dark:bg-slate-900" }, "1", "0" %>
+                      <%= f.check_box :purchased, { checked: item.purchased, onchange: "this.form.requestSubmit()", class: "mt-1 h-4 w-4 rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600 dark:bg-slate-900" }, "1", "0" %>
                     <% end %>
                     <div>
                       <p class="<%= item.purchased? ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-900 dark:text-slate-100' %> font-medium">
@@ -960,15 +960,15 @@
           <%= form_with model: CampTeamShoppingItem.new, url: camp_team_shopping_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[minmax(0,1.2fr)_10rem] lg:grid-cols-[minmax(0,1.2fr)_10rem_minmax(0,1fr)_auto]" do |f| %>
             <div>
               <%= f.label :name, "Artikel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :name, placeholder: "z. B. Becher", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :name, placeholder: "z. B. Becher", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :quantity, placeholder: "z. B. 3 Packungen", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :quantity, placeholder: "z. B. 3 Packungen", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div>
               <%= f.label :notes, "Notiz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :notes, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :notes, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
             <div class="flex items-end">
               <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
@@ -1287,15 +1287,15 @@
             <div class="min-w-0">
               <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Uhrzeit</label>
               <div class="grid grid-cols-[4.75rem_auto_4.75rem] items-center gap-2">
-                <%= f.select :starts_at_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @program_block_modal.try(:start_hour)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :starts_at_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @program_block_modal.try(:start_hour)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
-                <%= f.select :starts_at_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @program_block_modal.try(:start_minute)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :starts_at_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @program_block_modal.try(:start_minute)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
             </div>
 
             <div class="min-w-0">
               <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
           </div>
 
@@ -1308,7 +1308,7 @@
             <%= f.select :color,
               options_for_select(CampProgramBlock::COLOR_THEMES.map { |key, config| [config[:label], key] }, @program_block_modal.color.presence || "blue"),
               {},
-              class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
           </div>
 
           <div class="flex items-center justify-end gap-3">
@@ -1340,14 +1340,14 @@
             <div class="min-w-0">
               <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Uhrzeit</label>
               <div class="grid grid-cols-[4.75rem_auto_4.75rem] items-center gap-2">
-                <%= f.select :starts_at_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @program_week_block_modal.try(:start_hour)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :starts_at_hour, options_for_select((0..23).map { |hour| [format("%02d", hour), format("%02d", hour)] }, @program_week_block_modal.try(:start_hour)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                 <span class="text-sm font-medium text-slate-500 dark:text-slate-400">:</span>
-                <%= f.select :starts_at_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @program_week_block_modal.try(:start_minute)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :starts_at_minute, options_for_select((0..55).step(5).map { |minute| [format("%02d", minute), format("%02d", minute)] }, @program_week_block_modal.try(:start_minute)), {}, class: "block w-[4.75rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
             </div>
             <div class="min-w-0">
               <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
             </div>
           </div>
           <label class="flex items-center gap-3 rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
@@ -1359,7 +1359,7 @@
             <%= f.select :color,
               options_for_select(CampProgramBlock::COLOR_THEMES.map { |key, config| [config[:label], key] }, @program_week_block_modal.color.presence || "blue"),
               {},
-              class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
           </div>
           <div class="flex items-center justify-between gap-3">
             <div>
@@ -1393,7 +1393,7 @@
         <%= form_with model: @program_week_day_modal, url: camp_program_week_day_path(@camp, @camp_team, @program_week_day_modal), method: :patch, class: "mt-5 space-y-4" do |f| %>
           <div>
             <%= f.label :label, "Hinweis", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-            <%= f.text_field :label, placeholder: "z. B. Anreisetag oder Exkursion", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-red-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            <%= f.text_field :label, placeholder: "z. B. Anreisetag oder Exkursion", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
           </div>
           <div class="flex items-center justify-end gap-3">
             <%= link_to "Abbrechen", camp_team_page_path(@camp, @camp_team, section: "week_plan"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>

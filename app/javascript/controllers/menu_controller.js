@@ -20,10 +20,10 @@ export default class extends Controller {
     if (isOpening) {
       this.menuTarget.classList.remove("hidden")
       this.iconTarget.classList.remove("text-slate-300")
-      this.iconTarget.classList.add("text-red-500")
+      this.iconTarget.classList.add("text-blue-500")
     } else {
       this.menuTarget.classList.add("hidden")
-      this.iconTarget.classList.remove("text-red-500")
+      this.iconTarget.classList.remove("text-blue-500")
       this.iconTarget.classList.add("text-slate-300")
     }
   }
@@ -31,7 +31,7 @@ export default class extends Controller {
   handleOutsideClick(event) {
     if (!this.element.contains(event.target)) {
       this.menuTarget.classList.add("hidden")
-      this.iconTarget.classList.remove("text-red-500")
+      this.iconTarget.classList.remove("text-blue-500")
       this.iconTarget.classList.add("text-slate-300")
     }
   }
