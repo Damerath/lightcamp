@@ -1,5 +1,5 @@
 <div class="space-y-8">
-  <div class="flex items-start justify-between gap-4">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div>
       <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Listenverwaltung</p>
       <h2 class="text-2xl font-bold">Sportmaterial</h2>
@@ -7,9 +7,9 @@
         Hier pflegst du die zentrale, fortlaufende Materialliste für den Sportbereich.
       </p>
     </div>
-    <div class="flex items-center gap-3">
-      <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
-      <%= link_to "Zur Teamverwaltung", admin_team_templates_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+    <div class="flex flex-col gap-2 sm:flex-row">
+      <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Zur Teamverwaltung", admin_team_templates_path, class: "inline-flex justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
     </div>
   </div>
 
@@ -21,7 +21,38 @@
       </p>
     </div>
 
-    <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+    <div class="mt-5 md:hidden space-y-3">
+      <% @sport_material_items.each do |item| %>
+        <%= form_with model: item, url: admin_sport_material_item_path(item), method: :patch, class: "rounded-2xl border border-slate-200 bg-slate-50/60 p-4 dark:border-slate-700 dark:bg-slate-900/40" do |f| %>
+          <div class="space-y-3">
+            <div>
+              <%= f.label :name, "Gegenstand", class: "mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400" %>
+              <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <%= f.label :quantity, "Menge", class: "mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400" %>
+                <%= f.text_field :quantity, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+              <div>
+                <%= f.label :storage_location, "Ort", class: "mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400" %>
+                <%= f.text_field :storage_location, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+              </div>
+            </div>
+            <div>
+              <%= f.label :notes, "Anmerkungen", class: "mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400" %>
+              <%= f.text_field :notes, placeholder: "z. B. defekt", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="flex flex-col gap-2 sm:flex-row">
+              <%= f.submit "Speichern", class: "inline-flex justify-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              <%= link_to "Entfernen", admin_sport_material_item_path(item), data: { turbo_method: :delete, turbo_confirm: "Default-Material wirklich entfernen?" }, class: "inline-flex justify-center rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="mt-5 hidden overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 md:block">
       <div class="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_minmax(0,1.2fr)_auto] gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-900 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-100">
         <% next_direction = @sort_column == "name" && @sort_direction == "asc" ? "desc" : "asc" %>
         <div>
@@ -85,7 +116,7 @@
       </div>
     </div>
 
-    <%= form_with model: TeamTemplateSportMaterialItem.new, url: admin_sport_material_items_path, class: "mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_minmax(0,1.2fr)_auto]" do |f| %>
+    <%= form_with model: TeamTemplateSportMaterialItem.new, url: admin_sport_material_items_path, class: "mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_10rem_minmax(0,1.2fr)_auto]" do |f| %>
       <div>
         <%= f.label :name, "Neues Material", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
         <%= f.text_field :name, placeholder: "z. B. Hockeyschläger", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
@@ -102,8 +133,8 @@
         <%= f.label :notes, "Anmerkungen", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
         <%= f.text_field :notes, placeholder: "z. B. defekt / reparieren", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
-      <div class="flex items-end">
-        <%= f.submit "Material hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+      <div class="flex items-end md:col-span-2 lg:col-span-1">
+        <%= f.submit "Material hinzufügen", class: "inline-flex w-full justify-center rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 lg:w-auto" %>
       </div>
     <% end %>
 

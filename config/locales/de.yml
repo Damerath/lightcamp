@@ -68,6 +68,11 @@ de:
         password_confirmation: "Passwort bestätigen"
         remember_me: "Angemeldet bleiben"
   devise:
+    passwords:
+      new:
+        title: "Passwort vergessen?"
+        subtitle: "Gib deine E-Mail-Adresse ein. Wir schicken dir einen Link zum Zurücksetzen deines Passworts."
+        submit: "Link zum Zurücksetzen senden"
     registrations:
       new:
         title: "Konto erstellen"
