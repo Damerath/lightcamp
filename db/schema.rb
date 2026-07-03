@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_02_103100) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_03_103000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -329,6 +329,38 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_02_103100) do
     t.index ["category", "position"], name: "idx_med_supply_items_on_category_and_position"
   end
 
+  create_table "notification_deliveries", force: :cascade do |t|
+    t.bigint "notification_event_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "channel_kind", default: 0, null: false
+    t.integer "status", default: 2, null: false
+    t.string "title", null: false
+    t.text "body", null: false
+    t.text "link_url"
+    t.datetime "read_at"
+    t.datetime "dismissed_at"
+    t.datetime "attempted_at"
+    t.datetime "delivered_at"
+    t.datetime "failed_at"
+    t.text "failure_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_event_id", "user_id", "channel_kind"], name: "idx_notification_deliveries_uniqueness", unique: true
+    t.index ["notification_event_id"], name: "index_notification_deliveries_on_notification_event_id"
+    t.index ["user_id", "channel_kind", "dismissed_at"], name: "idx_notification_deliveries_on_user_channel_dismissed"
+    t.index ["user_id"], name: "index_notification_deliveries_on_user_id"
+  end
+
+  create_table "notification_events", force: :cascade do |t|
+    t.string "key", null: false
+    t.bigint "actor_id"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_notification_events_on_actor_id"
+    t.index ["key"], name: "index_notification_events_on_key"
+  end
+
   create_table "team_template_links", force: :cascade do |t|
     t.bigint "team_template_id", null: false
     t.string "title", null: false
@@ -401,6 +433,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_02_103100) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "registration_open", default: false
+    t.date "training_on"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -436,6 +469,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_02_103100) do
   add_foreign_key "download_items", "team_templates"
   add_foreign_key "download_items", "users", column: "uploader_id"
   add_foreign_key "medical_supply_changes", "users"
+  add_foreign_key "notification_deliveries", "notification_events"
+  add_foreign_key "notification_deliveries", "users"
+  add_foreign_key "notification_events", "users", column: "actor_id"
   add_foreign_key "team_template_links", "team_templates"
   add_foreign_key "team_template_sport_material_changes", "team_templates"
   add_foreign_key "team_template_sport_material_changes", "users"

@@ -13,11 +13,15 @@ class AdminCampApplicationsController < ApplicationController
   end
 
   def update_assignment
+    previous_team_id = @camp_application.assigned_camp_team_id
+    previous_responsible = @camp_application.assigned_as_responsible?
     assigned_camp_team_id = assignment_params[:assigned_camp_team_id].presence
     @camp_application.assigned_camp_team_id = assigned_camp_team_id
     @camp_application.assigned_as_responsible = assignment_params[:assigned_as_responsible] == "1"
 
     if @camp_application.save
+      assignment_changed = previous_team_id != @camp_application.assigned_camp_team_id || previous_responsible != @camp_application.assigned_as_responsible?
+      ::Notifications::Triggers.team_assignment_updated!(camp_application: @camp_application, actor: current_user) if assignment_changed
       redirect_to assignment_return_path, notice: "Zuteilung wurde gespeichert."
     else
       redirect_to assignment_return_path, alert: @camp_application.errors.full_messages.to_sentence

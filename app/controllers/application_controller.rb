@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
+  before_action :load_notification_deliveries, if: :user_signed_in?
   protected
 
   def configure_permitted_parameters
@@ -11,5 +12,10 @@ class ApplicationController < ActionController::Base
     unless current_user.profile_complete?
       redirect_to profile_path, alert: "Bitte vervollständige zuerst dein Profil."
     end
+  end
+
+  def load_notification_deliveries
+    @notification_deliveries = current_user.notification_deliveries.in_app_visible.limit(12)
+    @unread_notification_count = @notification_deliveries.count(&:unread?)
   end
 end

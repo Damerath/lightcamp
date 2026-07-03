@@ -21,5 +21,6 @@ class DashboardController < ApplicationController
       else
         :not_applied
       end
+
   end
 end
