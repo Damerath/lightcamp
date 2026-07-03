@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   has_many :camp_applications, dependent: :destroy
+  has_many :notification_deliveries, dependent: :destroy
+  has_many :notification_events, through: :notification_deliveries
 
   after_initialize :set_default_role, if: :new_record?
 

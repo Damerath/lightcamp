@@ -136,7 +136,23 @@ class AdminCampTeamsController < ApplicationController
   end
 
   def update
-    if @camp_team.update(camp_team_params)
+    previous_meeting_at = @camp_team.next_internal_meeting_at
+    previous_week_plan_published = @camp_team.week_plan_published?
+    changed_attributes = camp_team_params
+
+    if @camp_team.update(changed_attributes)
+      if changed_attributes.key?(:next_internal_meeting_at) && previous_meeting_at != @camp_team.next_internal_meeting_at && @camp_team.next_internal_meeting_at.present?
+        ::Notifications::Triggers.team_meeting_changed!(
+          camp_team: @camp_team,
+          actor: current_user,
+          changed: previous_meeting_at.present? ? :updated : :created
+        )
+      end
+
+      if @camp_team.program_team? && !previous_week_plan_published && @camp_team.week_plan_published?
+        ::Notifications::Triggers.week_plan_published!(program_team: @camp_team, actor: current_user)
+      end
+
       redirect_to update_return_path, notice: "Team wurde aktualisiert."
     else
       redirect_to update_failure_path, alert: @camp_team.errors.full_messages.to_sentence

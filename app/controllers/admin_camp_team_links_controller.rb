@@ -7,6 +7,7 @@ class AdminCampTeamLinksController < ApplicationController
     link = @camp_team.camp_team_links.new(camp_team_link_params.merge(position: next_position))
 
     if link.save
+      ::Notifications::Triggers.team_link_added!(camp_team: @camp_team, link: link, actor: current_user)
       redirect_to admin_camp_team_page_path(@camp, @camp_team), notice: "Link wurde gespeichert."
     else
       redirect_to admin_camp_team_page_path(@camp, @camp_team), alert: link.errors.full_messages.to_sentence

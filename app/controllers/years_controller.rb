@@ -27,12 +27,13 @@ class YearsController < ApplicationController
     year = Year.find(params[:id])
 
     year.update!(registration_open: !year.registration_open?)
+    ::Notifications::Triggers.camp_activated!(year: year, actor: current_user) if year.registration_open?
 
     redirect_to admin_camps_path, notice: "Anmeldestatus wurde aktualisiert."
   end
   private
 
   def year_params
-    params.require(:year).permit(:name)
+    params.require(:year).permit(:name, :training_on)
   end
 end

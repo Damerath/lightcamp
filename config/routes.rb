@@ -143,6 +143,8 @@ Rails.application.routes.draw do
   patch "years/:id/toggle_registration", to: "years#toggle_registration", as: :toggle_year_registration
   get "profile", to: "profiles#edit"
   patch "profile", to: "profiles#update"
+  get "notifications/:id/visit", to: "notification_deliveries#visit", as: :notification_delivery_visit
+  patch "notifications/:id/dismiss", to: "notification_deliveries#dismiss", as: :notification_delivery_dismiss
   get 'camp_applications/new'
   get "camp_application", to: "camp_applications#new"
   post "camp_application", to: "camp_applications#create"

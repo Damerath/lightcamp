@@ -64,7 +64,7 @@ class MedicalSupplyItemsController < ApplicationController
     parts << "Ablauf #{item.expires_on_label}" if item.expires_on_label.present?
     parts << "Anmerkung #{item.notes}" if item.notes.present?
     parts << "fehlt" if item.missing?
-    parts << "angebr." if item.opened?
+    parts << "angebrochen" if item.opened?
     "#{prefix}: #{parts.join(', ')}"
   end
 
@@ -77,7 +77,7 @@ class MedicalSupplyItemsController < ApplicationController
     changes << "Ablauf von #{previous['expires_on_label'].presence || '-'} auf #{item.expires_on_label.presence || '-'}" if previous["expires_on_label"] != item.expires_on_label
     changes << "Anmerkung von #{previous['notes'].presence || '-'} auf #{item.notes.presence || '-'}" if previous["notes"] != item.notes
     changes << "Fehlt von #{previous['missing'] ? 'Ja' : 'Nein'} auf #{item.missing? ? 'Ja' : 'Nein'}" if previous["missing"] != item.missing
-    changes << "Angebr. von #{previous['opened'] ? 'Ja' : 'Nein'} auf #{item.opened? ? 'Ja' : 'Nein'}" if previous["opened"] != item.opened
+    changes << "Angebrochen von #{previous['opened'] ? 'Ja' : 'Nein'} auf #{item.opened? ? 'Ja' : 'Nein'}" if previous["opened"] != item.opened
     changes.present? ? "Aktualisiert: #{changes.join('; ')}" : nil
   end
 

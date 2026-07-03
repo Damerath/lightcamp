@@ -7,6 +7,7 @@ class AdminCampTeamTodosController < ApplicationController
     todo = @camp_team.camp_team_todos.new(camp_team_todo_params.merge(position: next_position))
 
     if todo.save
+      ::Notifications::Triggers.team_todo_added!(camp_team: @camp_team, todo: todo, actor: current_user)
       redirect_to admin_camp_team_page_path(@camp, @camp_team, section: "todos"), notice: "ToDo wurde gespeichert."
     else
       redirect_to admin_camp_team_page_path(@camp, @camp_team, section: "todos"), alert: todo.errors.full_messages.to_sentence
