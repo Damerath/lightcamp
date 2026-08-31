@@ -10,7 +10,7 @@ jobs:
     runs-on: self-hosted
 
     env:
-      GIT_SSH_COMMAND: "ssh -i /home/peter/.ssh/id_ed25519 -o IdentitiesOnly=yes"
+      GIT_SSH_COMMAND: "ssh -i /home/peter/.ssh/lightcamp_deploy -o IdentitiesOnly=yes"
 
     steps:
       - name: Update repository
