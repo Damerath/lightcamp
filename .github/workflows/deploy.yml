@@ -24,11 +24,17 @@ jobs:
       - name: Run migrations
         run: |
           cd /home/peter/apps/lightcamp
+          set -a
+          source /etc/lightcamp.env
+          set +a
           RAILS_ENV=production bin/rails db:migrate
 
       - name: Precompile assets
         run: |
           cd /home/peter/apps/lightcamp
+          set -a
+          source /etc/lightcamp.env
+          set +a
           RAILS_ENV=production bin/rails assets:precompile
 
       - name: Restart Lightcamp
