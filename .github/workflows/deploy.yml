@@ -9,6 +9,9 @@ jobs:
   deploy:
     runs-on: self-hosted
 
+    env:
+      GIT_SSH_COMMAND: "ssh -i /home/peter/.ssh/id_ed25519 -o IdentitiesOnly=yes"
+
     steps:
       - name: Update repository
         run: |
