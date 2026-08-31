@@ -82,3 +82,4 @@ production:
   database: lightcamp_production
   username: lightcamp
   password: <%= ENV["LIGHTCAMP_DATABASE_PASSWORD"] %>
+  host: localhost
