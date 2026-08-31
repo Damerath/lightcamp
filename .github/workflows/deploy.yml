@@ -1,0 +1,42 @@
+name: Deploy to Lightcamp Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Update repository
+        run: |
+          cd /home/peter/apps/lightcamp
+          git fetch origin
+          git reset --hard origin/main
+
+      - name: Install gems
+        run: |
+          cd /home/peter/apps/lightcamp
+          bundle install
+
+      - name: Run migrations
+        run: |
+          cd /home/peter/apps/lightcamp
+          set -a
+          source /etc/lightcamp.env
+          set +a
+          RAILS_ENV=production bin/rails db:migrate
+
+      - name: Precompile assets
+        run: |
+          cd /home/peter/apps/lightcamp
+          set -a
+          source /etc/lightcamp.env
+          set +a
+          RAILS_ENV=production bin/rails assets:precompile
+
+      - name: Restart Lightcamp
+        run: |
+          sudo systemctl restart lightcamp
