@@ -1,7 +1,23 @@
 class ApplicationController < ActionController::Base
+  before_action :basic_auth, if: -> { Rails.env.production? }
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
   before_action :load_notification_deliveries, if: :user_signed_in?
+  private
+
+  def basic_auth
+    authenticate_or_request_with_http_basic do |username, password|
+      ActiveSupport::SecurityUtils.secure_compare(
+        username.to_s,
+        ENV.fetch("BASIC_AUTH_USER", "")
+      ) &&
+        ActiveSupport::SecurityUtils.secure_compare(
+          password.to_s,
+          ENV.fetch("BASIC_AUTH_PASSWORD", "")
+        )
+    end
+  end
+
   protected
 
   def configure_permitted_parameters
