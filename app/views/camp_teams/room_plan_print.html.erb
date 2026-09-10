@@ -39,7 +39,7 @@
       <div class="space-y-2 px-4 py-4">
         <% assigned_people.each do |application| %>
           <div class="rounded-lg border border-slate-200 px-3 py-2">
-            <p class="text-sm font-medium text-slate-900"><%= [application.user.first_name, application.user.last_name].compact.join(" ") %></p>
+            <p class="text-sm font-medium text-slate-900"><%= application.display_name %></p>
             <p class="text-xs text-slate-500"><%= application.assigned_camp_team&.name || "-" %></p>
           </div>
         <% end %>
@@ -48,7 +48,7 @@
           <div class="rounded-lg border border-sky-200 bg-sky-50/70 px-3 py-2">
             <p class="text-sm font-medium text-slate-900"><%= person.name %></p>
             <p class="text-xs text-slate-500">
-              <%= person.kind_label %><%= person.related_camp_application&.user.present? ? " · zu #{person.related_camp_application.user.first_name} #{person.related_camp_application.user.last_name}" : "" %>
+              <%= person.kind_label %><%= person.related_camp_application.present? ? " · zu #{person.related_camp_application.display_name}" : "" %>
             </p>
           </div>
         <% end %>
@@ -69,7 +69,7 @@
     <div class="grid gap-3 px-4 py-4 md:grid-cols-2">
       <% @unassigned_room_candidates.each do |application| %>
         <div class="rounded-lg border border-slate-200 px-3 py-2">
-          <p class="text-sm font-medium text-slate-900"><%= [application.user.first_name, application.user.last_name].compact.join(" ") %></p>
+          <p class="text-sm font-medium text-slate-900"><%= application.display_name %></p>
           <p class="text-xs text-slate-500"><%= application.assigned_camp_team&.name || "-" %></p>
         </div>
       <% end %>
@@ -77,7 +77,7 @@
         <div class="rounded-lg border border-sky-200 bg-sky-50/70 px-3 py-2">
           <p class="text-sm font-medium text-slate-900"><%= person.name %></p>
           <p class="text-xs text-slate-500">
-            <%= person.kind_label %><%= person.related_camp_application&.user.present? ? " · zu #{person.related_camp_application.user.first_name} #{person.related_camp_application.user.last_name}" : "" %>
+            <%= person.kind_label %><%= person.related_camp_application.present? ? " · zu #{person.related_camp_application.display_name}" : "" %>
           </p>
         </div>
       <% end %>

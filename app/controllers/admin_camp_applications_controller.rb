@@ -9,10 +9,16 @@ class AdminCampApplicationsController < ApplicationController
     @camp_applications = CampApplication
       .includes(:user, :year, :camps, :assigned_camp, :assigned_camp_team)
       .where(year: @selected_year)
+      .where(anonymized_at: nil)
       .order(created_at: :desc)
   end
 
   def update_assignment
+    if @camp_application.anonymized?
+      redirect_to admin_camp_applications_path(year_id: @camp_application.year_id), alert: "Archivierte Anmeldungen koennen nicht mehr bearbeitet werden."
+      return
+    end
+
     previous_team_id = @camp_application.assigned_camp_team_id
     previous_responsible = @camp_application.assigned_as_responsible?
     assigned_camp_team_id = assignment_params[:assigned_camp_team_id].presence

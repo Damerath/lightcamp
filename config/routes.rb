@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get 'years/index'
   devise_for :users
   root "dashboard#index"
+  get "impressum", to: "legal_pages#imprint"
+  get "datenschutz", to: "legal_pages#privacy"
+  get "nutzungsbedingungen", to: "legal_pages#terms"
   get "camps", to: "camps#index"
   post "camps", to: "camps#create"
   patch "camps/:id", to: "camps#update", as: :camp

@@ -8,11 +8,11 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "lucide", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <script src="https://unpkg.com/lucide@latest"></script>
   </head>
 
-  <body class="bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+  <body class="flex min-h-screen flex-col bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <div
       data-controller="confirm-modal"
       class="hidden"
@@ -102,9 +102,16 @@
       </div>
     </header>
 
-    <main class="mx-auto max-w-5xl px-6 py-8">
+    <main class="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
       <%= yield %>
     </main>
+    <footer class="border-t border-slate-200 px-4 py-3 text-center text-xs text-slate-500 dark:border-slate-700 dark:text-slate-400">
+      <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-4 gap-y-1">
+        <%= link_to "Impressum", impressum_path, class: "transition hover:text-blue-400 hover:underline" %>
+        <%= link_to "Datenschutz", datenschutz_path, class: "transition hover:text-blue-400 hover:underline" %>
+        <%= link_to "Nutzungsbedingungen", nutzungsbedingungen_path, class: "transition hover:text-blue-400 hover:underline" %>
+      </div>
+    </footer>
     <% if user_signed_in? && !current_page?(root_path) %>
       <div data-controller="notifications-drawer">
         <button
@@ -182,8 +189,10 @@
         </div>
       <% end %>
     </div>
-    <script>
-      lucide.createIcons();
+    <script data-turbo-eval="false">
+      document.addEventListener("turbo:load", function() {
+        window.lucide?.createIcons();
+      });
     </script>
   </body>
 </html>

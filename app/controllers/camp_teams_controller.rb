@@ -52,7 +52,7 @@ class CampTeamsController < ApplicationController
     if @camp_team.camp_leader_team?
       @camp.ensure_sleeping_places!
       @camp_sleeping_places = @camp.camp_sleeping_places.includes(camp_applications: [:user, :assigned_camp_team]).ordered
-      @camp_room_candidates = @camp.assigned_camp_applications.includes(:user, :assigned_camp_team, :camp_sleeping_place).sort_by { |application| [application.user.last_name.to_s, application.user.first_name.to_s] }
+      @camp_room_candidates = @camp.assigned_camp_applications.includes(:user, :assigned_camp_team, :camp_sleeping_place).sort_by(&:display_name)
       @camp_room_assignments_by_place_id = @camp_room_candidates.select { |application| application.camp_sleeping_place_id.present? }.group_by(&:camp_sleeping_place_id)
       @camp_room_people = @camp.camp_room_people.includes(:camp_sleeping_place, related_camp_application: :user).ordered
       @camp_room_people_by_place_id = @camp_room_people.select { |person| person.camp_sleeping_place_id.present? }.group_by(&:camp_sleeping_place_id)
@@ -69,7 +69,7 @@ class CampTeamsController < ApplicationController
     @program_week_block_modal = build_program_week_block_modal
     @viewer_assignment = current_user&.camp_applications&.find_by(assigned_camp_team_id: @camp_team.workspace_team_ids)
     @show_responsible_description = @camp_team.supports_responsible_description? && (current_user&.admin? || @viewer_assignment&.assigned_as_responsible?)
-    @assigned_applications = @camp_team.assigned_workspace_applications.includes(:user).sort_by { |application| [application.user.last_name.to_s, application.user.first_name.to_s] }
+    @assigned_applications = @camp_team.assigned_workspace_applications.includes(:user).sort_by(&:display_name)
   end
 
   def shopping_print
@@ -196,7 +196,7 @@ class CampTeamsController < ApplicationController
   def prepare_room_plan_print
     @camp.ensure_sleeping_places!
     @camp_sleeping_places = @camp.camp_sleeping_places.ordered
-    @camp_room_candidates = @camp.assigned_camp_applications.includes(:user, :assigned_camp_team, :camp_sleeping_place).sort_by { |application| [application.user.last_name.to_s, application.user.first_name.to_s] }
+    @camp_room_candidates = @camp.assigned_camp_applications.includes(:user, :assigned_camp_team, :camp_sleeping_place).sort_by(&:display_name)
     @camp_room_assignments_by_place_id = @camp_room_candidates.select { |application| application.camp_sleeping_place_id.present? }.group_by(&:camp_sleeping_place_id)
     @camp_room_people = @camp.camp_room_people.includes(:camp_sleeping_place, related_camp_application: :user).ordered
     @camp_room_people_by_place_id = @camp_room_people.select { |person| person.camp_sleeping_place_id.present? }.group_by(&:camp_sleeping_place_id)

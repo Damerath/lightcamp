@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_03_103000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_10_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,7 +52,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_03_103000) do
   end
 
   create_table "camp_applications", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.bigint "year_id", null: false
     t.text "motivation"
     t.string "commitment"
@@ -69,6 +69,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_03_103000) do
     t.bigint "assigned_camp_team_id"
     t.boolean "assigned_as_responsible", default: false, null: false
     t.bigint "camp_sleeping_place_id"
+    t.string "archived_display_name"
+    t.datetime "health_data_deleted_at"
+    t.datetime "anonymized_at"
     t.index ["assigned_camp_id"], name: "index_camp_applications_on_assigned_camp_id"
     t.index ["assigned_camp_team_id"], name: "index_camp_applications_on_assigned_camp_team_id"
     t.index ["camp_sleeping_place_id"], name: "index_camp_applications_on_camp_sleeping_place_id"

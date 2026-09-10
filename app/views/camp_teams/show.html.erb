@@ -294,7 +294,7 @@
                 <% if @assigned_applications.any? %>
                   <% @assigned_applications.each do |application| %>
                     <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200">
-                      <span><%= [application.user.first_name, application.user.last_name].compact.join(" ").presence || application.user.email %></span>
+                      <span><%= application.display_name %></span>
                       <% if application.assigned_as_responsible? %>
                         <span class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">V</span>
                       <% end %>
@@ -640,7 +640,7 @@
                   <% if @assigned_applications.any? %>
                     <% @assigned_applications.each do |application| %>
                       <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200">
-                        <span><%= [application.user.first_name, application.user.last_name].compact.join(" ").presence || application.user.email %></span>
+                        <span><%= application.display_name %></span>
                         <% if application.assigned_as_responsible? %>
                           <span class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">V</span>
                         <% end %>
@@ -720,7 +720,7 @@
                   <% if @assigned_applications.any? %>
                     <% @assigned_applications.each do |application| %>
                       <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200">
-                        <span><%= [application.user.first_name, application.user.last_name].compact.join(" ").presence || application.user.email %></span>
+                        <span><%= application.display_name %></span>
                         <% if application.assigned_as_responsible? %>
                           <span class="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-900/60 dark:text-amber-200">V</span>
                         <% end %>
@@ -828,7 +828,7 @@
                     <% if assigned_people.any? %>
                       <% assigned_people.each do |application| %>
                         <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
-                          <p class="text-sm font-medium text-slate-900 dark:text-slate-100"><%= [application.user.first_name, application.user.last_name].compact.join(" ") %></p>
+                          <p class="text-sm font-medium text-slate-900 dark:text-slate-100"><%= application.display_name %></p>
                           <p class="text-xs text-slate-500 dark:text-slate-400"><%= application.assigned_camp_team&.name || "-" %></p>
                         </div>
                       <% end %>
@@ -836,7 +836,7 @@
                     <% extra_people.each do |person| %>
                       <div class="rounded-lg border border-sky-200 bg-sky-50/70 px-3 py-2 dark:border-sky-900/60 dark:bg-sky-950/20">
                         <p class="text-sm font-medium text-slate-900 dark:text-slate-100"><%= person.name %></p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400"><%= person.kind_label %><%= person.related_camp_application&.user.present? ? " · zu #{person.related_camp_application.user.first_name} #{person.related_camp_application.user.last_name}" : "" %></p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400"><%= person.kind_label %><%= person.related_camp_application.present? ? " · zu #{person.related_camp_application.display_name}" : "" %></p>
                       </div>
                     <% end %>
                     <% if assigned_people.empty? && extra_people.empty? %>
@@ -893,7 +893,7 @@
               <% @camp_room_candidates.each do |application| %>
                 <%= form_with model: application, url: camp_sleeping_assignment_path(@camp, @camp_team, application), method: :patch, class: "grid gap-3 rounded-xl border border-slate-200 px-4 py-3 md:grid-cols-[minmax(0,1fr)_15rem_auto] md:items-center dark:border-slate-700" do |f| %>
                   <div>
-                    <p class="font-medium text-slate-900 dark:text-slate-100"><%= [application.user.first_name, application.user.last_name].compact.join(" ") %></p>
+                    <p class="font-medium text-slate-900 dark:text-slate-100"><%= application.display_name %></p>
                     <p class="text-sm text-slate-500 dark:text-slate-400">
                       <%= application.assigned_camp_team&.name || "-" %>
                       <% if application.assigned_as_responsible? %>
@@ -934,7 +934,7 @@
               </div>
               <div>
                 <%= f.label :related_camp_application_id, "Gehört zu", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-                <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [application.display_name, application.id] }), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
               </div>
               <div>
                 <%= f.label :camp_sleeping_place_id, "Schlafplatz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
@@ -955,7 +955,7 @@
                   <%= form_with model: person, url: camp_room_person_path(@camp, @camp_team, person), method: :patch, class: "grid gap-3 rounded-xl border border-slate-200 px-4 py-3 lg:grid-cols-[1fr_11rem_14rem_14rem_minmax(0,1fr)_auto_auto] lg:items-center dark:border-slate-700" do |f| %>
                     <%= f.text_field :name, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     <%= f.select :kind, options_for_select(CampRoomPerson::KINDS.map { |key, label| [label, key] }, person.kind), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-                    <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [[application.user.first_name, application.user.last_name].compact.join(" "), application.id] }, person.related_camp_application_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                    <%= f.select :related_camp_application_id, options_for_select([["Niemandem direkt zugeordnet", nil]] + @camp_room_candidates.map { |application| [application.display_name, application.id] }, person.related_camp_application_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     <%= f.select :camp_sleeping_place_id, options_for_select([["Noch nicht zugewiesen", nil]] + @camp_sleeping_places.map { |place| [place.name, place.id] }, person.camp_sleeping_place_id), {}, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     <%= f.text_field :notes, placeholder: "Hinweis", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
                     <%= f.submit "Speichern", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
@@ -1299,10 +1299,10 @@
               <div class="flex items-start justify-between gap-3">
                 <div>
                   <p class="font-medium text-slate-900 dark:text-slate-100">
-                    <%= application.user.first_name %> <%= application.user.last_name %>
+                    <%= application.display_name %>
                   </p>
                   <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                    <span><%= application.user.gender == "male" ? "m" : application.user.gender == "female" ? "w" : "-" %></span>
+                    <span><%= application.user&.gender == "male" ? "m" : application.user&.gender == "female" ? "w" : "-" %></span>
                     <% if @camp_team.media_team? && application.assigned_camp_team.present? %>
                       <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
                         <%= application.assigned_camp_team.name %>

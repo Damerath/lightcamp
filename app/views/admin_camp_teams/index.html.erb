@@ -118,20 +118,20 @@
 
           <% if team.assigned_camp_applications.any? %>
             <div class="grid grid-cols-2 gap-2 mt-3">
-              <% team.assigned_camp_applications.sort_by { |application| [application.user.last_name.to_s, application.user.first_name.to_s] }.each do |application| %>
+              <% team.assigned_camp_applications.sort_by(&:display_name).each do |application| %>
                 <div
-                  class="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 transition"
-                  data-action="click->application-modal#open"
+                  class="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-600 dark:text-slate-300 <%= application.user.present? ? 'cursor-pointer transition hover:bg-slate-200 dark:hover:bg-slate-700' : '' %>"
+                  <% if application.user.present? %>data-action="click->application-modal#open"<% end %>
                   data-assignment-path="<%= admin_camp_application_assignment_path(application) %>"
                   data-application-id="<%= application.id %>"
-                  data-name="<%= application.user.first_name %> <%= application.user.last_name %>"
-                  data-email="<%= application.user.email %>"
-                  data-birthdate="<%= application.user.birthdate.present? ? l(application.user.birthdate) : '-' %>"
-                  data-phone="<%= application.user.phone %>"
-                  data-first-aider="<%= application.user.first_aider? ? 'Ja' : 'Nein' %>"
-                  data-sound-tech="<%= application.user.sound_tech? ? 'Ja' : 'Nein' %>"
-                  data-instruments="<%= application.user.instruments.to_s.gsub('"', '&quot;') %>"
-                  data-other-skills="<%= application.user.other_skills.to_s.gsub('"', '&quot;') %>"
+                  data-name="<%= application.display_name %>"
+                  data-email="<%= application.user&.email %>"
+                  data-birthdate="<%= application.user&.birthdate.present? ? l(application.user.birthdate) : '-' %>"
+                  data-phone="<%= application.user&.phone %>"
+                  data-first-aider="<%= application.user&.first_aider? ? 'Ja' : 'Nein' %>"
+                  data-sound-tech="<%= application.user&.sound_tech? ? 'Ja' : 'Nein' %>"
+                  data-instruments="<%= application.user&.instruments.to_s.gsub('"', '&quot;') %>"
+                  data-other-skills="<%= application.user&.other_skills.to_s.gsub('"', '&quot;') %>"
                   data-camps="<%= application.camps.map(&:name).join(', ') %>"
                   data-camp-teams="<%= json_escape(application.camps.includes(:camp_teams).map { |camp| { id: camp.id, name: camp.name, teams: camp.camp_teams.ordered.map { |camp_team| { id: camp_team.id, name: camp_team.name, responsible_slots: camp_team.responsible_slots } } } }.to_json) %>"
                   data-assigned-camp-id="<%= application.assigned_camp&.id %>"
@@ -148,10 +148,10 @@
                 >
                   <div>
                     <p class="font-medium text-slate-900 dark:text-slate-100">
-                      <%= application.user.first_name %> <%= application.user.last_name %>
+                      <%= application.display_name %>
                     </p>
                     <p class="text-slate-500 dark:text-slate-400">
-                      <%= application.user.gender == "male" ? "m" : application.user.gender == "female" ? "w" : "-" %>
+                      <%= application.user&.gender == "male" ? "m" : application.user&.gender == "female" ? "w" : "-" %>
                     </p>
                   </div>
 

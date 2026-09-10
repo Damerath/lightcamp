@@ -16,7 +16,7 @@ class CampApplication < ApplicationRecord
     "Campstory"
   ].freeze
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :year
   belongs_to :assigned_camp, class_name: "Camp", optional: true
   belongs_to :assigned_camp_team, class_name: "CampTeam", optional: true
@@ -33,6 +33,12 @@ class CampApplication < ApplicationRecord
 
   def confirmed?
     assigned_camp_team.present?
+  end
+
+  def display_name
+    return user.display_name if user.present?
+
+    archived_display_name.presence || "Ehemalige Person"
   end
 
   private

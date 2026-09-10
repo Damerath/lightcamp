@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "lucide", "data-turbo-track": "reload" %>
     <style>
       <% if %w[week_plan_print sport_tournament_print kitchen_plan_print diy_plan_print].include?(action_name) %>
         @page { size: A4 landscape; margin: 10mm; }
@@ -22,9 +23,8 @@
     <main class="<%= %w[week_plan_print sport_tournament_print kitchen_plan_print diy_plan_print].include?(action_name) ? 'mx-auto max-w-none px-4 py-6' : 'mx-auto max-w-4xl px-6 py-8' %>">
       <%= yield %>
     </main>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-      lucide.createIcons();
+      window.lucide?.createIcons();
     </script>
   </body>
 </html>
