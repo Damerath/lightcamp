@@ -10,6 +10,11 @@
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
+      <div class="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+        <%= label_tag :website, "Website" %>
+        <%= text_field_tag :website, nil, autocomplete: "off", tabindex: -1 %>
+      </div>
+
       <div>
         <%= f.label :first_name, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
         <%= f.text_field :first_name, autofocus: true, autocomplete: "given-name", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
@@ -39,6 +44,11 @@
         <%= f.label :password_confirmation, class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
         <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
       </div>
+
+      <% if ENV["TURNSTILE_SITE_KEY"].present? %>
+        <div class="cf-turnstile" data-sitekey="<%= ENV.fetch("TURNSTILE_SITE_KEY") %>" data-action="registration"></div>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+      <% end %>
 
       <div>
         <%= f.submit t(".submit"), class: "w-full rounded-lg bg-red-600 px-4 py-2.5 font-medium text-white transition hover:bg-red-700" %>

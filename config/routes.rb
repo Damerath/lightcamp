@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get 'admin_camp_applications/index'
   get 'profiles/edit'
   get 'years/index'
-  devise_for :users
+  devise_for :users, controllers: { registrations: "users/registrations" }
   root "dashboard#index"
   get "impressum", to: "legal_pages#imprint"
   get "datenschutz", to: "legal_pages#privacy"
