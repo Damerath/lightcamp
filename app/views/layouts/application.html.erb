@@ -210,6 +210,10 @@
       document.addEventListener("turbo:load", function() {
         window.lucide?.createIcons();
       });
+
+      document.addEventListener("turbo:frame-render", function() {
+        window.lucide?.createIcons();
+      });
     </script>
   </body>
 </html>

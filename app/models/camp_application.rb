@@ -35,6 +35,10 @@ class CampApplication < ApplicationRecord
     assigned_camp_team.present?
   end
 
+  def anonymized?
+    anonymized_at.present?
+  end
+
   def display_name
     return user.display_name if user.present?
 

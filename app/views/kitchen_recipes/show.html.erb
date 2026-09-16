@@ -1,0 +1,86 @@
+<div class="space-y-6" data-controller="recipe-scaler" data-recipe-scaler-base-servings-value="<%= @recipe.base_servings %>">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Globales Rezeptbuch</p>
+      <h2 class="text-2xl font-bold"><%= @recipe.title %></h2>
+    </div>
+    <%= link_to "Zurueck zum Rezeptbuch", recipe_index_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-600 dark:text-slate-300" %>
+  </div>
+
+  <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+    <label class="text-sm font-medium" for="recipe-servings">Berechnen fuer</label>
+    <div class="mt-2 flex items-center gap-3">
+      <input id="recipe-servings" type="number" min="1" value="<%= @recipe.base_servings %>" data-recipe-scaler-target="servings" data-action="input->recipe-scaler#scale" class="w-28 rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900">
+      <span class="text-sm text-slate-500">Personen</span>
+    </div>
+
+    <ul class="mt-5 space-y-2">
+      <% @ingredients.each do |ingredient| %>
+        <li class="flex gap-2">
+          <strong data-recipe-scaler-target="amount" data-amount="<%= ingredient.amount %>"><%= ingredient.amount %></strong>
+          <span><%= ingredient.unit %> <%= ingredient.name %></span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+    <h3 class="font-semibold">Zubereitung</h3>
+    <div class="mt-3 leading-7"><%= render_recipe_instructions(@recipe) %></div>
+  </div>
+
+  <% if @can_manage_recipes %>
+    <div class="grid gap-6 lg:grid-cols-2">
+      <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+        <h3 class="font-semibold">Rezeptdaten</h3>
+        <%= form_with model: @recipe, url: recipe_path(@recipe), method: :patch, class: "mt-4 space-y-3" do |f| %>
+          <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          <%= f.text_field :category, placeholder: "Kategorie", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          <%= f.number_field :base_servings, min: 1, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          <%= f.submit "Rezept speichern", class: "rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white" %>
+        <% end %>
+
+        <%= button_to "Rezept loeschen", recipe_path(@recipe), method: :delete, data: { turbo_confirm: "Rezept inklusive aller Zutaten wirklich loeschen?" }, class: "mt-5 text-sm font-medium text-red-600 dark:text-red-400" %>
+      </div>
+
+      <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+        <h3 class="font-semibold">Zutaten</h3>
+        <div class="mt-3 space-y-2">
+          <% @ingredients.each do |ingredient| %>
+            <div class="flex gap-2">
+              <%= form_with model: ingredient, url: recipe_ingredient_path(@recipe, ingredient), method: :patch, class: "flex min-w-0 flex-1 gap-2" do |f| %>
+                <%= f.number_field :amount, step: 0.001, class: "w-20 rounded border px-2 dark:bg-slate-900" %>
+                <%= f.text_field :unit, class: "w-20 rounded border px-2 dark:bg-slate-900" %>
+                <%= f.text_field :name, class: "min-w-0 flex-1 rounded border px-2 dark:bg-slate-900" %>
+                <%= f.submit "Speichern", class: "px-2 text-sm" %>
+              <% end %>
+              <%= button_to "Loeschen", recipe_ingredient_path(@recipe, ingredient), method: :delete, data: { turbo_confirm: "Zutat wirklich loeschen?" }, class: "px-2 text-sm text-red-600 dark:text-red-400" %>
+            </div>
+          <% end %>
+        </div>
+
+        <%= form_with model: KitchenRecipeIngredient.new, url: recipe_ingredients_path(@recipe), class: "mt-4 flex gap-2" do |f| %>
+          <%= f.number_field :amount, step: 0.001, placeholder: "Menge", class: "w-24 rounded border px-2 dark:bg-slate-900" %>
+          <%= f.text_field :unit, placeholder: "Einheit", class: "w-24 rounded border px-2 dark:bg-slate-900" %>
+          <%= f.text_field :name, placeholder: "Zutat", class: "min-w-0 flex-1 rounded border px-2 dark:bg-slate-900" %>
+          <%= f.submit "Hinzufuegen", class: "px-2 text-sm" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800" data-controller="recipe-token-inserter">
+      <h3 class="font-semibold">Zubereitung mit automatischen Mengen</h3>
+      <p class="mt-1 text-sm text-slate-500">Klicke auf eine Zutat, um sie an der Cursorposition einzufuegen.</p>
+      <%= form_with model: @recipe, url: recipe_path(@recipe), method: :patch, class: "mt-4 space-y-3" do |f| %>
+        <%= f.text_area :instructions, rows: 8, data: { recipe_token_inserter_target: "input" }, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm dark:border-slate-600 dark:bg-slate-900" %>
+        <div class="flex flex-wrap gap-2">
+          <% @ingredients.each do |ingredient| %>
+            <button type="button" data-action="click->recipe-token-inserter#insert" data-token="[[ingredient:<%= ingredient.id %>:full]]" class="rounded border px-2 py-1 text-sm"><%= ingredient.name %></button>
+            <button type="button" data-action="click->recipe-token-inserter#insert" data-token="[[ingredient:<%= ingredient.id %>:amount]]" class="rounded border px-2 py-1 text-xs">nur Menge</button>
+          <% end %>
+        </div>
+        <%= f.submit "Zubereitung speichern", class: "rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

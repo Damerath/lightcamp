@@ -2,6 +2,10 @@ de:
   errors:
     messages:
       blank: "darf nicht leer sein"
+      not_a_number: "ist keine Zahl"
+      not_an_integer: "muss eine ganze Zahl sein"
+      greater_than_or_equal_to: "muss größer oder gleich %{count} sein"
+      inclusion: "ist keine gültige Auswahl"
   time:
     formats:
       default: "%H:%M"
@@ -59,6 +63,15 @@ de:
       download_item:
         title: "Titel"
         file: "Datei"
+      kitchen_recipe_ingredient:
+        amount: "Menge"
+        unit: "Einheit"
+        name: "Zutat"
+      kitchen_recipe:
+        title: "Rezeptname"
+        category: "Mahlzeit"
+        base_servings: "Personenzahl"
+        effort_level: "Aufwand"
       user:
         first_name: "Vorname"
         last_name: "Nachname"

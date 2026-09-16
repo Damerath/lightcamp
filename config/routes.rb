@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     resources :sport_day_plans, controller: "camp_sport_day_plans", only: :update
     resources :sport_material_items, controller: "camp_sport_material_items", only: %i[create update destroy]
     resources :kitchen_day_plans, controller: "camp_kitchen_day_plans", only: :update
+    resources :kitchen_recipes, path: "recipes", controller: "kitchen_recipes", only: %i[index show create update destroy] do
+      resources :ingredients, controller: "kitchen_recipe_ingredients", only: %i[create update destroy]
+    end
     resources :diy_day_plans, controller: "camp_diy_day_plans", only: :update do
       post :apply_general_offer_to_all, on: :member
     end

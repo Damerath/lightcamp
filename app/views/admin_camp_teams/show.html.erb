@@ -47,6 +47,8 @@
     <% if @camp_team.kitchen_team? %>
       <% active = @section == "kitchen_plan" %>
       <%= link_to "Küchenplan", admin_camp_team_page_path(@camp, @camp_team, section: "kitchen_plan"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
+      <% active = @section == "recipe_book" %>
+      <%= link_to "Rezeptbuch", admin_camp_team_page_path(@camp, @camp_team, section: "recipe_book"), class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{active ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'}" %>
     <% end %>
     <% if @camp_team.diy_team? %>
       <% active = @section == "diy_plan" %>
@@ -67,7 +69,7 @@
 
   </div>
 
-  <% if %w[program week_plan sport_plan material_list medical_supplies kitchen_plan diy_plan room_plan].include?(@section) %>
+  <% if %w[program week_plan sport_plan material_list medical_supplies kitchen_plan recipe_book diy_plan room_plan].include?(@section) %>
     <div class="space-y-6">
   <% else %>
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
@@ -578,6 +580,8 @@
               "Sonstiges" => "Weitere Hilfsmittel und Verbrauchsmaterialien."
             } %>
         </div>
+      <% elsif @section == "recipe_book" %>
+        <%= render "kitchen_recipes/workspace", admin: true %>
       <% elsif @section == "kitchen_plan" %>
         <div class="relative left-1/2 w-screen max-w-none -translate-x-1/2 px-4 sm:px-6 xl:px-8">
           <div class="space-y-4">
@@ -1238,7 +1242,7 @@
           <% end %>
         </div>
       <% end %>
-    <% unless %w[program week_plan sport_plan material_list medical_supplies kitchen_plan diy_plan room_plan].include?(@section) %>
+    <% unless %w[program week_plan sport_plan material_list medical_supplies kitchen_plan recipe_book diy_plan room_plan].include?(@section) %>
       </div>
 
       <aside class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">

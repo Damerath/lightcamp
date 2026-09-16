@@ -254,6 +254,13 @@ class CampTeam < ApplicationRecord
     user.camp_applications.exists?(assigned_camp_team_id: workspace_team_ids)
   end
 
+  def kitchen_recipe_manager?(user)
+    return true if user&.management?
+    return false unless kitchen_team? && user.present?
+
+    user.camp_applications.exists?(assigned_camp_team_id: workspace_team_ids, assigned_as_responsible: true)
+  end
+
   def sync_kitchen_day_plans_to_schedule!
     return unless kitchen_team?
     return unless camp.scheduled?

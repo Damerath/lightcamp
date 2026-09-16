@@ -27,7 +27,10 @@ class AdminCampTeamsController < ApplicationController
       allowed_sections << "material_list"
     end
     allowed_sections << "medical_supplies" if @camp_team.medical_team?
-    allowed_sections << "kitchen_plan" if @camp_team.kitchen_team?
+    if @camp_team.kitchen_team?
+      allowed_sections << "kitchen_plan"
+      allowed_sections << "recipe_book"
+    end
     allowed_sections << "diy_plan" if @camp_team.diy_team?
     allowed_sections << "room_plan" if @camp_team.camp_leader_team?
     allowed_sections << "program" if @camp_team.program_team?
@@ -57,6 +60,10 @@ class AdminCampTeamsController < ApplicationController
     if @camp_team.kitchen_team?
       @camp_team.sync_kitchen_day_plans_to_schedule!
       @camp_kitchen_day_plans = @camp_team.camp_kitchen_day_plans.ordered
+      @recipes = KitchenRecipe.includes(:ingredients).ordered
+      @recipe = KitchenRecipe.find_by(id: params[:recipe_id])
+      @ingredients = @recipe&.ingredients&.ordered || KitchenRecipeIngredient.none
+      @can_manage_recipes = true
     end
     if @camp_team.diy_team?
       @camp_team.sync_diy_day_plans_to_schedule!

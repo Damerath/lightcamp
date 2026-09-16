@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_16_110000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_16_143000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -321,6 +321,27 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_16_110000) do
     t.index ["uploader_id"], name: "index_download_items_on_uploader_id"
   end
 
+  create_table "kitchen_recipe_ingredients", force: :cascade do |t|
+    t.bigint "kitchen_recipe_id", null: false
+    t.decimal "amount", precision: 10, scale: 3, null: false
+    t.string "unit", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kitchen_recipe_id"], name: "index_kitchen_recipe_ingredients_on_kitchen_recipe_id"
+  end
+
+  create_table "kitchen_recipes", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "category"
+    t.integer "base_servings", null: false
+    t.text "instructions", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "effort_level", default: 1, null: false
+  end
+
   create_table "medical_supply_changes", force: :cascade do |t|
     t.bigint "user_id"
     t.string "actor_name", default: "", null: false
@@ -489,6 +510,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_16_110000) do
   add_foreign_key "download_items", "camp_teams"
   add_foreign_key "download_items", "team_templates"
   add_foreign_key "download_items", "users", column: "uploader_id"
+  add_foreign_key "kitchen_recipe_ingredients", "kitchen_recipes"
   add_foreign_key "medical_supply_changes", "users"
   add_foreign_key "notification_deliveries", "notification_events"
   add_foreign_key "notification_deliveries", "users"
