@@ -1,5 +1,5 @@
 class AdminCampSportTournamentPlansController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
   before_action :set_camp
   before_action :set_camp_team
 
@@ -58,7 +58,7 @@ class AdminCampSportTournamentPlansController < ApplicationController
     ((hour.presence || "15").to_i * 60) + (minute.presence || "00").to_i
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

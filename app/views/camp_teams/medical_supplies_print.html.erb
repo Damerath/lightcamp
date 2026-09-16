@@ -6,7 +6,7 @@
     </p>
   </div>
   <div class="flex gap-3">
-    <% back_path = current_user&.admin? ? admin_camp_team_page_path(@camp, @camp_team, section: "medical_supplies") : camp_team_page_path(@camp, @camp_team, section: "medical_supplies") %>
+    <% back_path = current_user&.management? ? admin_camp_team_page_path(@camp, @camp_team, section: "medical_supplies") : camp_team_page_path(@camp, @camp_team, section: "medical_supplies") %>
     <%= link_to "Zurück", back_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" %>
     <button onclick="window.print()" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">Drucken</button>
   </div>

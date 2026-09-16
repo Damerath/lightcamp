@@ -1,5 +1,5 @@
 class AdminDownloadItemsController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
 
   def index
     @download_items = DownloadItem.admin_items.includes(:uploader, file_attachment: :blob)
@@ -43,7 +43,7 @@ class AdminDownloadItemsController < ApplicationController
     (DownloadItem.admin_only.maximum(:position) || -1) + 1
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

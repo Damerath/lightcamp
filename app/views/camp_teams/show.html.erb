@@ -1084,7 +1084,7 @@
               </p>
 
               <div class="mt-4 flex flex-col items-start gap-2 lg:hidden">
-                <%= link_to "Druckansicht", current_user&.admin? ? admin_camp_team_week_plan_print_path(@camp, @camp_team) : camp_team_week_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+                <%= link_to "Druckansicht", current_user&.management? ? admin_camp_team_week_plan_print_path(@camp, @camp_team) : camp_team_week_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
                 <% if @camp_team.program_team? %>
                   <%= form_with model: @camp_team, url: camp_team_page_path(@camp, @camp_team), method: :patch do |f| %>
                     <%= hidden_field_tag :section, "week_plan" %>
@@ -1096,7 +1096,7 @@
             </div>
 
             <div class="hidden lg:flex lg:flex-wrap lg:justify-end lg:gap-2">
-              <%= link_to "Druckansicht", current_user&.admin? ? admin_camp_team_week_plan_print_path(@camp, @camp_team) : camp_team_week_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+              <%= link_to "Druckansicht", current_user&.management? ? admin_camp_team_week_plan_print_path(@camp, @camp_team) : camp_team_week_plan_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
               <% if @camp_team.program_team? %>
                 <%= form_with model: @camp_team, url: camp_team_page_path(@camp, @camp_team), method: :patch do |f| %>
                   <%= hidden_field_tag :section, "week_plan" %>

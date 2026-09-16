@@ -1,5 +1,5 @@
 class AdminCampSportMaterialItemsController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
   before_action :set_camp
   before_action :set_camp_team
   before_action :set_sport_team_template
@@ -91,7 +91,7 @@ class AdminCampSportMaterialItemsController < ApplicationController
     changes.present? ? "Aktualisiert: #{changes.join('; ')}" : nil
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

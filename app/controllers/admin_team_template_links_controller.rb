@@ -1,5 +1,5 @@
 class AdminTeamTemplateLinksController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
   before_action :set_team_template
 
   def create
@@ -43,7 +43,7 @@ class AdminTeamTemplateLinksController < ApplicationController
     (@team_template.team_template_links.maximum(:position) || -1) + 1
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

@@ -77,7 +77,10 @@
               <span class="md:hidden">Camps</span>
               <span class="hidden md:inline">Meine Camps</span>
             <% end %>
-            <a href="#" class="hidden text-slate-700 hover:text-blue-400 md:inline">Leitung</a>
+            <% if current_user.management? %>
+              <%= link_to "Leitung", leadership_path,
+                class: "text-sm font-medium #{current_page?(leadership_path) ? 'text-red-600' : 'text-slate-600 dark:text-slate-300 hover:text-blue-400'}" %>
+            <% end %>
 
             <% if current_user.admin? %>
               <%= link_to "Admin", admin_path,

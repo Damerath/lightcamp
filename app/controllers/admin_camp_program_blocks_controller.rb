@@ -1,5 +1,5 @@
 class AdminCampProgramBlocksController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
   before_action :set_camp
   before_action :set_camp_team
 
@@ -67,7 +67,7 @@ class AdminCampProgramBlocksController < ApplicationController
     (@camp_team.camp_program_blocks.maximum(:position) || -1) + 1
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

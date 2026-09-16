@@ -1,0 +1,44 @@
+<div class="space-y-8">
+  <div>
+    <h2 class="text-2xl font-bold">Leitung</h2>
+    <p class="mt-1 text-slate-600 dark:text-slate-400">
+      Hier findest du alle Werkzeuge fuer die operative Campverwaltung.
+    </p>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="rounded-lg bg-white p-5 shadow dark:bg-slate-800">
+      <h3 class="font-semibold text-slate-900 dark:text-slate-100">Campverwaltung</h3>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Camps einrichten, Mitarbeitende zuteilen und Teams verwalten.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <%= link_to "Camps einrichten", admin_camps_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+        <%= link_to "Mitarbeiter zuteilen", admin_camp_applications_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      </div>
+    </div>
+
+    <div class="rounded-lg bg-white p-5 shadow dark:bg-slate-800">
+      <h3 class="font-semibold text-slate-900 dark:text-slate-100">Teamverwaltung</h3>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Vorlagen und die Inhalte der Camp-Teams verwalten.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <%= link_to "Defaults verwalten", admin_team_templates_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      </div>
+    </div>
+
+    <div class="rounded-lg bg-white p-5 shadow dark:bg-slate-800">
+      <h3 class="font-semibold text-slate-900 dark:text-slate-100">Listenverwaltung</h3>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Zentrale Listen fuer Sportmaterial und medizinische Versorgung.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <%= link_to "Sportmaterial", admin_sport_material_list_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+        <%= link_to "Medizinische Versorgung", admin_medical_supply_list_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      </div>
+    </div>
+
+    <div class="rounded-lg bg-white p-5 shadow dark:bg-slate-800">
+      <h3 class="font-semibold text-slate-900 dark:text-slate-100">Leitungs-Downloads</h3>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Dateien fuer die Camporganisation bereitstellen.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <%= link_to "Dateien verwalten", admin_download_items_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      </div>
+    </div>
+  </div>
+</div>

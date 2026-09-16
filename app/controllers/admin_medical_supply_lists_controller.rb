@@ -1,5 +1,5 @@
 class AdminMedicalSupplyListsController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
 
   def show
     load_collection
@@ -78,7 +78,7 @@ class AdminMedicalSupplyListsController < ApplicationController
     changes.present? ? "Aktualisiert: #{changes.join('; ')}" : nil
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

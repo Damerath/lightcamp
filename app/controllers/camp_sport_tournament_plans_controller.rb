@@ -59,7 +59,7 @@ class CampSportTournamentPlansController < ApplicationController
   end
 
   def require_team_access
-    return if current_user&.admin?
+    return if current_user&.management?
     return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
 
     redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."

@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get "users", to: "users#index"
   patch "users/:id", to: "users#update", as: :user
   delete "users/:id", to: "users#destroy"
+  get "leitung", to: "leadership#index", as: :leadership
   get "admin", to: "admin#index"
   get "admin/downloads", to: "admin_download_items#index", as: :admin_download_items
   post "admin/downloads/items", to: "admin_download_items#create", as: :admin_download_items_create

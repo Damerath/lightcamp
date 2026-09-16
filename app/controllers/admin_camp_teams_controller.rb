@@ -1,5 +1,5 @@
 class AdminCampTeamsController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
   before_action :set_camp
   before_action :set_camp_team, only: [:show, :update, :shopping_print, :week_plan_print, :sport_tournament_print, :kitchen_plan_print, :diy_plan_print, :room_plan_print, :medical_supplies_print]
   layout :resolve_layout
@@ -223,8 +223,8 @@ class AdminCampTeamsController < ApplicationController
     end
   end
 
-  def require_admin
-    unless current_user&.admin?
+  def require_management
+    unless current_user&.management?
       redirect_to root_path, alert: "Kein Zugriff"
     end
   end

@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
+  end
+
   def load_notification_deliveries
     @notification_deliveries = current_user.notification_deliveries.in_app_visible.limit(12)
     @unread_notification_count = @notification_deliveries.count(&:unread?)

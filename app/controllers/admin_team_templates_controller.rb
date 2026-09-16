@@ -1,5 +1,5 @@
 class AdminTeamTemplatesController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
 
   def index
     @team_templates = TeamTemplate.order(:name)
@@ -42,7 +42,7 @@ class AdminTeamTemplatesController < ApplicationController
     params[:propagate_scope].presence_in(%w[all future_years]) || "future_years"
   end
 
-  def require_admin
-    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.admin?
+  def require_management
+    redirect_to root_path, alert: "Kein Zugriff" unless current_user&.management?
   end
 end

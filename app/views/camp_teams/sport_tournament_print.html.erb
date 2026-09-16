@@ -12,7 +12,7 @@
       <button type="button" onclick="window.print()" class="inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
         Drucken
       </button>
-      <% back_path = current_user&.admin? ? admin_camp_team_page_path(@camp, @camp_team, section: "sport_plan") : camp_team_page_path(@camp, @camp_team, section: "sport_plan") %>
+      <% back_path = current_user&.management? ? admin_camp_team_page_path(@camp, @camp_team, section: "sport_plan") : camp_team_page_path(@camp, @camp_team, section: "sport_plan") %>
       <%= link_to "Zurueck", back_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" %>
     </div>
   </div>

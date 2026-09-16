@@ -248,7 +248,7 @@ class CampTeam < ApplicationRecord
   end
 
   def medical_supply_manager?(user)
-    return true if user&.admin?
+    return true if user&.management?
     return false unless medical_team? && user.present?
 
     user.camp_applications.exists?(assigned_camp_team_id: workspace_team_ids)

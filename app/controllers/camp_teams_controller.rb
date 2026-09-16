@@ -68,7 +68,7 @@ class CampTeamsController < ApplicationController
     @program_block_modal = build_program_block_modal
     @program_week_block_modal = build_program_week_block_modal
     @viewer_assignment = current_user&.camp_applications&.find_by(assigned_camp_team_id: @camp_team.workspace_team_ids)
-    @show_responsible_description = @camp_team.supports_responsible_description? && (current_user&.admin? || @viewer_assignment&.assigned_as_responsible?)
+    @show_responsible_description = @camp_team.supports_responsible_description? && (current_user&.management? || @viewer_assignment&.assigned_as_responsible?)
     @assigned_applications = @camp_team.assigned_workspace_applications.includes(:user).sort_by(&:display_name)
   end
 
@@ -183,7 +183,7 @@ class CampTeamsController < ApplicationController
   end
 
   def require_team_access
-    return if current_user&.admin?
+    return if current_user&.management?
     return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
 
     redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."

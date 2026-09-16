@@ -45,7 +45,7 @@ class CampRoomPeopleController < ApplicationController
   end
 
   def require_freizeitleiter_access
-    return if current_user&.admin?
+    return if current_user&.management?
     return if @camp_team.name == "Freizeitleiter" && current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
 
     redirect_to camps_path, alert: "Kein Zugriff auf diesen Bereich."

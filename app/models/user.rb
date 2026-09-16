@@ -8,6 +8,14 @@ class User < ApplicationRecord
   def admin?
     role == "admin"
   end
+
+  def leader?
+    role == "leader"
+  end
+
+  def management?
+    admin? || leader?
+  end
   
   def profile_complete?
     first_name.present? &&

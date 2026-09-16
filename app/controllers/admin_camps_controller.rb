@@ -1,5 +1,5 @@
 class AdminCampsController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
 
 def index
   @years = Year.includes(:camps).order(name: :desc)
@@ -15,8 +15,8 @@ end
 
   private
 
-  def require_admin
-    unless current_user&.admin?
+  def require_management
+    unless current_user&.management?
       redirect_to root_path, alert: "Kein Zugriff"
     end
   end

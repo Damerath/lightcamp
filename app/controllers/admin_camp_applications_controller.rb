@@ -1,5 +1,5 @@
 class AdminCampApplicationsController < ApplicationController
-  before_action :require_admin
+  before_action :require_management
   before_action :set_camp_application, only: :update_assignment
 
   def index
@@ -62,8 +62,8 @@ class AdminCampApplicationsController < ApplicationController
     end
   end
 
-  def require_admin
-    unless current_user&.admin?
+  def require_management
+    unless current_user&.management?
       redirect_to root_path, alert: "Kein Zugriff"
     end
   end
