@@ -1,4 +1,13 @@
 module KitchenRecipesHelper
+  def recipe_effort_color_class(recipe)
+    case recipe.effort_level
+    when 1, 2 then "bg-green-500"
+    when 3 then "bg-yellow-500"
+    when 4 then "bg-orange-500"
+    else "bg-red-500"
+    end
+  end
+
   def render_recipe_instructions(recipe)
     ingredients = recipe.ingredients.index_by(&:id)
     parts = recipe.instructions.to_s.split(KitchenRecipe::INSTRUCTION_TOKEN_PATTERN)

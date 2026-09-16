@@ -18,7 +18,13 @@
         <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Aufwand: <%= @recipe.effort_level %> von 5</p>
       </div>
       <div class="flex flex-col items-end gap-3">
-        <%= link_to "Zurück zum Rezeptbuch", page_path.call, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-600 dark:text-slate-300" %>
+        <div class="flex flex-wrap justify-end gap-3 print:hidden recipe-print-hidden">
+          <%= link_to "Zurück zum Rezeptbuch", page_path.call, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-600 dark:text-slate-300" %>
+          <button type="button" onclick="const elements = document.querySelectorAll('.recipe-print-hidden'); elements.forEach((element) => { element.dataset.recipePrintDisplay = element.style.display; element.style.display = 'none'; }); window.addEventListener('afterprint', () => elements.forEach((element) => { element.style.display = element.dataset.recipePrintDisplay; delete element.dataset.recipePrintDisplay; }), { once: true }); window.print();" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+            <i data-lucide="printer" class="h-4 w-4"></i>
+            Druckansicht
+          </button>
+        </div>
         <% if @can_manage_recipes %>
           <div class="flex flex-wrap justify-end gap-3">
             <button type="submit" form="recipe-details-form" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white">Rezept speichern</button>
@@ -47,7 +53,7 @@
     </div>
 
     <% if @can_manage_recipes %>
-      <div class="grid gap-4 xl:grid-cols-3">
+      <div class="grid gap-4 xl:grid-cols-3 print:hidden recipe-print-hidden">
         <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
           <h4 class="font-semibold">Rezeptdaten</h4>
           <%= form_with model: @recipe, url: recipe_resource_path.call(@recipe), method: :patch, id: "recipe-details-form", class: "mt-4 space-y-3" do |f| %>
@@ -92,7 +98,7 @@
         <% end %>
       </div>
 
-      <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800" data-controller="recipe-token-inserter">
+      <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800 print:hidden recipe-print-hidden" data-controller="recipe-token-inserter">
         <h4 class="font-semibold">Zubereitung mit automatischen Mengen</h4>
         <p class="mt-1 text-sm text-slate-500">Wähle eine Zutat aus, um sie an der Cursorposition einzufügen.</p>
         <%= form_with model: @recipe, url: recipe_resource_path.call(@recipe), method: :patch, class: "mt-4 space-y-3" do |f| %>

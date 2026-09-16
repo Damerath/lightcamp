@@ -1,5 +1,5 @@
-<div class="space-y-8">
-  <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+<div class="space-y-8 <%= 'print:space-y-0 recipe-print-page' if @section == 'recipe_book' %>">
+  <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between <%= 'print:hidden recipe-print-hidden' if @section == 'recipe_book' %>">
     <div>
       <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
         <%= @camp_team.year_shared_team? ? "#{@camp.year.name} · Jahresbereich" : "#{@camp.year.name} · #{@camp.name}" %>
@@ -23,7 +23,7 @@
   </div>
 
 
-  <div class="flex flex-wrap rounded-lg border border-slate-300 bg-white p-1 shadow-sm dark:border-slate-600 dark:bg-slate-800">
+  <div class="flex flex-wrap rounded-lg border border-slate-300 bg-white p-1 shadow-sm dark:border-slate-600 dark:bg-slate-800 <%= 'print:hidden recipe-print-hidden' if @section == 'recipe_book' %>">
     <% [
       ["overview", "Übersicht"],
       ["description", "Aufgabenbeschreibung"],
@@ -625,6 +625,9 @@
                 </div>
               <% else %>
                 <div class="mt-5">
+                  <% recipe_assignment_create_path = ->(day_plan) { admin_camp_kitchen_day_plan_recipe_assignments_path(@camp, @camp_team, day_plan) } %>
+                  <% recipe_assignment_destroy_path = ->(day_plan, assignment) { admin_camp_kitchen_day_plan_recipe_assignment_path(@camp, @camp_team, day_plan, assignment) } %>
+                  <% recipe_book_path = ->(recipe) { admin_camp_team_page_path(@camp, @camp_team, section: "recipe_book", recipe_id: recipe.id) } %>
                   <div class="grid overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 dark:border-slate-700 dark:bg-slate-900/30" style="grid-template-columns: repeat(<%= @camp_kitchen_day_plans.size %>, minmax(0, 1fr));">
                     <% @camp_kitchen_day_plans.each do |kitchen_day_plan| %>
                       <div class="<%= kitchen_day_plan == @camp_kitchen_day_plans.first ? '' : 'border-l border-slate-200 dark:border-slate-700' %> p-4">
@@ -637,18 +640,22 @@
                           <div>
                             <%= f.label :breakfast, "Frühstück", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
                             <%= f.text_area :breakfast, rows: 2, placeholder: "z. B. Brötchen, Müsli, Obst", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= render "camp_teams/kitchen_plan_recipe_assignments", kitchen_day_plan: kitchen_day_plan, meal_slot: "breakfast", recipes: @kitchen_recipes, can_manage: @can_manage_recipes, assignment_create_path: recipe_assignment_create_path, assignment_destroy_path: recipe_assignment_destroy_path, recipe_book_path: recipe_book_path %>
                           </div>
                           <div>
                             <%= f.label :lunch, "Mittag", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
                             <%= f.text_area :lunch, rows: 2, placeholder: "z. B. Nudeln mit Soße", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= render "camp_teams/kitchen_plan_recipe_assignments", kitchen_day_plan: kitchen_day_plan, meal_slot: "lunch", recipes: @kitchen_recipes, can_manage: @can_manage_recipes, assignment_create_path: recipe_assignment_create_path, assignment_destroy_path: recipe_assignment_destroy_path, recipe_book_path: recipe_book_path %>
                           </div>
                           <div>
                             <%= f.label :dinner, "Abendessen", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
                             <%= f.text_area :dinner, rows: 2, placeholder: "z. B. Brotzeit oder warmes Essen", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= render "camp_teams/kitchen_plan_recipe_assignments", kitchen_day_plan: kitchen_day_plan, meal_slot: "dinner", recipes: @kitchen_recipes, can_manage: @can_manage_recipes, assignment_create_path: recipe_assignment_create_path, assignment_destroy_path: recipe_assignment_destroy_path, recipe_book_path: recipe_book_path %>
                           </div>
                           <div>
                             <%= f.label :snack, "Snack", class: "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" %>
                             <%= f.text_area :snack, rows: 2, placeholder: "z. B. Obst, Kuchen, Abend-Snack", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+                            <%= render "camp_teams/kitchen_plan_recipe_assignments", kitchen_day_plan: kitchen_day_plan, meal_slot: "snack", recipes: @kitchen_recipes, can_manage: @can_manage_recipes, assignment_create_path: recipe_assignment_create_path, assignment_destroy_path: recipe_assignment_destroy_path, recipe_book_path: recipe_book_path %>
                           </div>
                           <div class="flex justify-end pt-0.5">
                             <%= f.submit "Speichern", class: "inline-flex rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700" %>

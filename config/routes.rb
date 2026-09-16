@@ -11,7 +11,13 @@ Rails.application.routes.draw do
     resources :team_shopping_items, path: "shopping_items", controller: "camp_team_shopping_items", only: %i[create update destroy]
     resources :sport_day_plans, controller: "camp_sport_day_plans", only: :update
     resources :sport_material_items, controller: "camp_sport_material_items", only: %i[create update destroy]
-    resources :kitchen_day_plans, controller: "camp_kitchen_day_plans", only: :update
+    resources :kitchen_day_plans, controller: "camp_kitchen_day_plans", only: :update do
+      resources :recipe_assignments, controller: "camp_kitchen_recipe_assignments", only: %i[create destroy]
+    end
+    # The recipe selector is rendered within the existing day-plan form. Its
+    # hidden method field therefore submits PATCH even when its button targets
+    # the assignment URL.
+    patch "kitchen_day_plans/:kitchen_day_plan_id/recipe_assignments", to: "camp_kitchen_recipe_assignments#create"
     resources :kitchen_recipes, path: "recipes", controller: "kitchen_recipes", only: %i[index show create update destroy] do
       resources :ingredients, controller: "kitchen_recipe_ingredients", only: %i[create update destroy]
     end

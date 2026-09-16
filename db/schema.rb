@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_16_143000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_16_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -119,6 +119,17 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_16_143000) do
     t.datetime "updated_at", null: false
     t.index ["camp_team_id", "planned_on"], name: "index_camp_kitchen_day_plans_on_camp_team_id_and_planned_on", unique: true
     t.index ["camp_team_id"], name: "index_camp_kitchen_day_plans_on_camp_team_id"
+  end
+
+  create_table "camp_kitchen_recipe_assignments", force: :cascade do |t|
+    t.bigint "camp_kitchen_day_plan_id", null: false
+    t.bigint "kitchen_recipe_id", null: false
+    t.string "meal_slot", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["camp_kitchen_day_plan_id", "meal_slot", "kitchen_recipe_id"], name: "index_kitchen_recipe_assignments_uniqueness", unique: true
+    t.index ["camp_kitchen_day_plan_id"], name: "index_kitchen_recipe_assignments_on_day_plan"
+    t.index ["kitchen_recipe_id"], name: "index_camp_kitchen_recipe_assignments_on_kitchen_recipe_id"
   end
 
   create_table "camp_program_blocks", force: :cascade do |t|
@@ -489,6 +500,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_16_143000) do
   add_foreign_key "camp_applications", "years"
   add_foreign_key "camp_diy_day_plans", "camp_teams"
   add_foreign_key "camp_kitchen_day_plans", "camp_teams"
+  add_foreign_key "camp_kitchen_recipe_assignments", "camp_kitchen_day_plans"
+  add_foreign_key "camp_kitchen_recipe_assignments", "kitchen_recipes"
   add_foreign_key "camp_program_blocks", "camp_teams"
   add_foreign_key "camp_program_week_blocks", "camp_program_week_days"
   add_foreign_key "camp_program_week_days", "camp_teams"

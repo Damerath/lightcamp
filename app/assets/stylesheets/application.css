@@ -194,6 +194,20 @@
   background: rgb(30 64 175);
 }
 
+@media print {
+  .recipe-print-hidden {
+    display: none !important;
+  }
+
+  .recipe-print-page {
+    gap: 0 !important;
+  }
+}
+
+.recipe-printing .recipe-print-hidden {
+  display: none !important;
+}
+
 
 .datepicker-footer .clear-btn {
   border: 1px solid rgb(229 231 235);

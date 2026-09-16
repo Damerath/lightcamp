@@ -59,8 +59,9 @@ class AdminCampTeamsController < ApplicationController
     end
     if @camp_team.kitchen_team?
       @camp_team.sync_kitchen_day_plans_to_schedule!
-      @camp_kitchen_day_plans = @camp_team.camp_kitchen_day_plans.ordered
+      @camp_kitchen_day_plans = @camp_team.camp_kitchen_day_plans.includes(recipe_assignments: :kitchen_recipe).ordered
       @recipes = KitchenRecipe.includes(:ingredients).ordered
+      @kitchen_recipes = KitchenRecipe.ordered
       @recipe = KitchenRecipe.find_by(id: params[:recipe_id])
       @ingredients = @recipe&.ingredients&.ordered || KitchenRecipeIngredient.none
       @can_manage_recipes = true
