@@ -1,0 +1,13 @@
+Hallo <%= recipient_name(@user) %>,
+
+in Lightcamp HQ gibt es neue Neuigkeiten:
+
+<% @deliveries.each do |delivery| %>
+<%= delivery.title %>
+<%= delivery.body %>
+<% if notification_link(delivery).present? %>
+<%= notification_link(delivery) %>
+<% end %>
+
+<% end %>Viele Grüße
+dein Lightcamp-HQ-Team

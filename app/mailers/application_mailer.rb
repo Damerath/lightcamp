@@ -16,8 +16,7 @@ class ApplicationMailer < ActionMailer::Base
     user.first_name.presence || user.email
   end
 
-  # All recipients use the German Lightcamp interface, including system mails
-  # sent without a request context such as password resets.
+  # Auch Systemmails ohne Anfragekontext, etwa Passwort-Resets, bleiben deutsch.
   def use_german_locale(&)
     I18n.with_locale(:de, &)
   end

@@ -5,14 +5,17 @@ module Notifications
         user = entry[:user]
         next if user.blank?
 
-        {
-          user: user,
-          channel_kind: entry[:channel_kind] || :in_app,
-          title: entry[:title].to_s.strip,
-          body: entry[:body].to_s.strip,
-          link_url: entry[:link_url].presence
-        }
+        Array(entry.fetch(:channel_kinds, %i[in_app email])).map do |channel_kind|
+          {
+            user: user,
+            channel_kind: channel_kind,
+            title: entry[:title].to_s.strip,
+            body: entry[:body].to_s.strip,
+            link_url: entry[:link_url].presence
+          }
+        end
       end
+      normalized_deliveries.flatten!
 
       normalized_deliveries.select! { |entry| entry[:title].present? && entry[:body].present? }
       normalized_deliveries.uniq! { |entry| [entry[:user].id, entry[:channel_kind].to_s, entry[:title], entry[:body], entry[:link_url]] }
@@ -29,8 +32,8 @@ module Notifications
             title: delivery[:title],
             body: delivery[:body],
             link_url: delivery[:link_url],
-            status: :delivered,
-            delivered_at: Time.current
+            status: delivery[:channel_kind].to_sym == :email ? :created : :delivered,
+            delivered_at: delivery[:channel_kind].to_sym == :email ? nil : Time.current
           )
         end
 

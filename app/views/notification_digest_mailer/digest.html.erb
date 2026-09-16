@@ -1,0 +1,17 @@
+<p>Hallo <%= recipient_name(@user) %>,</p>
+
+<p>in Lightcamp HQ gibt es neue Neuigkeiten:</p>
+
+<ul>
+  <% @deliveries.each do |delivery| %>
+    <li>
+      <strong><%= delivery.title %></strong><br>
+      <%= delivery.body %>
+      <% if notification_link(delivery).present? %>
+        <br><%= link_to "In Lightcamp HQ ansehen", notification_link(delivery) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<p>Viele Grüße<br>dein Lightcamp-HQ-Team</p>

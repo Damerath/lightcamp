@@ -4,4 +4,10 @@ namespace :notifications do
     Notifications::Reminders.run!
     puts "Reminder notifications processed."
   end
+
+  desc "Send due notification digest emails"
+  task send_digests: :environment do
+    Notifications::DigestSender.run!
+    puts "Notification digest emails processed."
+  end
 end

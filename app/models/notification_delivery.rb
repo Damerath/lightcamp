@@ -9,6 +9,7 @@ class NotificationDelivery < ApplicationRecord
 
   scope :in_app_visible, -> { channel_kind_in_app.where(dismissed_at: nil).order(created_at: :desc) }
   scope :unread, -> { where(read_at: nil) }
+  scope :pending_email, -> { channel_kind_email.where(status: %i[created failed]).order(:created_at) }
 
   def unread?
     read_at.nil?

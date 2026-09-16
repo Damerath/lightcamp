@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_10_100000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_16_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -348,6 +348,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_10_100000) do
     t.text "failure_reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["channel_kind", "status", "user_id", "created_at"], name: "idx_notification_deliveries_for_digests"
     t.index ["notification_event_id", "user_id", "channel_kind"], name: "idx_notification_deliveries_uniqueness", unique: true
     t.index ["notification_event_id"], name: "index_notification_deliveries_on_notification_event_id"
     t.index ["user_id", "channel_kind", "dismissed_at"], name: "idx_notification_deliveries_on_user_channel_dismissed"
