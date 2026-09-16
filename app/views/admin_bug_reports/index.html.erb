@@ -1,0 +1,39 @@
+<div class="space-y-6">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Adminbereich</p>
+      <h2 class="text-2xl font-bold">Gemeldete Bugs</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">Hier landen Hinweise aus der Plattform.</p>
+    </div>
+    <%= link_to "Zur Admin-Übersicht", admin_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <%= link_to "Alle", admin_bug_reports_path, class: "rounded-full px-3 py-1.5 text-sm font-medium #{@selected_status.blank? ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900' : 'border border-slate-300 text-slate-600 dark:border-slate-600 dark:text-slate-300'}" %>
+    <% { "reported" => "Neu", "in_progress" => "In Bearbeitung", "resolved" => "Gelöst", "closed" => "Geschlossen" }.each do |status, label| %>
+      <%= link_to label, admin_bug_reports_path(status: status), class: "rounded-full px-3 py-1.5 text-sm font-medium #{@selected_status == status ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900' : 'border border-slate-300 text-slate-600 dark:border-slate-600 dark:text-slate-300'}" %>
+    <% end %>
+  </div>
+
+  <% if @bug_reports.any? %>
+    <div class="space-y-3">
+      <% @bug_reports.each do |report| %>
+        <div class="flex items-start gap-3 rounded-xl bg-white p-5 shadow dark:bg-slate-800">
+          <%= link_to admin_bug_report_path(report), class: "min-w-0 flex-1 transition hover:opacity-80" do %>
+            <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <p class="font-semibold text-slate-900 dark:text-slate-100">#<%= report.id %> · <%= report.title %></p>
+              <p class="mt-1 truncate text-sm text-slate-600 dark:text-slate-400"><%= report.description %></p>
+              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400"><%= report.user.display_name %> · <%= l(report.created_at, format: "%d.%m.%Y %H:%M") %> · <%= report.category_label %></p>
+            </div>
+            <span class="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-200"><%= report.status_label %></span>
+            </div>
+          <% end %>
+          <%= button_to "Löschen", admin_bug_report_path(report), method: :delete, data: { turbo_confirm: "Diesen Bugreport wirklich löschen?" }, class: "shrink-0 rounded-lg border border-red-300 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/40" %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-500 dark:border-slate-600 dark:text-slate-400">Keine Bugreports in dieser Ansicht.</div>
+  <% end %>
+</div>

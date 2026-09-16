@@ -12,7 +12,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="flex min-h-screen flex-col bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+  <body class="flex min-h-screen flex-col bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100" data-controller="<%= "bug-report-modal" if user_signed_in? %>">
     <div
       data-controller="confirm-modal"
       class="hidden"
@@ -113,8 +113,22 @@
         <%= link_to "Impressum", impressum_path, class: "transition hover:text-blue-400 hover:underline" %>
         <%= link_to "Datenschutz", datenschutz_path, class: "transition hover:text-blue-400 hover:underline" %>
         <%= link_to "Nutzungsbedingungen", nutzungsbedingungen_path, class: "transition hover:text-blue-400 hover:underline" %>
+        <% if user_signed_in? %>
+          <button
+            type="button"
+            data-action="click->bug-report-modal#open"
+            class="inline-flex items-center gap-1 text-amber-700 transition hover:text-amber-800 hover:underline dark:text-amber-300 dark:hover:text-amber-200"
+            aria-label="Problem melden"
+          >
+            <i data-lucide="bug" class="h-3.5 w-3.5" aria-hidden="true"></i>
+            <span class="hidden sm:inline">Problem melden</span>
+          </button>
+        <% end %>
       </div>
     </footer>
+    <% if user_signed_in? %>
+      <%= render "shared/bug_report_modal" %>
+    <% end %>
     <% if user_signed_in? && !current_page?(root_path) %>
       <div data-controller="notifications-drawer">
         <button
@@ -173,7 +187,7 @@
         </div>
       </div>
     <% end %>
-    <div class="fixed bottom-6 left-1/2 text-center transform -translate-x-1/2 z-50 space-y-3 w-full max-w-5xl">
+    <div id="flash-messages" class="fixed bottom-6 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 space-y-3 text-center">
       <% if notice %>
         <div
           data-controller="flash"

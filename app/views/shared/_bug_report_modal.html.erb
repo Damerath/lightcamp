@@ -1,0 +1,67 @@
+<div
+  data-bug-report-modal-target="backdrop"
+  data-action="click->bug-report-modal#closeFromBackdrop"
+  class="hidden fixed inset-0 z-[80] overflow-y-auto bg-slate-950/60 px-4 py-6 opacity-0 transition duration-150"
+>
+  <div class="flex min-h-full items-center justify-center">
+    <div
+      data-bug-report-modal-target="panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="bug-report-title"
+      class="w-full max-w-lg translate-y-4 scale-95 rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl opacity-0 transition duration-150 dark:border-slate-700 dark:bg-slate-800"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium uppercase tracking-wide text-red-600">Feedback</p>
+          <h2 id="bug-report-title" class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">Problem melden</h2>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Beschreibe kurz, was nicht wie erwartet funktioniert hat.</p>
+        </div>
+        <button type="button" data-action="click->bug-report-modal#close" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-xl text-slate-500 transition hover:border-red-700 hover:text-slate-700 dark:border-slate-600 dark:text-slate-300" aria-label="Meldung schließen">×</button>
+      </div>
+
+      <%= form_with model: BugReport.new, class: "mt-6 space-y-4" do |form| %>
+        <%= form.hidden_field :page_url, data: { bug_report_modal_target: "pageUrl" } %>
+        <%= form.hidden_field :browser_details, data: { bug_report_modal_target: "browserDetails" } %>
+        <%= form.hidden_field :viewport, data: { bug_report_modal_target: "viewport" } %>
+
+        <div>
+          <%= form.label :category, "Kategorie", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= form.select :category, [["Funktion", "functionality"], ["Darstellung", "display"], ["Daten", "data"], ["Berechtigung", "permission"], ["Sonstiges", "other"]], {}, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+        </div>
+
+        <div>
+          <%= form.label :title, "Kurz gesagt: Was ist passiert?", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= form.text_field :title, required: true, maxlength: 160, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100", placeholder: "Zum Beispiel: Speichern im Wochenplan funktioniert nicht" %>
+        </div>
+
+        <div>
+          <%= form.label :description, "Was hast du erwartet und was ist stattdessen passiert?", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+          <%= form.text_area :description, required: true, rows: 4, maxlength: 5_000, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100", placeholder: "Schritte, Beobachtung und weitere Hinweise helfen uns bei der Suche." %>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 p-4 dark:border-slate-700">
+          <div class="flex justify-center">
+            <button type="button" data-action="click->bug-report-modal#chooseUpload" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
+              <i data-lucide="upload" class="h-4 w-4" aria-hidden="true"></i>
+              Screenshot hochladen
+            </button>
+            <%= form.file_field :screenshot, accept: "image/png,image/jpeg,image/webp", class: "hidden", data: { bug_report_modal_target: "fileInput", action: "change->bug-report-modal#uploadChanged" } %>
+          </div>
+          <div data-bug-report-modal-target="preview" class="mt-4 hidden items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-left dark:border-slate-700 dark:bg-slate-900">
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-slate-900 dark:text-slate-100">Screenshot angehängt</p>
+              <p data-bug-report-modal-target="previewFilename" class="truncate text-xs text-slate-500 dark:text-slate-400"></p>
+            </div>
+            <button type="button" data-action="click->bug-report-modal#removeScreenshot" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-lg text-slate-500 transition hover:bg-red-100 hover:text-red-700 dark:text-slate-300 dark:hover:bg-red-950/50 dark:hover:text-red-300" aria-label="Screenshot entfernen">×</button>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" data-action="click->bug-report-modal#close" class="inline-flex rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">Abbrechen</button>
+          <%= form.submit "Bugreport senden", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

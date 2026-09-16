@@ -1,0 +1,15 @@
+<p>Hallo <%= recipient_name(@admin) %>,</p>
+
+<p>es wurde ein neuer Bugreport gemeldet.</p>
+
+<p>
+  <strong>#<%= @bug_report.id %> · <%= @bug_report.title %></strong><br>
+  Kategorie: <%= @bug_report.category_label %><br>
+  Gemeldet von: <%= @bug_report.user.display_name %>
+</p>
+
+<p><%= @bug_report.description %></p>
+
+<p><%= link_to "Bugreport im Adminbereich öffnen", admin_bug_report_url(@bug_report) %></p>
+
+<p>Viele Grüße<br>dein Lightcamp-HQ-Team</p>

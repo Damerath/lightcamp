@@ -1,0 +1,14 @@
+Hallo <%= recipient_name(@admin) %>,
+
+es wurde ein neuer Bugreport gemeldet.
+
+#<%= @bug_report.id %> · <%= @bug_report.title %>
+Kategorie: <%= @bug_report.category_label %>
+Gemeldet von: <%= @bug_report.user.display_name %>
+
+<%= @bug_report.description %>
+
+<%= admin_bug_report_url(@bug_report) %>
+
+Viele Grüße
+dein Lightcamp-HQ-Team

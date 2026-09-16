@@ -57,6 +57,8 @@ Rails.application.routes.draw do
   delete "users/:id", to: "users#destroy"
   get "leitung", to: "leadership#index", as: :leadership
   get "admin", to: "admin#index"
+  resources :bug_reports, only: :create
+  resources :admin_bug_reports, path: "admin/bug_reports", only: %i[index show update destroy]
   get "admin/downloads", to: "admin_download_items#index", as: :admin_download_items
   post "admin/downloads/items", to: "admin_download_items#create", as: :admin_download_items_create
   patch "admin/downloads/items/:id", to: "admin_download_items#update", as: :admin_download_item
