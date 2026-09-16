@@ -1,4 +1,5 @@
 class CampProgramWeekDaysController < ApplicationController
+  include CampTeamAccess
   before_action :set_camp
   before_action :set_camp_team
   before_action :require_team_access
@@ -11,15 +12,15 @@ class CampProgramWeekDaysController < ApplicationController
     if valid_planned_on?(week_day.planned_on) && week_day.save
       apply_mode_template!(week_day) if week_day.default_plan?
       if params[:open_modal] == "new_week_block"
-        redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "new_week_block", week_day_id: week_day.id), notice: "Wochenplan-Tag wurde angelegt."
+        redirect_to team_page_path(@camp, @camp_team, section: "week_plan", modal: "new_week_block", week_day_id: week_day.id), notice: "Wochenplan-Tag wurde angelegt."
       elsif params[:open_modal] == "edit_week_day"
-        redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan", modal: "edit_week_day", week_day_id: week_day.id), notice: "Wochenplan-Tag wurde angelegt."
+        redirect_to team_page_path(@camp, @camp_team, section: "week_plan", modal: "edit_week_day", week_day_id: week_day.id), notice: "Wochenplan-Tag wurde angelegt."
       else
-        redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Tag wurde angelegt."
+        redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Tag wurde angelegt."
       end
     else
       message = week_day.errors.full_messages.to_sentence.presence || "Der Tag liegt nicht im Camp-Zeitraum."
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), alert: message
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), alert: message
     end
   end
 
@@ -32,10 +33,10 @@ class CampProgramWeekDaysController < ApplicationController
 
     if attributes.present? && week_day.update(attributes)
       apply_mode_template!(week_day) if target_mode == "default_plan"
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Tag wurde aktualisiert."
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Tag wurde aktualisiert."
     else
       message = week_day.errors.full_messages.to_sentence.presence || "Der Wochenplan-Tag konnte nicht aktualisiert werden."
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), alert: message
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), alert: message
     end
   end
 
@@ -43,19 +44,10 @@ class CampProgramWeekDaysController < ApplicationController
     week_day = @camp_team.camp_program_week_days.find(params[:id])
     week_day.destroy
 
-    redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Der Tag wurde aus dem Wochenplan entfernt."
+    redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Der Tag wurde aus dem Wochenplan entfernt."
   end
 
   private
-
-  def set_camp
-    @camp = Camp.find(params[:camp_id])
-  end
-
-  def set_camp_team
-    @camp_team = @camp.camp_teams.find(params[:team_id]).workspace_team
-    @camp = @camp_team.camp
-  end
 
   def camp_program_week_day_params
     params.require(:camp_program_week_day).permit(:mode, :label)
@@ -102,12 +94,5 @@ class CampProgramWeekDaysController < ApplicationController
 
   def normalized_title(title)
     title.to_s.squish.downcase
-  end
-
-  def require_team_access
-    return if current_user&.management?
-    return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
-
-    redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."
   end
 end

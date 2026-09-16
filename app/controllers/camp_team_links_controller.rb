@@ -1,4 +1,5 @@
 class CampTeamLinksController < ApplicationController
+  include CampTeamAccess
   before_action :set_camp
   before_action :set_camp_team
   before_action :require_team_access
@@ -8,9 +9,9 @@ class CampTeamLinksController < ApplicationController
 
     if link.save
       ::Notifications::Triggers.team_link_added!(camp_team: @camp_team, link: link, actor: current_user)
-      redirect_to camp_team_page_path(@camp, @camp_team), notice: "Link wurde gespeichert."
+      redirect_to team_page_path(@camp, @camp_team), notice: "Link wurde gespeichert."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team), alert: link.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team), alert: link.errors.full_messages.to_sentence
     end
   end
 
@@ -18,9 +19,9 @@ class CampTeamLinksController < ApplicationController
     link = @camp_team.camp_team_links.find(params[:id])
 
     if link.update(camp_team_link_params)
-      redirect_to camp_team_page_path(@camp, @camp_team), notice: "Link wurde aktualisiert."
+      redirect_to team_page_path(@camp, @camp_team), notice: "Link wurde aktualisiert."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team), alert: link.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team), alert: link.errors.full_messages.to_sentence
     end
   end
 
@@ -28,19 +29,10 @@ class CampTeamLinksController < ApplicationController
     link = @camp_team.camp_team_links.find(params[:id])
     link.destroy
 
-    redirect_to camp_team_page_path(@camp, @camp_team), notice: "Link wurde entfernt."
+    redirect_to team_page_path(@camp, @camp_team), notice: "Link wurde entfernt."
   end
 
   private
-
-  def set_camp
-    @camp = Camp.find(params[:camp_id])
-  end
-
-  def set_camp_team
-    @camp_team = @camp.camp_teams.find(params[:team_id]).workspace_team
-    @camp = @camp_team.camp
-  end
 
   def camp_team_link_params
     params.require(:camp_team_link).permit(:title, :url)
@@ -48,12 +40,5 @@ class CampTeamLinksController < ApplicationController
 
   def next_position
     (@camp_team.camp_team_links.maximum(:position) || -1) + 1
-  end
-
-  def require_team_access
-    return if current_user&.management?
-    return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
-
-    redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."
   end
 end

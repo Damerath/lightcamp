@@ -1,4 +1,5 @@
 class CampProgramWeekBlocksController < ApplicationController
+  include CampTeamAccess
   before_action :set_camp
   before_action :set_camp_team
   before_action :require_team_access
@@ -9,9 +10,9 @@ class CampProgramWeekBlocksController < ApplicationController
 
     if block.save
       sync_matching_colors!(block)
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Block wurde gespeichert."
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Block wurde gespeichert."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), alert: block.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), alert: block.errors.full_messages.to_sentence
     end
   end
 
@@ -20,9 +21,9 @@ class CampProgramWeekBlocksController < ApplicationController
 
     if block.update(camp_program_week_block_params)
       sync_matching_colors!(block)
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Block wurde aktualisiert."
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Block wurde aktualisiert."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), alert: block.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), alert: block.errors.full_messages.to_sentence
     end
   end
 
@@ -30,19 +31,10 @@ class CampProgramWeekBlocksController < ApplicationController
     block = find_block
     block.destroy
 
-    redirect_to camp_team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Block wurde entfernt."
+    redirect_to team_page_path(@camp, @camp_team, section: "week_plan"), notice: "Wochenplan-Block wurde entfernt."
   end
 
   private
-
-  def set_camp
-    @camp = Camp.find(params[:camp_id])
-  end
-
-  def set_camp_team
-    @camp_team = @camp.camp_teams.find(params[:team_id]).workspace_team
-    @camp = @camp_team.camp
-  end
 
   def find_block
     @camp_team.camp_program_week_days.joins(:camp_program_week_blocks)
@@ -76,12 +68,5 @@ class CampProgramWeekBlocksController < ApplicationController
               .where("LOWER(BTRIM(camp_program_week_blocks.title)) = ?", normalized_title)
               .where.not(id: block.id)
               .update_all(color: block.color)
-  end
-
-  def require_team_access
-    return if current_user&.management?
-    return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
-
-    redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."
   end
 end

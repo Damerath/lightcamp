@@ -1,4 +1,5 @@
 class CampTeamDownloadItemsController < ApplicationController
+  include CampTeamAccess
   before_action :set_camp
   before_action :set_camp_team
   before_action :require_team_access
@@ -8,9 +9,9 @@ class CampTeamDownloadItemsController < ApplicationController
 
     if item.save
       ::Notifications::Triggers.team_download_added!(camp_team: @camp_team, download_item: item, actor: current_user)
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde hochgeladen."
+      redirect_to team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde hochgeladen."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "downloads"), alert: item.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team, section: "downloads"), alert: item.errors.full_messages.to_sentence
     end
   end
 
@@ -20,35 +21,19 @@ class CampTeamDownloadItemsController < ApplicationController
     item.uploader ||= current_user
 
     if item.save
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde aktualisiert."
+      redirect_to team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde aktualisiert."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "downloads"), alert: item.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team, section: "downloads"), alert: item.errors.full_messages.to_sentence
     end
   end
 
   def destroy
     item = @camp_team.download_items.camp_team_local.find(params[:id])
     item.destroy
-    redirect_to camp_team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde entfernt."
+    redirect_to team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde entfernt."
   end
 
   private
-
-  def set_camp
-    @camp = Camp.find(params[:camp_id])
-  end
-
-  def set_camp_team
-    @camp_team = @camp.camp_teams.find(params[:team_id]).workspace_team
-    @camp = @camp_team.camp
-  end
-
-  def require_team_access
-    return if current_user&.management?
-    return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
-
-    redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."
-  end
 
   def download_item_params
     params.require(:download_item).permit(:title, :description, :file)

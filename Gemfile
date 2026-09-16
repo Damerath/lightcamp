@@ -66,6 +66,9 @@ group :development do
 end
 
 group :test do
+  # Rails 7.1's test runner is not compatible with Minitest 6 yet.
+  gem "minitest", "~> 5.0"
+
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"

@@ -1,4 +1,6 @@
 class CampsController < ApplicationController
+  before_action :require_management, only: %i[create update destroy]
+
   def index
     applications = current_user.camp_applications
       .includes(assigned_camp: :year, assigned_camp_team: { camp: :year })

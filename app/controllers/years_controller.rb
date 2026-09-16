@@ -1,4 +1,6 @@
 class YearsController < ApplicationController
+  before_action :require_management
+
   def index
     @years = Year.all
   end

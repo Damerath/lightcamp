@@ -1,8 +1,10 @@
 require "test_helper"
 
 class AdminCampsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get admin_camps_index_url
+  test "leader can view camp administration" do
+    sign_in_as("leader")
+
+    get admin_camps_path
     assert_response :success
   end
 end

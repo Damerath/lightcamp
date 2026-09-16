@@ -1,4 +1,5 @@
 class CampSportMaterialItemsController < ApplicationController
+  include CampTeamAccess
   before_action :set_camp
   before_action :set_camp_team
   before_action :set_sport_team_template
@@ -16,9 +17,9 @@ class CampSportMaterialItemsController < ApplicationController
         change_type: "create",
         change_summary: "Angelegt: Menge #{item.quantity.presence || '-'}, Ort #{item.storage_location.presence || '-'}, Anmerkung #{item.notes.presence || '-'}"
       )
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "material_list"), notice: "Material wurde hinzugefügt."
+      redirect_to team_page_path(@camp, @camp_team, section: "material_list"), notice: "Material wurde hinzugefügt."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "material_list"), alert: item.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team, section: "material_list"), alert: item.errors.full_messages.to_sentence
     end
   end
 
@@ -37,9 +38,9 @@ class CampSportMaterialItemsController < ApplicationController
           change_summary: summary
         )
       end
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "material_list"), notice: "Material wurde aktualisiert."
+      redirect_to team_page_path(@camp, @camp_team, section: "material_list"), notice: "Material wurde aktualisiert."
     else
-      redirect_to camp_team_page_path(@camp, @camp_team, section: "material_list"), alert: item.errors.full_messages.to_sentence
+      redirect_to team_page_path(@camp, @camp_team, section: "material_list"), alert: item.errors.full_messages.to_sentence
     end
   end
 
@@ -57,19 +58,10 @@ class CampSportMaterialItemsController < ApplicationController
       change_summary: summary
     )
 
-    redirect_to camp_team_page_path(@camp, @camp_team, section: "material_list"), notice: "Material wurde entfernt."
+    redirect_to team_page_path(@camp, @camp_team, section: "material_list"), notice: "Material wurde entfernt."
   end
 
   private
-
-  def set_camp
-    @camp = Camp.find(params[:camp_id])
-  end
-
-  def set_camp_team
-    @camp_team = @camp.camp_teams.find(params[:team_id]).workspace_team
-    @camp = @camp_team.camp
-  end
 
   def set_sport_team_template
     @team_template = TeamTemplate.find_or_create_by!(name: "Sport")
@@ -83,17 +75,10 @@ class CampSportMaterialItemsController < ApplicationController
     (@team_template.team_template_sport_material_items.maximum(:position) || -1) + 1
   end
 
-  def require_team_access
-    return if current_user&.management?
-    return if current_user.camp_applications.exists?(assigned_camp_team_id: @camp_team.workspace_team_ids)
-
-    redirect_to camps_path, alert: "Kein Zugriff auf diese Teamseite."
-  end
-
   def require_sport_material_manager
     return if @camp_team.sport_material_manager?(current_user)
 
-    redirect_to camp_team_page_path(@camp, @camp_team, section: "material_list"), alert: "Nur Verantwortliche dürfen die Materialliste bearbeiten."
+    redirect_to team_page_path(@camp, @camp_team, section: "material_list"), alert: "Nur Verantwortliche dürfen die Materialliste bearbeiten."
   end
 
   def build_update_summary(previous, item)
