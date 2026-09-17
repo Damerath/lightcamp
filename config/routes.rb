@@ -76,6 +76,15 @@ Rails.application.routes.draw do
       patch :reorder, on: :collection
     end
   end
+  resources :leadership_annual_tasks, path: "leitung/jahresaufgaben", only: %i[index show create update destroy] do
+    post :complete, on: :member
+    post :reactivate, on: :member
+    post :reminders, on: :member
+    delete "reminders/:reminder_id", to: "leadership_annual_tasks#destroy_reminder", as: :reminder
+    resources :checklist_items, controller: "leadership_annual_task_checklist_items", only: %i[create update destroy] do
+      patch :reorder, on: :collection
+    end
+  end
   get "admin", to: "admin#index"
   resources :bug_reports, only: :create
   resources :admin_bug_reports, path: "admin/bug_reports", only: %i[index show update destroy]

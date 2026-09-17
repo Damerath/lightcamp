@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Lightcamp annual task reminders every day at 09:00
+
+[Timer]
+OnCalendar=*-*-* 09:00:00 Europe/Berlin
+Persistent=true
+Unit=lightcamp-annual-task-reminders.service
+
+[Install]
+WantedBy=timers.target

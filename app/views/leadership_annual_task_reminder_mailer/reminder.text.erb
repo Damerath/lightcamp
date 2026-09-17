@@ -1,0 +1,14 @@
+Hallo <%= recipient_name(@task.responsible_user) %>,
+
+Erinnerung zu deiner Jahresaufgabe:
+
+<%= @task.title %>
+Stichtag: <%= l(@due_on, format: "%d.%m.%Y") %>
+
+<% if @task.description.present? %><%= @task.description %>
+
+<% end %>Öffne die Jahresaufgabe in Lightcamp HQ, um den aktuellen Stand zu prüfen:
+<%= @task_url %>
+
+Viele Grüße
+dein Lightcamp-HQ-Team

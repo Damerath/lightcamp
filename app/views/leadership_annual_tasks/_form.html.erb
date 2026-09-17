@@ -1,0 +1,43 @@
+<%= form_with model: task, class: "space-y-4" do |f| %>
+  <div>
+    <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium" %>
+    <%= f.text_field :title, autofocus: true, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+  </div>
+
+  <div>
+    <%= f.label :responsible_user_id, "Verantwortliche Person", class: "mb-1 block text-sm font-medium" %>
+    <%= f.collection_select :responsible_user_id, management_users, :id, :display_name, { prompt: "Bitte auswählen" }, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+  </div>
+
+  <div>
+    <%= f.label :description, "Beschreibung", class: "mb-1 block text-sm font-medium" %>
+    <%= f.text_area :description, rows: 3, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <p class="mb-1 text-sm font-medium">Stichtag</p>
+      <div class="grid grid-cols-2 gap-2">
+        <%= f.select :due_day, annual_task_day_options, {}, class: "rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+        <%= f.select :due_month, annual_task_month_options, {}, class: "rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+      </div>
+    </div>
+    <div>
+      <p class="mb-1 text-sm font-medium">Reaktivieren am</p>
+      <div class="grid grid-cols-2 gap-2">
+        <%= f.select :reactivation_day, annual_task_day_options, {}, class: "rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+        <%= f.select :reactivation_month, annual_task_month_options, {}, class: "rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+      </div>
+    </div>
+  </div>
+
+  <label class="flex items-center gap-2 text-sm">
+    <%= f.check_box :active, class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500" %>
+    Aufgabe ist aktiv und kann Erinnerungen senden
+  </label>
+
+  <div class="flex justify-end gap-3">
+    <%= link_to "Abbrechen", task.persisted? ? leadership_annual_task_path(task) : leadership_annual_tasks_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium" %>
+    <%= f.submit task.persisted? ? "Änderungen speichern" : "Jahresaufgabe anlegen", class: "rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+  </div>
+<% end %>

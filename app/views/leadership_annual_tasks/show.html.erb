@@ -1,0 +1,68 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Leitungsdaten · Jahresaufgaben</p>
+      <div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl font-bold"><%= @task.title %></h2><% if @task.completed? %><span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Erledigt</span><% end %></div>
+      <% if @task.description.present? %><p class="mt-1 text-slate-600 dark:text-slate-400"><%= @task.description %></p><% end %>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%= link_to "Zurück zu Jahresaufgaben", leadership_annual_tasks_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Aufgabe bearbeiten", leadership_annual_task_path(@task, modal: "edit"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <% if @task.completed? %>
+        <%= button_to "Reaktivieren", reactivate_leadership_annual_task_path(@task), method: :post, form: { class: "inline-flex" }, data: { turbo_confirm: "Aufgabe jetzt für einen neuen Durchlauf reaktivieren? Checkliste und Kommentar werden zurückgesetzt." }, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <% else %>
+        <%= button_to "Erledigen", complete_leadership_annual_task_path(@task), method: :post, form: { class: "inline-flex shrink-0" }, data: { turbo_confirm: "Jahresaufgabe wirklich als erledigt markieren?" }, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+      <%= form_with model: @task, class: "mb-6 border-b border-slate-200 pb-5 dark:border-slate-700" do |f| %>
+        <div class="mb-1 flex items-center justify-between gap-3">
+          <%= f.label :comment, "Kommentar", class: "font-semibold" %>
+          <%= f.submit "Kommentar speichern", class: "rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+        </div>
+        <%= f.text_area :comment, rows: 2, placeholder: "Optionaler Kommentar für den aktuellen Durchlauf", class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900" %>
+      <% end %>
+      <h3 class="font-semibold">Checkliste</h3>
+      <%= form_with model: LeadershipAnnualTaskChecklistItem.new, url: leadership_annual_task_checklist_items_path(@task), class: "mt-4 flex gap-2" do |f| %>
+        <%= f.text_field :text, placeholder: "Checklistenpunkt hinzufügen", autofocus: params[:focus_item] == "1", class: "min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900" %>
+        <%= f.submit "Hinzufügen", class: "shrink-0 rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+      <% end %>
+
+      <div class="mt-4 space-y-2" data-controller="sortable" data-sortable-url-value="<%= reorder_leadership_annual_task_checklist_items_path(@task) %>" data-action="dragover->sortable#dragOver drop->sortable#drop">
+        <% @unfinished_items.each do |item| %>
+          <div data-sortable-target="item" data-sortable-id-value="<%= item.id %>" class="flex min-w-0 items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5 dark:border-slate-700">
+            <button type="button" draggable="true" data-action="dragstart->sortable#dragStart dragend->sortable#dragEnd" aria-label="<%= item.text %> verschieben" title="Zum Sortieren ziehen" class="shrink-0 cursor-grab touch-none text-slate-400 hover:text-slate-600 active:cursor-grabbing dark:hover:text-slate-200"><i data-lucide="grip-vertical" class="h-5 w-5"></i></button>
+            <%= form_with model: item, url: leadership_annual_task_checklist_item_path(@task, item), method: :patch, class: "shrink-0" do |f| %><%= f.check_box :completed, { class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500", onchange: "this.form.requestSubmit()", aria: { label: "#{item.text} erledigen" } }, "1", "0" %><% end %>
+            <p class="min-w-0 flex-1 break-words"><%= item.text %></p>
+            <%= link_to leadership_annual_task_checklist_item_path(@task, item), data: { turbo_method: :delete, turbo_confirm: "Punkt wirklich löschen?" }, aria: { label: "#{item.text} löschen" }, title: "Punkt löschen", class: "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-950 dark:text-red-300" do %><i data-lucide="x" class="h-4 w-4"></i><% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @completed_items.any? %>
+        <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-700"><h4 class="font-semibold text-slate-500 dark:text-slate-400">Erledigte Punkte</h4>
+          <div class="mt-4 space-y-2">
+            <% @completed_items.each do |item| %>
+              <div class="flex min-w-0 items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5 dark:border-slate-700">
+                <%= form_with model: item, url: leadership_annual_task_checklist_item_path(@task, item), method: :patch, class: "shrink-0" do |f| %><%= f.check_box :completed, { class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500", onchange: "this.form.requestSubmit()", aria: { label: "#{item.text} wieder öffnen" } }, "1", "0" %><% end %>
+                <p class="min-w-0 flex-1 break-words text-slate-500 line-through dark:text-slate-400"><%= item.text %></p>
+                <%= link_to leadership_annual_task_checklist_item_path(@task, item), data: { turbo_method: :delete, turbo_confirm: "Punkt wirklich löschen?" }, aria: { label: "#{item.text} löschen" }, title: "Punkt löschen", class: "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-950 dark:text-red-300" do %><i data-lucide="x" class="h-4 w-4"></i><% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <aside class="space-y-4">
+      <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800"><h3 class="font-semibold">Aufgabendaten</h3><dl class="mt-3 space-y-3 text-sm"><div><dt class="text-slate-500 dark:text-slate-400">Verantwortlich</dt><dd class="font-medium"><%= @task.responsible_user.display_name %></dd></div><div><dt class="text-slate-500 dark:text-slate-400">Stichtag</dt><dd class="font-medium text-amber-700 dark:text-amber-300"><%= @task.due_date_label %></dd></div><div><dt class="text-slate-500 dark:text-slate-400">Reaktivieren am</dt><dd class="font-medium"><%= @task.reactivation_date_label %></dd></div></dl></div>
+    </aside>
+  </div>
+
+  <% if params[:modal] == "edit" %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"><div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800"><div class="mb-5 flex items-start justify-between gap-4"><div><h3 class="text-xl font-bold">Jahresaufgabe bearbeiten</h3><p class="mt-1 text-sm text-slate-500">Erinnerungen werden relativ zum Stichtag versendet.</p></div><%= link_to "×", leadership_annual_task_path(@task), class: "text-2xl leading-none text-slate-500" %></div><%= render "form", task: @task, management_users: @management_users %><div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-700"><h4 class="font-semibold">Erinnerungen</h4><div class="mt-3 space-y-2"><% @task.reminders.ordered.each do |reminder| %><div class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700"><span><%= reminder.label %></span><%= link_to "Entfernen", leadership_annual_task_reminder_path(@task, reminder_id: reminder.id), data: { turbo_method: :delete, turbo_confirm: "Erinnerung wirklich entfernen?" }, class: "font-medium text-red-600 dark:text-red-400" %></div><% end %></div><%= form_with model: LeadershipAnnualTaskReminder.new, url: reminders_leadership_annual_task_path(@task), class: "mt-3 flex gap-2" do |f| %><%= f.number_field :days_before, min: 0, max: 365, placeholder: "Tage vorher (0 = Stichtag)", class: "min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900" %><%= f.submit "Hinzufügen", class: "shrink-0 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium dark:border-slate-600" %><% end %></div><div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-700"><%= link_to "Jahresaufgabe löschen", leadership_annual_task_path(@task), data: { turbo_method: :delete, turbo_confirm: "Jahresaufgabe wirklich löschen?" }, class: "text-sm font-medium text-red-600 dark:text-red-400" %></div></div></div>
+  <% end %>
+</div>

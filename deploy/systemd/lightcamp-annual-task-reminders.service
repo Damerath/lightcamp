@@ -1,0 +1,11 @@
+[Unit]
+Description=Process Lightcamp annual task reminders
+After=network.target
+
+[Service]
+Type=oneshot
+User=peter
+WorkingDirectory=/home/peter/apps/lightcamp
+Environment=RAILS_ENV=production
+EnvironmentFile=/etc/lightcamp.env
+ExecStart=/home/peter/.rbenv/shims/bundle exec rake leadership_annual_tasks:process_reminders

@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :notification_deliveries, dependent: :destroy
   has_many :notification_events, through: :notification_deliveries
   has_many :bug_reports, dependent: :destroy
+  has_many :leadership_annual_tasks, foreign_key: :responsible_user_id, inverse_of: :responsible_user, dependent: :restrict_with_error
 
   after_initialize :set_default_role, if: :new_record?
 

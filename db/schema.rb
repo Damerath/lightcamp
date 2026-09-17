@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_17_110000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_17_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -353,6 +353,59 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_17_110000) do
     t.integer "effort_level", default: 1, null: false
   end
 
+  create_table "leadership_annual_task_checklist_items", force: :cascade do |t|
+    t.bigint "leadership_annual_task_id", null: false
+    t.string "text", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["leadership_annual_task_id", "completed", "position"], name: "index_annual_checklist_items_for_order"
+    t.index ["leadership_annual_task_id"], name: "index_annual_checklist_items_on_task"
+  end
+
+  create_table "leadership_annual_task_reminder_deliveries", force: :cascade do |t|
+    t.bigint "leadership_annual_task_id", null: false
+    t.bigint "leadership_annual_task_reminder_id", null: false
+    t.date "due_on", null: false
+    t.datetime "in_app_notified_at"
+    t.datetime "emailed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["leadership_annual_task_id"], name: "index_annual_reminder_deliveries_on_task"
+    t.index ["leadership_annual_task_reminder_id", "due_on"], name: "index_annual_reminder_deliveries_uniqueness", unique: true
+    t.index ["leadership_annual_task_reminder_id"], name: "index_annual_reminder_deliveries_on_reminder"
+  end
+
+  create_table "leadership_annual_task_reminders", force: :cascade do |t|
+    t.bigint "leadership_annual_task_id", null: false
+    t.integer "days_before", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["leadership_annual_task_id", "days_before"], name: "index_annual_task_reminders_uniqueness", unique: true
+    t.index ["leadership_annual_task_id"], name: "index_annual_task_reminders_on_task"
+  end
+
+  create_table "leadership_annual_tasks", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.text "comment", default: "", null: false
+    t.bigint "responsible_user_id", null: false
+    t.integer "due_month", null: false
+    t.integer "due_day", null: false
+    t.integer "reactivation_month", null: false
+    t.integer "reactivation_day", null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "completed_at"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "last_reactivated_on"
+    t.index ["active", "completed", "due_month", "due_day"], name: "index_annual_tasks_for_overview"
+    t.index ["responsible_user_id"], name: "index_leadership_annual_tasks_on_responsible_user_id"
+  end
+
   create_table "leadership_links", force: :cascade do |t|
     t.string "title", null: false
     t.string "url", null: false
@@ -553,6 +606,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_17_110000) do
   add_foreign_key "download_items", "team_templates"
   add_foreign_key "download_items", "users", column: "uploader_id"
   add_foreign_key "kitchen_recipe_ingredients", "kitchen_recipes"
+  add_foreign_key "leadership_annual_task_checklist_items", "leadership_annual_tasks"
+  add_foreign_key "leadership_annual_task_reminder_deliveries", "leadership_annual_task_reminders"
+  add_foreign_key "leadership_annual_task_reminder_deliveries", "leadership_annual_tasks"
+  add_foreign_key "leadership_annual_task_reminders", "leadership_annual_tasks"
+  add_foreign_key "leadership_annual_tasks", "users", column: "responsible_user_id"
   add_foreign_key "leadership_list_items", "leadership_lists"
   add_foreign_key "medical_supply_changes", "users"
   add_foreign_key "notification_deliveries", "notification_events"
