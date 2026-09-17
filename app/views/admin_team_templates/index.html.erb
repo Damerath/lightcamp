@@ -25,9 +25,11 @@
               <%= template.supports_responsible_description? ? "Mit Zusatzbeschreibung für Verantwortliche." : "Mit allgemeiner Standardbeschreibung." %>
             </p>
           </div>
-          <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
-            Default
-          </span>
+          <% if template.responsible_user.present? %>
+            <span class="w-56 shrink-0 truncate rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300" title="<%= template.responsible_user.display_name %>">
+              <%= template.responsible_user.display_name %>
+            </span>
+          <% end %>
         </div>
 
         <div class="mt-4 text-sm text-slate-500 dark:text-slate-400">

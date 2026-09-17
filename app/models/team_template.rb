@@ -4,8 +4,10 @@ class TeamTemplate < ApplicationRecord
   has_many :team_template_sport_material_items, dependent: :destroy
   has_many :team_template_sport_material_changes, dependent: :destroy
   has_many :download_items, dependent: :destroy
+  belongs_to :responsible_user, class_name: "User", optional: true
 
   validates :name, presence: true, uniqueness: true
+  validate :responsible_user_is_management
 
   def sport_team?
     name == "Sport"
@@ -50,6 +52,12 @@ class TeamTemplate < ApplicationRecord
   end
 
   private
+
+  def responsible_user_is_management
+    return if responsible_user.blank? || responsible_user.management?
+
+    errors.add(:responsible_user, "muss eine Leitungsperson oder ein Admin sein")
+  end
 
   def eligible_year_ids_for(scope, active_year)
     return Year.pluck(:id) unless scope == "future_years"

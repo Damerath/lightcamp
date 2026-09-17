@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :notification_events, through: :notification_deliveries
   has_many :bug_reports, dependent: :destroy
   has_many :leadership_annual_tasks, foreign_key: :responsible_user_id, inverse_of: :responsible_user, dependent: :restrict_with_error
+  has_many :responsible_team_templates, class_name: "TeamTemplate", foreign_key: :responsible_user_id, dependent: :nullify
 
   after_initialize :set_default_role, if: :new_record?
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_17_121000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_17_122000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -538,7 +538,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_17_121000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "responsible_description"
+    t.bigint "responsible_user_id"
     t.index ["name"], name: "index_team_templates_on_name", unique: true
+    t.index ["responsible_user_id"], name: "index_team_templates_on_responsible_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -620,4 +622,5 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_17_121000) do
   add_foreign_key "team_template_sport_material_changes", "team_templates"
   add_foreign_key "team_template_sport_material_changes", "users"
   add_foreign_key "team_template_sport_material_items", "team_templates"
+  add_foreign_key "team_templates", "users", column: "responsible_user_id", on_delete: :nullify
 end
