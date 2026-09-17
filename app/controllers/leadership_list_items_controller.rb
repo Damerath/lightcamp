@@ -7,7 +7,7 @@ class LeadershipListItemsController < ApplicationController
     item = @leadership_list.items.new(item_params.merge(position: next_position))
 
     if item.save
-      redirect_to leadership_list_path(@leadership_list), notice: "Punkt wurde hinzugefügt."
+      redirect_to leadership_list_path(@leadership_list, focus_item: "1"), notice: "Punkt wurde hinzugefügt."
     else
       redirect_to leadership_list_path(@leadership_list), alert: item.errors.full_messages.to_sentence
     end
