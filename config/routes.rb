@@ -71,6 +71,7 @@ Rails.application.routes.draw do
     patch :reorder, on: :collection
   end
   resources :leadership_lists, path: "leitung/listen", only: %i[index show create update destroy] do
+    patch :reorder, on: :collection
     resources :items, controller: "leadership_list_items", only: %i[create update destroy] do
       patch :reorder, on: :collection
     end

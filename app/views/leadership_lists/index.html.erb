@@ -11,14 +11,21 @@
   </div>
 
   <% if @leadership_lists.any? %>
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-controller="sortable" data-sortable-url-value="<%= reorder_leadership_lists_path %>" data-action="dragover->sortable#dragOver drop->sortable#drop">
       <% @leadership_lists.each do |leadership_list| %>
-        <%= link_to leadership_list_path(leadership_list), class: "block min-w-0 rounded-xl bg-white p-5 shadow transition hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
-          <p class="truncate font-semibold text-slate-900 dark:text-slate-100"><%= leadership_list.title %></p>
-          <% if leadership_list.description.present? %>
-            <p class="mt-1 truncate text-sm text-slate-600 dark:text-slate-400"><%= leadership_list.description %></p>
+        <div data-sortable-target="item" data-sortable-id-value="<%= leadership_list.id %>" class="relative min-w-0" style="height: 5rem;">
+          <button type="button" draggable="true" data-action="dragstart->sortable#dragStart dragend->sortable#dragEnd" aria-label="<%= leadership_list.title %> verschieben" title="Zum Sortieren ziehen" class="absolute left-3 top-1/2 z-10 -translate-y-1/2 cursor-grab touch-none text-slate-400 hover:text-slate-600 active:cursor-grabbing dark:hover:text-slate-200">
+            <i data-lucide="grip-vertical" class="h-5 w-5"></i>
+          </button>
+          <%= link_to leadership_list_path(leadership_list), style: "height: 100%;", class: "block min-w-0 rounded-xl bg-white p-5 shadow transition hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
+            <div class="ml-8 min-w-0">
+              <p class="truncate font-semibold text-slate-900 dark:text-slate-100"><%= leadership_list.title %></p>
+              <% if leadership_list.description.present? %>
+                <p class="mt-1 truncate text-sm text-slate-600 dark:text-slate-400"><%= leadership_list.description %></p>
+              <% end %>
+            </div>
           <% end %>
-        <% end %>
+        </div>
       <% end %>
     </div>
   <% else %>
