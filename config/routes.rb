@@ -5,7 +5,9 @@ Rails.application.routes.draw do
     resources :sleeping_places, controller: "camp_sleeping_places", only: %i[create update destroy]
     resources :sleeping_assignments, controller: "camp_sleeping_assignments", only: :update
     resources :room_people, controller: "camp_room_people", only: %i[create update destroy]
-    resources :team_links, path: "links", controller: "camp_team_links", only: %i[create update destroy]
+    resources :team_links, path: "links", controller: "camp_team_links", only: %i[create update destroy] do
+      patch :reorder, on: :collection
+    end
     resources :team_download_items, path: "download_items", controller: "camp_team_download_items", only: %i[create update destroy]
     resources :team_todos, path: "todos", controller: "camp_team_todos", only: %i[create update destroy]
     resources :team_shopping_items, path: "shopping_items", controller: "camp_team_shopping_items", only: %i[create update destroy]
@@ -65,7 +67,9 @@ Rails.application.routes.draw do
   patch "users/:id", to: "users#update", as: :user
   delete "users/:id", to: "users#destroy"
   get "leitung", to: "leadership#index", as: :leadership
-  resources :leadership_links, path: "leitung/links", only: %i[index create destroy]
+  resources :leadership_links, path: "leitung/links", only: %i[index create destroy] do
+    patch :reorder, on: :collection
+  end
   get "admin", to: "admin#index"
   resources :bug_reports, only: :create
   resources :admin_bug_reports, path: "admin/bug_reports", only: %i[index show update destroy]
@@ -101,6 +105,7 @@ Rails.application.routes.draw do
   get "admin/team_templates/:id", to: "admin_team_templates#show", as: :admin_team_template
   patch "admin/team_templates/:id", to: "admin_team_templates#update"
   post "admin/team_templates/:team_template_id/links", to: "admin_team_template_links#create", as: :admin_team_template_links
+  patch "admin/team_templates/:team_template_id/links/reorder", to: "admin_team_template_links#reorder", as: :admin_team_template_links_reorder
   patch "admin/team_templates/:team_template_id/links/:id", to: "admin_team_template_links#update", as: :admin_team_template_link
   delete "admin/team_templates/:team_template_id/links/:id", to: "admin_team_template_links#destroy"
   post "admin/team_templates/:team_template_id/download_items", to: "admin_team_template_download_items#create", as: :admin_team_template_download_items

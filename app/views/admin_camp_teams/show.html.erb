@@ -72,8 +72,8 @@
   <% if %w[program week_plan sport_plan material_list medical_supplies kitchen_plan recipe_book diy_plan room_plan].include?(@section) %>
     <div class="space-y-6">
   <% else %>
-    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <div class="space-y-6">
+    <div class="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div class="min-w-0 space-y-6">
   <% end %>
       <% if @section == "overview" %>
         <% if @camp_team.shows_internal_meeting? %>
@@ -138,7 +138,7 @@
           </div>
         <% end %>
 
-        <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
+        <div class="min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
           <div>
             <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Wichtige Links</h3>
             <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
@@ -146,33 +146,38 @@
             </p>
           </div>
 
-          <div class="mt-5 space-y-3">
+          <div class="mt-5 space-y-3" data-controller="sortable" data-sortable-url-value="<%= reorder_admin_camp_team_links_path(@camp, @camp_team) %>" data-action="dragover->sortable#dragOver drop->sortable#drop">
             <% if @team_template_links.any? %>
               <% @team_template_links.each do |link| %>
-                <div class="flex items-center justify-between gap-4 rounded-lg border border-sky-200 bg-sky-50/70 px-4 py-3 dark:border-sky-900/60 dark:bg-sky-950/20">
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <p class="font-medium text-slate-900 dark:text-slate-100"><%= link.title %></p>
-                      <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-900/60 dark:text-sky-200">Default</span>
+                <div class="flex min-w-0 items-center justify-between gap-4 rounded-lg border border-sky-200 bg-sky-50/70 px-4 py-3 dark:border-sky-900/60 dark:bg-sky-950/20">
+                  <div class="min-w-0 flex-1">
+                    <div class="flex min-w-0 items-center gap-2">
+                      <p class="min-w-0 flex-1 truncate font-medium text-slate-900 dark:text-slate-100"><%= link.title %></p>
+                      <span class="shrink-0 rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-900/60 dark:text-sky-200">Default</span>
                     </div>
-                    <%= link_to link.url, link.url, target: "_blank", rel: "noreferrer", class: "text-sm text-blue-600 hover:underline dark:text-blue-400" %>
+                    <%= link_to link.url, link.url, target: "_blank", rel: "noreferrer", class: "block truncate text-sm text-blue-600 hover:underline dark:text-blue-400" %>
                   </div>
-                  <%= link_to "Verwalten", admin_team_template_path(@camp_team.team_template), class: "text-sm font-medium text-sky-700 hover:text-sky-800 dark:text-sky-300" %>
+                  <%= link_to "Verwalten", admin_team_template_path(@camp_team.team_template), class: "shrink-0 text-sm font-medium text-sky-700 hover:text-sky-800 dark:text-sky-300" %>
                 </div>
               <% end %>
             <% end %>
 
             <% if @camp_team_links.any? %>
               <% @camp_team_links.each do |link| %>
-                <div class="flex items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <p class="font-medium text-slate-900 dark:text-slate-100"><%= link.title %></p>
-                      <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">Camp</span>
+                <div data-sortable-target="item" data-sortable-id-value="<%= link.id %>" class="flex min-w-0 max-w-full items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
+                  <div class="flex min-w-0 flex-1 items-center gap-3">
+                    <button type="button" draggable="true" data-action="dragstart->sortable#dragStart dragend->sortable#dragEnd" aria-label="<%= link.title %> verschieben" title="Zum Sortieren ziehen" class="shrink-0 cursor-grab touch-none text-slate-400 hover:text-slate-600 active:cursor-grabbing dark:hover:text-slate-200">
+                      <i data-lucide="grip-vertical" class="h-5 w-5"></i>
+                    </button>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex min-w-0 items-center gap-2">
+                        <p class="min-w-0 flex-1 truncate font-medium text-slate-900 dark:text-slate-100"><%= link.title %></p>
+                        <span class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">Camp</span>
+                      </div>
+                      <%= link_to link.url, link.url, target: "_blank", rel: "noreferrer", class: "block truncate text-sm text-blue-600 hover:underline dark:text-blue-400", style: "overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" %>
                     </div>
-                    <%= link_to link.url, link.url, target: "_blank", rel: "noreferrer", class: "text-sm text-blue-600 hover:underline dark:text-blue-400" %>
                   </div>
-                  <%= link_to "Entfernen", admin_camp_team_link_path(@camp, @camp_team, link), data: { turbo_method: :delete, turbo_confirm: "Link wirklich entfernen?" }, class: "text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400" %>
+                  <%= link_to "Entfernen", admin_camp_team_link_path(@camp, @camp_team, link), data: { turbo_method: :delete, turbo_confirm: "Link wirklich entfernen?" }, class: "shrink-0 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400" %>
                 </div>
               <% end %>
             <% elsif @team_template_links.empty? %>

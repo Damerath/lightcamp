@@ -20,6 +20,19 @@ class LeadershipLinksController < ApplicationController
     redirect_to leadership_links_path, notice: "Leitungs-Link wurde entfernt."
   end
 
+  def reorder
+    ids = Array(params[:ids]).map(&:to_i)
+    links = LeadershipLink.where(id: ids)
+
+    return head :unprocessable_entity unless ids.present? && ids.uniq.length == ids.length && links.count == ids.length
+
+    ActiveRecord::Base.transaction do
+      ids.each_with_index { |id, position| links.find(id).update!(position: position) }
+    end
+
+    head :no_content
+  end
+
   private
 
   def leadership_link_params

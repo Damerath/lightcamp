@@ -32,6 +32,10 @@ class CampTeamLinksController < ApplicationController
     redirect_to team_page_path(@camp, @camp_team), notice: "Link wurde entfernt."
   end
 
+  def reorder
+    reorder_links(@camp_team.camp_team_links)
+  end
+
   private
 
   def camp_team_link_params
@@ -40,5 +44,18 @@ class CampTeamLinksController < ApplicationController
 
   def next_position
     (@camp_team.camp_team_links.maximum(:position) || -1) + 1
+  end
+
+  def reorder_links(links)
+    ids = Array(params[:ids]).map(&:to_i)
+    records = links.where(id: ids)
+
+    return head :unprocessable_entity unless ids.present? && ids.uniq.length == ids.length && records.count == ids.length
+
+    ActiveRecord::Base.transaction do
+      ids.each_with_index { |id, position| records.find(id).update!(position: position) }
+    end
+
+    head :no_content
   end
 end
