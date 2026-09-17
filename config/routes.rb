@@ -70,6 +70,11 @@ Rails.application.routes.draw do
   resources :leadership_links, path: "leitung/links", only: %i[index create destroy] do
     patch :reorder, on: :collection
   end
+  resources :leadership_lists, path: "leitung/listen", only: %i[index show create update destroy] do
+    resources :items, controller: "leadership_list_items", only: %i[create update destroy] do
+      patch :reorder, on: :collection
+    end
+  end
   get "admin", to: "admin#index"
   resources :bug_reports, only: :create
   resources :admin_bug_reports, path: "admin/bug_reports", only: %i[index show update destroy]

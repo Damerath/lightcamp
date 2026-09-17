@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_17_090000) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_17_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -361,6 +361,25 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_17_090000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "leadership_list_items", force: :cascade do |t|
+    t.bigint "leadership_list_id", null: false
+    t.string "text", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["leadership_list_id", "completed", "position"], name: "index_leadership_list_items_on_list_completion_position"
+    t.index ["leadership_list_id"], name: "index_leadership_list_items_on_leadership_list_id"
+  end
+
+  create_table "leadership_lists", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "medical_supply_changes", force: :cascade do |t|
     t.bigint "user_id"
     t.string "actor_name", default: "", null: false
@@ -532,6 +551,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_17_090000) do
   add_foreign_key "download_items", "team_templates"
   add_foreign_key "download_items", "users", column: "uploader_id"
   add_foreign_key "kitchen_recipe_ingredients", "kitchen_recipes"
+  add_foreign_key "leadership_list_items", "leadership_lists"
   add_foreign_key "medical_supply_changes", "users"
   add_foreign_key "notification_deliveries", "notification_events"
   add_foreign_key "notification_deliveries", "users"

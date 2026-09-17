@@ -1,0 +1,87 @@
+<div class="space-y-6">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Leitungsdaten</p>
+      <h2 class="text-2xl font-bold"><%= @leadership_list.title %></h2>
+      <% if @leadership_list.description.present? %>
+        <p class="mt-1 text-slate-600 dark:text-slate-400"><%= @leadership_list.description %></p>
+      <% end %>
+    </div>
+    <div class="flex flex-wrap justify-end gap-3">
+      <%= link_to "Zurück zu Listen", leadership_lists_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-600 dark:text-slate-300" %>
+      <%= link_to "Listennamen ändern", leadership_list_path(@leadership_list, modal: "edit"), class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Liste löschen", leadership_list_path(@leadership_list), data: { turbo_method: :delete, turbo_confirm: "Bist du sicher? Alle Punkte dieser Liste werden gelöscht." }, class: "inline-flex rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-950 dark:text-red-300" %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+    <h3 class="font-semibold">Offene Punkte</h3>
+    <div class="mt-4 space-y-2" data-controller="sortable" data-sortable-url-value="<%= reorder_leadership_list_items_path(@leadership_list) %>" data-action="dragover->sortable#dragOver drop->sortable#drop">
+      <% @unfinished_items.each do |item| %>
+        <div data-sortable-target="item" data-sortable-id-value="<%= item.id %>" class="flex min-w-0 items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5 dark:border-slate-700">
+          <button type="button" draggable="true" data-action="dragstart->sortable#dragStart dragend->sortable#dragEnd" aria-label="<%= item.text %> verschieben" title="Zum Sortieren ziehen" class="shrink-0 cursor-grab touch-none text-slate-400 hover:text-slate-600 active:cursor-grabbing dark:hover:text-slate-200">
+            <i data-lucide="grip-vertical" class="h-5 w-5"></i>
+          </button>
+          <%= form_with model: item, url: leadership_list_item_path(@leadership_list, item), method: :patch, class: "shrink-0" do |f| %>
+            <%= f.check_box :completed, { class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500", onchange: "this.form.requestSubmit()", aria: { label: "#{item.text} erledigen" } }, "1", "0" %>
+          <% end %>
+          <p class="min-w-0 flex-1 break-words"><%= item.text %></p>
+          <%= link_to leadership_list_item_path(@leadership_list, item), data: { turbo_method: :delete, turbo_confirm: "Punkt wirklich löschen?" }, aria: { label: "#{item.text} löschen" }, title: "Punkt löschen", class: "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-950 dark:text-red-300" do %><i data-lucide="x" class="h-4 w-4"></i><% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form_with model: LeadershipListItem.new, url: leadership_list_items_path(@leadership_list), class: "mt-4 flex gap-2" do |f| %>
+      <%= f.text_field :text, placeholder: "Neuen Punkt hinzufügen", class: "min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900" %>
+      <%= f.submit "Hinzufügen", class: "shrink-0 rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl bg-white p-5 shadow dark:bg-slate-800">
+    <h3 class="font-semibold">Erledigte Punkte</h3>
+    <% if @completed_items.any? %>
+      <div class="mt-4 space-y-2">
+        <% @completed_items.each do |item| %>
+          <div class="flex min-w-0 items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5 dark:border-slate-700">
+            <%= form_with model: item, url: leadership_list_item_path(@leadership_list, item), method: :patch, class: "shrink-0" do |f| %>
+              <%= f.check_box :completed, { class: "h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-500", onchange: "this.form.requestSubmit()", aria: { label: "#{item.text} wieder öffnen" } }, "1", "0" %>
+            <% end %>
+            <p class="min-w-0 flex-1 break-words text-slate-500 line-through dark:text-slate-400"><%= item.text %></p>
+            <%= link_to leadership_list_item_path(@leadership_list, item), data: { turbo_method: :delete, turbo_confirm: "Punkt wirklich löschen?" }, aria: { label: "#{item.text} löschen" }, title: "Punkt löschen", class: "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-950 dark:text-red-300" do %><i data-lucide="x" class="h-4 w-4"></i><% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="mt-4 text-sm text-slate-500 dark:text-slate-400">Noch keine erledigten Punkte.</p>
+    <% end %>
+  </div>
+
+  <% if params[:modal] == "edit" %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
+      <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold">Liste bearbeiten</h3>
+            <p class="mt-1 text-sm text-slate-500">Ändere Titel und optionale Beschreibung der Liste.</p>
+          </div>
+          <%= link_to "×", leadership_list_path(@leadership_list), class: "text-2xl leading-none text-slate-500" %>
+        </div>
+
+        <%= form_with model: @leadership_list, class: "mt-5 space-y-4" do |f| %>
+          <div>
+            <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium" %>
+            <%= f.text_field :title, autofocus: true, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          </div>
+          <div>
+            <%= f.label :description, "Beschreibung (optional)", class: "mb-1 block text-sm font-medium" %>
+            <%= f.text_area :description, rows: 4, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          </div>
+          <div class="flex justify-end gap-3">
+            <%= link_to "Abbrechen", leadership_list_path(@leadership_list), class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium" %>
+            <%= f.submit "Änderungen speichern", class: "rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -35,10 +35,11 @@
 
     <div class="rounded-lg bg-white p-5 shadow dark:bg-slate-800">
       <h3 class="font-semibold text-slate-900 dark:text-slate-100">Leitungsdaten</h3>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Interne Dateien und Links für die Camporganisation bereitstellen.</p>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Interne Dateien, Links und Listen für die Camporganisation bereitstellen.</p>
       <div class="mt-4 flex flex-wrap gap-2">
         <%= link_to "Dateien verwalten", admin_download_items_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
         <%= link_to "Links verwalten", leadership_links_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+        <%= link_to "Listen verwalten", leadership_lists_path, class: "inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
       </div>
     </div>
   </div>

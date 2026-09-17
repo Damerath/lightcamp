@@ -1,0 +1,56 @@
+<div class="space-y-8">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <h2 class="text-2xl font-bold">Listen verwalten</h2>
+      <p class="mt-1 text-slate-600 dark:text-slate-400">Kurze gemeinsame Checklisten für die Leitung.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%= link_to "Zur Leitungs-Übersicht", leadership_path, class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
+      <%= link_to "Neue Liste anlegen", leadership_lists_path(modal: "new"), class: "inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+    </div>
+  </div>
+
+  <% if @leadership_lists.any? %>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <% @leadership_lists.each do |leadership_list| %>
+        <%= link_to leadership_list_path(leadership_list), class: "block min-w-0 rounded-xl bg-white p-5 shadow transition hover:ring-1 hover:ring-blue-400 dark:bg-slate-800" do %>
+          <p class="truncate font-semibold text-slate-900 dark:text-slate-100"><%= leadership_list.title %></p>
+          <% if leadership_list.description.present? %>
+            <p class="mt-1 truncate text-sm text-slate-600 dark:text-slate-400"><%= leadership_list.description %></p>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="rounded-xl bg-white p-5 text-slate-600 shadow dark:bg-slate-800 dark:text-slate-400">Noch keine Listen angelegt.</p>
+  <% end %>
+
+  <% if params[:modal] == "new" %>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
+      <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold">Neue Liste anlegen</h3>
+            <p class="mt-1 text-sm text-slate-500">Die Punkte ergänzt du anschließend in der Detailansicht.</p>
+          </div>
+          <%= link_to "×", leadership_lists_path, class: "text-2xl leading-none text-slate-500" %>
+        </div>
+
+        <%= form_with model: LeadershipList.new, url: leadership_lists_path, class: "mt-5 space-y-4" do |f| %>
+          <div>
+            <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium" %>
+            <%= f.text_field :title, autofocus: true, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          </div>
+          <div>
+            <%= f.label :description, "Beschreibung (optional)", class: "mb-1 block text-sm font-medium" %>
+            <%= f.text_area :description, rows: 3, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900" %>
+          </div>
+          <div class="flex justify-end gap-3">
+            <%= link_to "Abbrechen", leadership_lists_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium" %>
+            <%= f.submit "Liste anlegen", class: "rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
