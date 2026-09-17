@@ -144,6 +144,20 @@
             </p>
           </div>
 
+          <%= form_with model: CampTeamLink.new, url: camp_team_links_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.3fr_auto]" do |f| %>
+            <div>
+              <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :title, autofocus: params[:focus_link] == "1", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="flex items-end">
+              <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+
           <div class="mt-5 space-y-3" data-controller="sortable" data-sortable-url-value="<%= reorder_camp_team_links_path(@camp, @camp_team) %>" data-action="dragover->sortable#dragOver drop->sortable#drop">
             <% if @team_template_links.any? %>
               <% @team_template_links.each do |link| %>
@@ -181,20 +195,6 @@
               <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Links hinterlegt.</p>
             <% end %>
           </div>
-
-          <%= form_with model: CampTeamLink.new, url: camp_team_links_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.3fr_auto]" do |f| %>
-            <div>
-              <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-            </div>
-            <div>
-              <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-            </div>
-            <div class="flex items-end">
-              <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
-            </div>
-          <% end %>
         </div>
       <% elsif @section == "description" %>
         <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">
@@ -253,6 +253,11 @@
             </p>
           </div>
 
+          <%= form_with model: CampTeamTodo.new, url: camp_team_todos_path(@camp, @camp_team), class: "mt-5 flex flex-col gap-3 sm:flex-row" do |f| %>
+            <%= f.text_field :title, placeholder: "Neue Aufgabe...", autofocus: params[:focus_todo] == "1", class: "w-full min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            <%= f.submit "Hinzufügen", class: "inline-flex w-full justify-center rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 sm:w-auto" %>
+          <% end %>
+
           <div class="mt-5 space-y-3">
             <% if @camp_team_todos.any? %>
               <% @camp_team_todos.each do |todo| %>
@@ -273,10 +278,6 @@
             <% end %>
           </div>
 
-          <%= form_with model: CampTeamTodo.new, url: camp_team_todos_path(@camp, @camp_team), class: "mt-5 flex flex-col gap-3 sm:flex-row" do |f| %>
-            <%= f.text_field :title, placeholder: "Neue Aufgabe...", class: "w-full min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-            <%= f.submit "Hinzufügen", class: "inline-flex w-full justify-center rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 sm:w-auto" %>
-          <% end %>
         </div>
       <% elsif @section == "downloads" %>
         <%= render "shared/download_items_list",
@@ -996,6 +997,24 @@
             <%= link_to "Druckansicht", camp_team_shopping_print_path(@camp, @camp_team), target: "_blank", rel: "noreferrer", class: "inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" %>
           </div>
 
+          <%= form_with model: CampTeamShoppingItem.new, url: camp_team_shopping_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[minmax(0,1.2fr)_10rem] lg:grid-cols-[minmax(0,1.2fr)_10rem_minmax(0,1fr)_auto]" do |f| %>
+            <div>
+              <%= f.label :name, "Artikel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :name, placeholder: "z. B. Becher", autofocus: params[:focus_shopping_item] == "1", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :quantity, placeholder: "z. B. 3 Packungen", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div>
+              <%= f.label :notes, "Notiz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+              <%= f.text_field :notes, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+            </div>
+            <div class="flex items-end">
+              <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+            </div>
+          <% end %>
+
           <div class="mt-5 space-y-3">
             <% if @camp_team_shopping_items.any? %>
               <% @camp_team_shopping_items.each do |item| %>
@@ -1024,23 +1043,6 @@
             <% end %>
           </div>
 
-          <%= form_with model: CampTeamShoppingItem.new, url: camp_team_shopping_items_path(@camp, @camp_team), class: "mt-5 grid gap-4 sm:grid-cols-[minmax(0,1.2fr)_10rem] lg:grid-cols-[minmax(0,1.2fr)_10rem_minmax(0,1fr)_auto]" do |f| %>
-            <div>
-              <%= f.label :name, "Artikel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :name, placeholder: "z. B. Becher", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-            </div>
-            <div>
-              <%= f.label :quantity, "Menge", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :quantity, placeholder: "z. B. 3 Packungen", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-            </div>
-            <div>
-              <%= f.label :notes, "Notiz", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-              <%= f.text_field :notes, placeholder: "optional", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-            </div>
-            <div class="flex items-end">
-              <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
-            </div>
-          <% end %>
         </div>
       <% elsif @section == "program" %>
         <div class="rounded-2xl bg-white p-6 shadow dark:bg-slate-800">

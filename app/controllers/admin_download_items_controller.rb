@@ -9,7 +9,7 @@ class AdminDownloadItemsController < ApplicationController
     item = DownloadItem.new(download_item_params.merge(scope_kind: :admin_only, uploader: current_user, position: next_position))
 
     if item.save
-      redirect_to admin_download_items_path, notice: "Datei wurde hochgeladen."
+      redirect_to admin_download_items_path(focus_upload: "1"), notice: "Datei wurde hochgeladen."
     else
       redirect_to admin_download_items_path, alert: item.errors.full_messages.to_sentence
     end

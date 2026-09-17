@@ -9,7 +9,7 @@ class CampTeamLinksController < ApplicationController
 
     if link.save
       ::Notifications::Triggers.team_link_added!(camp_team: @camp_team, link: link, actor: current_user)
-      redirect_to team_page_path(@camp, @camp_team), notice: "Link wurde gespeichert."
+      redirect_to team_page_path(@camp, @camp_team, focus_link: "1"), notice: "Link wurde gespeichert."
     else
       redirect_to team_page_path(@camp, @camp_team), alert: link.errors.full_messages.to_sentence
     end

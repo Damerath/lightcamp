@@ -11,6 +11,20 @@
     <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Wichtige Links</h3>
     <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Diese Links stehen allen Personen mit Leitungsrolle zur Verfügung.</p>
 
+    <%= form_with model: LeadershipLink.new, url: leadership_links_path, class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.3fr_auto]" do |f| %>
+      <div>
+        <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.text_field :title, autofocus: params[:focus_link] == "1", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+      <div>
+        <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
+        <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
+      </div>
+      <div class="flex items-end">
+        <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
+      </div>
+    <% end %>
+
     <div class="mt-5 space-y-3" data-controller="sortable" data-sortable-url-value="<%= reorder_leadership_links_path %>" data-action="dragover->sortable#dragOver drop->sortable#drop">
       <% @leadership_links.each do |link| %>
         <div data-sortable-target="item" data-sortable-id-value="<%= link.id %>" class="flex items-center justify-between gap-4 rounded-lg border border-slate-200 px-4 py-3 dark:border-slate-700">
@@ -31,19 +45,5 @@
         <p class="text-sm text-slate-500 dark:text-slate-400">Noch keine Leitungs-Links hinterlegt.</p>
       <% end %>
     </div>
-
-    <%= form_with model: LeadershipLink.new, url: leadership_links_path, class: "mt-5 grid gap-4 sm:grid-cols-[1fr_1.3fr_auto]" do |f| %>
-      <div>
-        <%= f.label :title, "Titel", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.text_field :title, class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-      </div>
-      <div>
-        <%= f.label :url, "Link", class: "mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300" %>
-        <%= f.url_field :url, placeholder: "https://...", class: "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" %>
-      </div>
-      <div class="flex items-end">
-        <%= f.submit "Hinzufügen", class: "inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700" %>
-      </div>
-    <% end %>
   </div>
 </div>

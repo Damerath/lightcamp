@@ -9,7 +9,7 @@ class CampTeamDownloadItemsController < ApplicationController
 
     if item.save
       ::Notifications::Triggers.team_download_added!(camp_team: @camp_team, download_item: item, actor: current_user)
-      redirect_to team_page_path(@camp, @camp_team, section: "downloads"), notice: "Datei wurde hochgeladen."
+      redirect_to team_page_path(@camp, @camp_team, section: "downloads", focus_upload: "1"), notice: "Datei wurde hochgeladen."
     else
       redirect_to team_page_path(@camp, @camp_team, section: "downloads"), alert: item.errors.full_messages.to_sentence
     end

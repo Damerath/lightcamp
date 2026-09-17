@@ -9,7 +9,7 @@ class LeadershipLinksController < ApplicationController
     link = LeadershipLink.new(leadership_link_params.merge(position: next_position))
 
     if link.save
-      redirect_to leadership_links_path, notice: "Leitungs-Link wurde gespeichert."
+      redirect_to leadership_links_path(focus_link: "1"), notice: "Leitungs-Link wurde gespeichert."
     else
       redirect_to leadership_links_path, alert: link.errors.full_messages.to_sentence
     end

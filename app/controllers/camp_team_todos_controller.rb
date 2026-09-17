@@ -9,7 +9,7 @@ class CampTeamTodosController < ApplicationController
 
     if todo.save
       ::Notifications::Triggers.team_todo_added!(camp_team: @camp_team, todo: todo, actor: current_user)
-      redirect_to team_page_path(@camp, @camp_team, section: "todos"), notice: "ToDo wurde gespeichert."
+      redirect_to team_page_path(@camp, @camp_team, section: "todos", focus_todo: "1"), notice: "ToDo wurde gespeichert."
     else
       redirect_to team_page_path(@camp, @camp_team, section: "todos"), alert: todo.errors.full_messages.to_sentence
     end
